@@ -5,6 +5,9 @@ module Effective
     has_rich_text :body
     log_changes(to: :cpd_cycle) if respond_to?(:log_changes)
 
+    has_many :cpd_rules, as: :ruleable
+    accepts_nested_attributes_for :cpd_rules, allow_destroy: true
+
     effective_resource do
       title     :string
       position  :integer

@@ -8,6 +8,9 @@ module Effective
 
     acts_as_tokened
 
+    has_many :cpd_categories, -> { order(:position) }, inverse_of: :cpd_cycle, dependent: :destroy
+    accepts_nested_attributes_for :cpd_categories, allow_destroy: true
+
     if respond_to?(:log_changes)
       log_changes()
     end

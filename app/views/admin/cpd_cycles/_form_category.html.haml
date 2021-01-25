@@ -1,0 +1,14 @@
+= effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
+
+  = f.fields_for :cpd_categories, cpd_category do |fc|
+    = fc.rich_text_area :body
+
+    - cpd_rule = (cpd_category.cpd_rules.first || cpd_category.cpd_rules.build)
+
+    = fc.fields_for :cpd_rules, cpd_rule do |fr|
+      = fr.text_field :description
+      = fr.text_field :formula
+      = fr.number_field :max_credits_per_cycle
+      = fr.number_field :max_cycles_can_carry_forward
+
+  = effective_submit(f)

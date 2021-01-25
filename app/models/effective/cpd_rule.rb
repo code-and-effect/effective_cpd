@@ -25,7 +25,7 @@ module Effective
     validates :max_cycles_can_carry_forward, presence: true, numericality: { min: 0 }
     validates :formula, presence: true
 
-    validates :cycle_id, uniqueness: {
+    validates :cpd_cycle_id, uniqueness: {
       scope: [:ruleable_type, :ruleable_id], message: 'already has a rule for this cycle'
     }
 

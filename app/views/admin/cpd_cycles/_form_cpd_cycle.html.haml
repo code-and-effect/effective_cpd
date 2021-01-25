@@ -4,4 +4,12 @@
   = f.datetime_field :start_at
   = f.datetime_field :end_at
 
+  = f.number_field :required_score
+
+  %h2 Categories
+  %p Please add or remove categories here. After pressing Save you can click on the Categories tab to add activities.
+
+  = f.has_many :cpd_categories, class: 'tight' do |fa|
+    = fa.text_field :title, label: false
+
   = effective_submit(f)

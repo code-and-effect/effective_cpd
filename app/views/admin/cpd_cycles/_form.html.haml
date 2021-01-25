@@ -6,6 +6,12 @@
     = tab 'Content' do
       = render 'admin/cpd_cycles/form_content', cpd_cycle: cpd_cycle
 
+    = tab 'Categories' do
+      = tabs do
+        - cpd_cycle.cpd_categories.each do |cpd_category|
+          = tab(cpd_category.to_s) do
+            = render 'admin/cpd_cycles/form_category', cpd_cycle: cpd_cycle, cpd_category: cpd_category
+
     -# = tab 'Questions' do
     -#   - datatable = Admin::EffectivePollQuestionsDatatable.new(poll_id: poll.id)
     -#   = render_datatable(datatable, inline: true, simple: true)
