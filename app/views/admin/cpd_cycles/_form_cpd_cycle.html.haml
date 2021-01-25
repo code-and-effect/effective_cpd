@@ -1,0 +1,7 @@
+= effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
+  = f.text_field :title, hint: 'The title of your cpd cycle.'
+
+  = f.datetime_field :start_at
+  = f.datetime_field :end_at
+
+  = effective_submit(f)

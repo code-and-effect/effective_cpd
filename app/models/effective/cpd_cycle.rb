@@ -26,7 +26,7 @@ module Effective
     end
 
     scope :deep, -> {
-      .all_steps_content
+      with_rich_text_all_steps_content
       .with_rich_text_start_content
       .with_rich_text_activities_content
       .with_rich_text_submit_content
