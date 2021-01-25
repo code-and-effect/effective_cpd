@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-  mount EffectiveCpd::Engine => "/effective_cpd"
+  devise_for :users
+  root to: 'static_pages#home'
 end
