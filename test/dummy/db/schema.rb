@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2) do
+ActiveRecord::Schema.define(version: 3) do
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -20,6 +20,50 @@ ActiveRecord::Schema.define(version: 2) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
+  create_table "cpd_activities", force: :cascade do |t|
+    t.bigint "cpd_cycle_id"
+    t.bigint "cpd_category_id"
+    t.string "title"
+    t.string "amount_description"
+    t.string "amount2_description"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_category_id"], name: "index_cpd_activities_on_cpd_category_id"
+    t.index ["cpd_cycle_id"], name: "index_cpd_activities_on_cpd_cycle_id"
+  end
+
+  create_table "cpd_categories", force: :cascade do |t|
+    t.bigint "cpd_cycle_id"
+    t.string "title"
+    t.integer "position"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_cycle_id"], name: "index_cpd_categories_on_cpd_cycle_id"
+  end
+
+  create_table "cpd_cycles", force: :cascade do |t|
+    t.string "title"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.integer "required_score"
+    t.string "token"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+  end
+
+  create_table "cpd_rules", force: :cascade do |t|
+    t.bigint "cpd_cycle_id"
+    t.string "ruleable_type"
+    t.integer "ruleable_id"
+    t.text "description"
+    t.string "formula"
+    t.integer "max_credits_per_cycle"
+    t.integer "max_cycles_can_carry_forward"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_cycle_id"], name: "index_cpd_rules_on_cpd_cycle_id"
   end
 
   create_table "users", force: :cascade do |t|
