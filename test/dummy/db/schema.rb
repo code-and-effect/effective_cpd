@@ -26,8 +26,13 @@ ActiveRecord::Schema.define(version: 3) do
     t.bigint "cpd_cycle_id"
     t.bigint "cpd_category_id"
     t.string "title"
-    t.string "amount_description"
-    t.string "amount2_description"
+    t.integer "position"
+    t.string "formula"
+    t.string "amount_label"
+    t.string "amount2_label"
+    t.integer "max_credits_per_cycle"
+    t.integer "max_cycles_can_carry_forward"
+    t.boolean "requires_upload_file", default: false
     t.datetime "updated_at"
     t.datetime "created_at"
     t.index ["cpd_category_id"], name: "index_cpd_activities_on_cpd_category_id"
@@ -37,6 +42,7 @@ ActiveRecord::Schema.define(version: 3) do
   create_table "cpd_categories", force: :cascade do |t|
     t.bigint "cpd_cycle_id"
     t.string "title"
+    t.integer "max_credits_per_cycle"
     t.integer "position"
     t.datetime "updated_at"
     t.datetime "created_at"
@@ -51,19 +57,6 @@ ActiveRecord::Schema.define(version: 3) do
     t.string "token"
     t.datetime "updated_at"
     t.datetime "created_at"
-  end
-
-  create_table "cpd_rules", force: :cascade do |t|
-    t.bigint "cpd_cycle_id"
-    t.string "ruleable_type"
-    t.integer "ruleable_id"
-    t.text "description"
-    t.string "formula"
-    t.integer "max_credits_per_cycle"
-    t.integer "max_cycles_can_carry_forward"
-    t.datetime "updated_at"
-    t.datetime "created_at"
-    t.index ["cpd_cycle_id"], name: "index_cpd_rules_on_cpd_cycle_id"
   end
 
   create_table "users", force: :cascade do |t|

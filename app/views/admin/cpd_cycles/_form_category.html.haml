@@ -1,7 +1,0 @@
-= effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
-
-  = f.fields_for :cpd_categories, cpd_category do |fc|
-    = fc.rich_text_area :body, required: true
-    = fc.number_field :max_credits_per_cycle, hint: 'the maximum number of credits one statement can earn in this category this cycle. leave blank for no limit'
-
-  = effective_submit(f)

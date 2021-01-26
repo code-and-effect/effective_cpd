@@ -30,6 +30,7 @@ module Effective
     validates :title, presence: true
     validates :position, presence: true
     validates :body, presence: true
+    validates :max_credits_per_cycle, numericality: { greater_than: 0, allow_nil: true }
 
     def to_s
       title.presence || 'category'

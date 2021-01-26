@@ -8,6 +8,9 @@ module EffectiveCpd
   mattr_accessor :cpd_categories_table_name
   mattr_accessor :cpd_activities_table_name
 
+  mattr_accessor :cycle_label
+  mattr_accessor :credit_label
+
   mattr_accessor :authorization_method
   mattr_accessor :layout
 

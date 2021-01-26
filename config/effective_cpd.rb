@@ -32,6 +32,9 @@ EffectiveCpd.setup do |config|
     admin: 'admin'
   }
 
+  config.cycle_label = 'year'       # 'cycle', 'season'
+  config.credit_label = 'credit'    # 'credit', 'PDH', 'PDU', 'CCC'
+
   # Notifications Mailer Settings
   #
   # Schedule rake effective_cpd:notify to run every 10 minutes

@@ -6,17 +6,29 @@
 
   .row
     .col
-      = f.text_field :title, label: 'Activity Title'
+      = f.text_field :title, label: 'Activity title'
+
       = f.rich_text_area :body,
-        hint: 'include a description of the formula, like 15 hours of work equals one credit'
+        hint: "include a description of the formula, like 15 hours of work equals one #{cpd_credit_label}"
 
-      = f.number_field :max_credits_per_cycle
-      = f.number_field :max_cycles_can_carry_forward
+      = f.number_field :max_credits_per_cycle,
+        label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
+        hint: 'leave blank for no limit'
+
+      = f.number_field :max_cycles_can_carry_forward,
+        label: "Max #{cpd_cycles_label} can carry forward",
+        hint: "leave blank for limitless carry forward each #{cpd_cycle_label} upto the activity or category max"
+
       = f.check_box :requires_upload_file
-    .col
-      = f.text_field :formula, hint: '(amount / 15) or (30) or (amount * 2) or (amount + (amount2 * 10))'
-      = f.text_field :amount_label, hint: 'hours of work, papers written or courses attended. required.'
-      = f.text_field :amount2_label, hint: 'continuing education units. optional unless used in formula.'
 
+    .col
+      = f.text_field :formula,
+        hint: '30 or (amount / 15) or (amount + (amount2 * 10))'
+
+      = f.text_field :amount_label,
+        hint: 'hours of work, papers written, courses attended. required when in formula.'
+
+      = f.text_field :amount2_label,
+        hint: 'continuing education units. required when in formula.'
 
   = effective_submit(f)

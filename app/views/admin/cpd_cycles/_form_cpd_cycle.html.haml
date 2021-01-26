@@ -1,15 +1,20 @@
 = effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
   = f.text_field :title,
-    hint: "The title of this cycle. Something like #{Time.zone.now.year} Continuing Professional Development"
+    hint: "The title of this #{cpd_cycle_label}. Something like #{Time.zone.now.year} Continuing Professional Development"
 
-  = f.datetime_field :start_at, hint: 'The first date statements may be created in this cycle'
-  = f.datetime_field :end_at, hint: 'The last date statements may be created in this cycle'
+  = f.date_field :start_at,
+    hint: "The first date statements may be submited for this #{cpd_cycle_label}"
 
-  = f.number_field :required_score, hint: 'Statements require at least this many credits to submit'
+  = f.date_field :end_at,
+    hint: "The last date statements may be created for this #{cpd_cycle_label}. leave blank for no end date."
+
+  = f.number_field :required_score,
+    hint: "Statements require at least this many #{cpd_credits_label} to submit"
 
   %h2 Categories
+
   - if f.object.new_record?
-    %p Please add one or more categories
+    %p Please add one or more categories and save to continue adding activities.
   - else
     %p
       Click the
@@ -17,11 +22,13 @@
       tab to add activities to each category.
 
   %p
-    The max credits per cycle value determines the maximum number of
-    credits a statement from this cycle may earn through activities in this category.
+    The max #{cpd_credits_label} per #{cpd_cycle_label} value determines the maximum number of
+    #{cpd_credits_label} a statement from this #{cpd_cycle_label} may earn through activities
+    in this category.
 
   %p
-    Any remaining credits will be carried forward to future cycles, upto the activity's max cycles can carry forward value.
+    Any remaining #{cpd_credits_label} will be carried forward to future
+    #{cpd_cycles_label}, upto the activity's max #{cpd_cycles_label} can carry forward value.
 
   = f.has_many :cpd_categories, class: 'tight' do |fc|
     .card.mb-4
@@ -29,9 +36,10 @@
         .row
           .col
             = fc.text_field :title, label: 'Category title'
-            = fc.number_field :max_credits_per_cycle, hint: 'leave blank for no limit'
+            = fc.number_field :max_credits_per_cycle,
+              label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
+              hint: 'leave blank for no limit'
 
           .col= fc.rich_text_area :body, required: true
-
 
   = effective_submit(f)
