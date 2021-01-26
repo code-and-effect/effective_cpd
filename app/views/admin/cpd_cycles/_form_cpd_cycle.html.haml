@@ -1,15 +1,37 @@
 = effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
-  = f.text_field :title, hint: 'The title of your cpd cycle.'
+  = f.text_field :title,
+    hint: "The title of this cycle. Something like #{Time.zone.now.year} Continuing Professional Development"
 
-  = f.datetime_field :start_at
-  = f.datetime_field :end_at
+  = f.datetime_field :start_at, hint: 'The first date statements may be created in this cycle'
+  = f.datetime_field :end_at, hint: 'The last date statements may be created in this cycle'
 
-  = f.number_field :required_score
+  = f.number_field :required_score, hint: 'Statements require at least this many credits to submit'
 
   %h2 Categories
-  %p Please add or remove categories here. After pressing Save you can click on the Categories tab to add activities.
+  - if f.object.new_record?
+    %p Please add one or more categories
+  - else
+    %p
+      Click the
+      = link_to 'Activities', '#activities', 'data-toggle': 'tab'
+      tab to add activities to each category.
 
-  = f.has_many :cpd_categories, class: 'tight' do |fa|
-    = fa.text_field :title, label: false
+  %p
+    The max credits per cycle value determines the maximum number of
+    credits a statement from this cycle may earn through activities in this category.
+
+  %p
+    Any remaining credits will be carried forward to future cycles, upto the activity's max cycles can carry forward value.
+
+  = f.has_many :cpd_categories, class: 'tight' do |fc|
+    .card.mb-4
+      .card-body
+        .row
+          .col
+            = fc.text_field :title, label: 'Category title'
+            = fc.number_field :max_credits_per_cycle, hint: 'leave blank for no limit'
+
+          .col= fc.rich_text_area :body, required: true
+
 
   = effective_submit(f)

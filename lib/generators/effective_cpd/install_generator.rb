@@ -23,7 +23,6 @@ module EffectiveCpd
         @cpd_cycles_table_name = ':' + EffectiveCpd.cpd_cycles_table_name.to_s
         @cpd_categories_table_name = ':' + EffectiveCpd.cpd_categories_table_name.to_s
         @cpd_activities_table_name = ':' + EffectiveCpd.cpd_activities_table_name.to_s
-        @cpd_rules_table_name = ':' + EffectiveCpd.cpd_rules_table_name.to_s
 
         migration_template ('../' * 3) + 'db/migrate/01_create_effective_cpd.rb.erb', 'db/migrate/create_effective_cpd.rb'
       end

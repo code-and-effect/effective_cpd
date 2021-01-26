@@ -8,7 +8,6 @@ EffectiveCpd::Engine.routes.draw do
 
   namespace :admin do
     resources :cpd_cycles, except: [:show]
-    resources :cpd_categories, except: [:show]
     resources :cpd_activities, except: [:show]
   end
 

@@ -17,6 +17,7 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.references :cpd_cycle
 
       t.string :title
+      t.integer :max_credits_per_cycle
       t.integer :position
 
       t.datetime :updated_at
@@ -28,25 +29,17 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.references :cpd_category
 
       t.string :title
-
-      t.string :amount_description
-      t.string :amount2_description
-
-      t.datetime :updated_at
-      t.datetime :created_at
-    end
-
-    create_table :cpd_rules do |t|
-      t.references :cpd_cycle
-
-      t.string :ruleable_type
-      t.integer :ruleable_id
-
-      t.text :description
+      t.integer :position
 
       t.string :formula
+
+      t.string :amount_label
+      t.string :amount2_label
+
       t.integer :max_credits_per_cycle
       t.integer :max_cycles_can_carry_forward
+
+      t.boolean :requires_upload_file, default: false
 
       t.datetime :updated_at
       t.datetime :created_at

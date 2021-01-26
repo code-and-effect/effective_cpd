@@ -1,0 +1,22 @@
+= effective_form_with(model: [:admin, cpd_activity], engine: true) do |f|
+  - if inline_datatable?
+    = f.hidden_field :cpd_category_id
+  - else
+    - raise('unexpected')
+
+  .row
+    .col
+      = f.text_field :title, label: 'Activity Title'
+      = f.rich_text_area :body,
+        hint: 'include a description of the formula, like 15 hours of work equals one credit'
+
+      = f.number_field :max_credits_per_cycle
+      = f.number_field :max_cycles_can_carry_forward
+      = f.check_box :requires_upload_file
+    .col
+      = f.text_field :formula, hint: '(amount / 15) or (30) or (amount * 2) or (amount + (amount2 * 10))'
+      = f.text_field :amount_label, hint: 'hours of work, papers written or courses attended. required.'
+      = f.text_field :amount2_label, hint: 'continuing education units. optional unless used in formula.'
+
+
+  = effective_submit(f)

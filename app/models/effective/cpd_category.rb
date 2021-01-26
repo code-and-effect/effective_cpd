@@ -5,12 +5,15 @@ module Effective
     has_rich_text :body
     log_changes(to: :cpd_cycle) if respond_to?(:log_changes)
 
-    has_many :cpd_rules, as: :ruleable
-    accepts_nested_attributes_for :cpd_rules, allow_destroy: true
+    has_many :cpd_activities, -> { order(:position) }, inverse_of: :cpd_category, dependent: :destroy
+    accepts_nested_attributes_for :cpd_activities, allow_destroy: true
 
     effective_resource do
       title     :string
       position  :integer
+
+      # The maximum credits per cycle a statement. Nil for no limit
+      max_credits_per_cycle   :integer
 
       timestamps
     end
@@ -26,6 +29,7 @@ module Effective
 
     validates :title, presence: true
     validates :position, presence: true
+    validates :body, presence: true
 
     def to_s
       title.presence || 'category'
