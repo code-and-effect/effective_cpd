@@ -51,8 +51,8 @@ module Effective
     validates :formula, presence: true
     validates :position, presence: true
 
-    validates :max_credits_per_cycle, numericality: { greater_than: 0, allow_nil: true }
-    validates :max_cycles_can_carry_forward, numericality: { greater_than: 0, allow_nil: true }
+    validates :max_credits_per_cycle, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
+    validates :max_cycles_can_carry_forward, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
     validates :amount_label, if: -> { formula.to_s.gsub('amount2', '').include?('amount') },
       presence: { message: 'must be present when used in formula' }

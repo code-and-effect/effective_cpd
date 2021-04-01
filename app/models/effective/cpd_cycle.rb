@@ -17,7 +17,7 @@ module Effective
 
     effective_resource do
       # Acts as tokened
-      token                  :string, permitted: false
+      token                 :string, permitted: false
 
       title                 :string       # 2021 Continuing Professional Development
       start_at              :datetime

@@ -24,15 +24,15 @@ module Admin
       col :amount_label, label: 'Amount'
       col :amount2_label, label: 'Amount2'
 
-      col :max_credits_per_cycle, label: 'Credits' do |cpd_activity|
+      col :max_credits_per_cycle, label: cpd_credits_label.titleize do |cpd_activity|
         if cpd_activity.max_credits_per_cycle
           "max #{cpd_activity.max_credits_per_cycle}"
         end
       end
 
-      col :max_cycles_can_carry_forward, label: 'Carry' do |cpd_activity|
+      col :max_cycles_can_carry_forward, label: cpd_cycles_label.titleize do |cpd_activity|
         if cpd_activity.max_cycles_can_carry_forward
-          "upto #{cpd_activity.max_cycles_can_carry_forward}"
+          "max #{cpd_activity.max_cycles_can_carry_forward}"
         end
       end
 

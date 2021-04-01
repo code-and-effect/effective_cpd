@@ -15,9 +15,6 @@ module Effective
       # The maximum credits per cycle a statement. Nil for no limit
       max_credits_per_cycle   :integer
 
-      # Maximum number of cycles can carry forward
-      max_cycles_can_carry_forward  :integer
-
       timestamps
     end
 
@@ -33,7 +30,7 @@ module Effective
     validates :title, presence: true
     validates :position, presence: true
     validates :body, presence: true
-    validates :max_credits_per_cycle, numericality: { greater_than: 0, allow_nil: true }
+    validates :max_credits_per_cycle, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
     def to_s
       title.presence || 'category'

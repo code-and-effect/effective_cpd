@@ -1,8 +1,5 @@
 = effective_form_with(model: [:admin, cpd_activity], engine: true) do |f|
-  - if inline_datatable?
-    = f.hidden_field :cpd_category_id
-  - else
-    - raise('unexpected')
+  - raise('expected to be inside a datatable') unless inline_datatable?
 
   .row
     .col
@@ -17,7 +14,7 @@
 
       = f.number_field :max_cycles_can_carry_forward,
         label: "Max #{cpd_cycles_label} can carry forward",
-        hint: "leave blank for limitless carry forward each #{cpd_cycle_label} upto the activity or category max"
+        hint: "leave blank for no limit"
 
       = f.check_box :requires_upload_file
 
