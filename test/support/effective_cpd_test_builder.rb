@@ -11,6 +11,8 @@ module EffectiveCpdTestBuilder
       required_score: nil,
     )
 
+    cpd_cycle.all_steps_content = 'All Steps Content'
+
     category = build_cpd_category(cpd_cycle, 'Category A')
     build_cpd_activity(category, 'Activity 1')
     build_cpd_activity(category, 'Activity 2')

@@ -22,7 +22,7 @@ module Effective
     scope :sorted, -> { order(:position) }
 
     before_validation(if: -> { cpd_cycle.present? }) do
-      self.position ||= (cpd_cycle.cpd_categories.map { |obj| obj.position }.compact.max || -1) + 1
+      self.position ||= (cpd_cycle.cpd_categories.map(&:position).compact.max || -1) + 1
     end
 
     validates :cpd_cycle, presence: true

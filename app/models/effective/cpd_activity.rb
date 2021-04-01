@@ -37,7 +37,7 @@ module Effective
     scope :sorted, -> { order(:position) }
 
     before_validation(if: -> { cpd_category.present? }) do
-      self.position ||= (cpd_category.cpd_activities.map { |obj| obj.position }.compact.max || -1) + 1
+      self.position ||= (cpd_category.cpd_activities.map(&:position).compact.max || -1) + 1
     end
 
     before_validation(if: -> { cpd_category.present? }) do
@@ -71,7 +71,7 @@ module Effective
         self.errors.add(:formula, "may only contain amount, amount2 and 0-9 + - / * ( ) characters")
       else
         begin
-          score(amount: 0, amount2: 0, skip_rescue: true)
+          score(amount: 0, amount2: 0)
         rescue Exception => e
           self.errors.add(:formula, e.message)
         end
@@ -82,9 +82,9 @@ module Effective
       title.presence || 'activity'
     end
 
-    def score(amount:, amount2:, skip_rescue: false)
+    def score(amount:, amount2:)
       equation = formula.to_s.gsub('amount2', amount2.to_s).gsub('amount', amount.to_s)
-      skip_rescue ? eval(equation).to_i : (eval(equation).to_i rescue 0)
+      eval(equation).to_i
     end
 
   end
