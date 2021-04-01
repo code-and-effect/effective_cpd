@@ -17,8 +17,10 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.references :cpd_cycle
 
       t.string :title
-      t.integer :max_credits_per_cycle
       t.integer :position
+
+      t.integer :max_credits_per_cycle
+      t.integer :max_cycles_can_carry_forward
 
       t.datetime :updated_at
       t.datetime :created_at

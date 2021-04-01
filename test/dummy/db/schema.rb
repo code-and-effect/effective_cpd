@@ -42,8 +42,9 @@ ActiveRecord::Schema.define(version: 3) do
   create_table "cpd_categories", force: :cascade do |t|
     t.bigint "cpd_cycle_id"
     t.string "title"
-    t.integer "max_credits_per_cycle"
     t.integer "position"
+    t.integer "max_credits_per_cycle"
+    t.integer "max_cycles_can_carry_forward"
     t.datetime "updated_at"
     t.datetime "created_at"
     t.index ["cpd_cycle_id"], name: "index_cpd_categories_on_cpd_cycle_id"
