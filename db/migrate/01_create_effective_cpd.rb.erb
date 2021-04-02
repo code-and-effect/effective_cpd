@@ -46,6 +46,7 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
 
       t.integer :max_credits_per_cycle
       t.integer :max_cycles_can_carry_forward
+      t.boolean :unavailable, default: false
 
       t.datetime :updated_at
       t.datetime :created_at

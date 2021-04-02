@@ -23,6 +23,9 @@ module Effective
       # Maximum number of cycles can carry forward
       max_cycles_can_carry_forward  :integer
 
+      # Cannot be entered in this cycle
+      unavailable     :boolean
+
       timestamps
     end
 
