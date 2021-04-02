@@ -54,6 +54,28 @@ module Effective
       end
     end
 
+    # The formula is determined by the cpd_activity's amount_label and amount2_label presence
+    validate(if: -> { formula.present? && activity? }) do
+      amount = formula.gsub('amount2', '').include?('amount')
+      amount2 = formula.include?('amount2')
+
+      cpd_activity = ruleable
+
+      if cpd_activity.amount_label.present? && cpd_activity.amount2_label.present?
+        self.errors.add(:formula, 'must include "amount"') unless amount.present?
+        self.errors.add(:formula, 'must include "amount2"') unless amount2.present?
+      elsif cpd_activity.amount_label.present?
+        self.errors.add(:formula, 'must include "amount"') unless amount.present?
+        self.errors.add(:formula, 'must not include "amount2"') if amount2.present?
+      elsif cpd_activity.amount2_label.present?
+        self.errors.add(:formula, 'must include "amount2"') unless amount2.present?
+        self.errors.add(:formula, 'must not include "amount"') if amount.present?
+      else
+        self.errors.add(:formula, 'must not include "amount"') if amount.present?
+        self.errors.add(:formula, 'must not include "amount2"') if amount2.present?
+      end
+    end
+
     # validates :amount_label, if: -> { formula.to_s.gsub('amount2', '').include?('amount') },
     #   presence: { message: 'must be present when used in formula' }
 
