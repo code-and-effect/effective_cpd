@@ -3,7 +3,7 @@ module Effective
     belongs_to :cpd_category
 
     has_rich_text :body
-    log_changes if respond_to?(:log_changes)
+    log_changes(to: :cpd_category) if respond_to?(:log_changes)
 
     # has_many :rules, -> { order(cycle_id: :desc) }, as: :ruleable, dependent: :delete_all
     # accepts_nested_attributes_for :rules, allow_destroy: true

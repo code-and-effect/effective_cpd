@@ -1,0 +1,5 @@
+= effective_form_with(model: [:admin, cpd_category], engine: true) do |f|
+  = f.text_field :title
+  = f.rich_text_area :body
+
+  = effective_submit(f)

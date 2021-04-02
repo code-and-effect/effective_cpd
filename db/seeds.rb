@@ -2,12 +2,12 @@ puts "Running effective_cpd seeds"
 
 now = Time.zone.now
 
-# if Rails.env.test?
-#   Effective::CpdCycle.delete_all
-#   Effective::CpdCategory.delete_all
-#   Effective::CpdActivity.delete_all
-#   Effective::CpdRule.delete_all
-# end
+if Rails.env.test?
+  Effective::CpdCycle.delete_all
+  Effective::CpdCategory.delete_all
+  Effective::CpdActivity.delete_all
+  Effective::CpdRule.delete_all
+end
 
 # Build the first CpdCycle
 cycle = Effective::CpdCycle.create!(
@@ -36,6 +36,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 0,
   title: 'Practicing applied biology',
   amount_label: 'points',
 )
@@ -50,6 +51,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 1,
   title: 'Influencing the practice of applied biology',
   amount_label: 'points',
 )
@@ -75,6 +77,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 0,
   title: 'Assessment and evaluation of professionals who are conducting applied biology',
   body: "e.g. determining who is best for the particular work.",
   amount_label: 'points',
@@ -89,6 +92,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 1,
   title: 'Overseeing projects or activities',
   body: "e.g. reviewing professional documents being carried out by professionals.",
   amount_label: 'points',
@@ -103,6 +107,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 2,
   title: 'Establishing financial (cost assessments) and time limits for projects, and scope of projects',
   amount_label: 'points',
 )
@@ -116,6 +121,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 3,
   title: 'Other',
   amount_label: 'points',
 )
@@ -154,6 +160,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 0,
   title: 'Online, in classroom settings, a combination, or other methods',
   amount_label: 'points',
 )
@@ -179,6 +186,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 1,
   title: 'Self-directed studies',
   amount_label: 'points',
 )
@@ -192,6 +200,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 2,
   title: 'Attendance at conferences, seminars, workshops, technical presentations, clinics',
   amount_label: 'points',
 )
@@ -205,6 +214,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 3,
   title: 'Formalized and structured on the job training',
   amount_label: 'points',
 )
@@ -218,6 +228,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 4,
   title: 'Attendance at meetings of technical, professional or managerial associations or societies',
   amount_label: 'points',
 )
@@ -231,6 +242,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 5,
   title: 'Structured discussion of technical or professional issues with peers',
   amount_label: 'points',
 )
@@ -256,6 +268,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 0,
   title: 'Conference, symposium, workshop, seminar meeting, course, training session, lunch presentations',
   amount_label: 'points',
 )
@@ -269,6 +282,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 1,
   title: 'Post-secondary education institutes, employers, government, professional associations, public organizations',
   amount_label: 'points',
 )
@@ -282,6 +296,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 2,
   title: 'Other',
   amount_label: 'points',
 )
@@ -307,6 +322,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 0,
   title: 'Development of published standards, practices, codes',
   amount_label: 'standard, practice, code',
 )
@@ -321,6 +337,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 1,
   title: 'Development of published policy(ies), reference(s), guidelines(s), guidance(s)',
   amount_label: 'standard, practice, guideline',
 )
@@ -335,6 +352,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 2,
   title: 'Publication of papers in scientific peer-reviewed journals',
   amount_label: 'hour',
 )
@@ -349,6 +367,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 3,
   title: 'Publication of articles in non-peer-reviewed journals',
   amount_label: 'article',
 )
@@ -363,6 +382,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 4,
   title: 'Publication of a books, a book chapter',
   amount_label: 'book or book chapter',
 )
@@ -377,6 +397,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 5,
   title: 'Peer-review of manuscripts for a scientific journal',
   amount_label: 'hour',
 )
@@ -403,6 +424,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 0,
   title: 'Appointment as a mentor to an in-training registrant, a less experienced applied biology professional, student',
   amount_label: 'mentee',
 )
@@ -417,6 +439,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 1,
   title: 'Service as an appointed and/or elected biology professional on a public, government, non-government and non-profit organization Board, Council, Committee, Working group etc.',
   amount_label: 'appointed position',
 )
@@ -431,6 +454,7 @@ Effective::CpdRule.create!(
 
 activity = Effective::CpdActivity.create!(
   cpd_category: category,
+  position: 2,
   title: 'Other',
   amount_label: 'point',
 )

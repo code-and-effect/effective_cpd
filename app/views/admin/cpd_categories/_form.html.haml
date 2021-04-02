@@ -1,0 +1,12 @@
+= tabs do
+  = tab 'Category' do
+    = render 'admin/cpd_categories/form_cpd_category', cpd_category: cpd_category
+
+    - if cpd_category.persisted?
+      %h2 Activities
+      - datatable = Admin::EffectiveCpdActivitiesDatatable.new(cpd_category_id: cpd_category.id)
+      = render_datatable(datatable, inline: true, simple: true)
+
+  - if cpd_category.persisted? && cpd_category.respond_to?(:log_changes_datatable)
+    = tab 'Logs' do
+      = render_datatable(cpd_category.log_changes_datatable)

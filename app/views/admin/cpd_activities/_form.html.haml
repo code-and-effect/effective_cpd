@@ -1,31 +1,20 @@
 = effective_form_with(model: [:admin, cpd_activity], engine: true) do |f|
-  - raise('expected to be inside a datatable') unless inline_datatable?
+  - if inline_datatable?
+    = f.hidden_field :cpd_category_id
+  - else
+    = f.select :cpd_category_id, Effective::CpdCategory.sorted.all, label: 'Category'
 
   .row
     .col
-      = f.text_field :title, label: 'Activity title'
-
-      = f.rich_text_area :body,
-        hint: "include a description of the formula, like 15 hours of work equals one #{cpd_credit_label}"
-
-      = f.number_field :max_credits_per_cycle,
-        label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
-        hint: 'leave blank for no limit'
-
-      = f.number_field :max_cycles_can_carry_forward,
-        label: "Max #{cpd_cycles_label} can carry forward",
-        hint: "leave blank for no limit"
-
-      = f.check_box :requires_upload_file
-
+      = f.text_field :title, label: 'Title'
+      = f.rich_text_area :body, label: "Body"
     .col
-      = f.text_field :formula,
-        hint: '30 or (amount / 15) or (amount + (amount2 * 10))'
-
       = f.text_field :amount_label,
-        hint: 'hours of work, papers written, courses attended. required when in formula.'
+        hint: 'hours of work, papers written, courses attended'
 
       = f.text_field :amount2_label,
-        hint: 'continuing education units. required when in formula.'
+        hint: 'continuing education units'
+
+      = f.check_box :requires_upload_file
 
   = effective_submit(f)

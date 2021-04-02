@@ -12,8 +12,6 @@ module Admin
       col :end_at
       col :required_score
 
-      col :cpd_categories, visible: false
-
       actions_col
     end
 
