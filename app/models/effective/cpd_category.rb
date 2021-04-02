@@ -1,40 +1,46 @@
 module Effective
   class CpdCategory < ActiveRecord::Base
-    belongs_to :cpd_cycle
-
     has_rich_text :body
-    log_changes(to: :cpd_cycle) if respond_to?(:log_changes)
+    log_changes if respond_to?(:log_changes)
 
     has_many :cpd_activities, -> { order(:position) }, inverse_of: :cpd_category, dependent: :destroy
     accepts_nested_attributes_for :cpd_activities, allow_destroy: true
+
+    # has_many :rules, -> { order(cycle_id: :desc) }, as: :ruleable, dependent: :delete_all
+    # accepts_nested_attributes_for :rules, allow_destroy: true
 
     effective_resource do
       title     :string
       position  :integer
 
-      # The maximum credits per cycle a statement. Nil for no limit
-      max_credits_per_cycle   :integer
-
       timestamps
     end
 
-    scope :deep, -> { with_rich_text_body.includes(:cpd_cycle) }
+    scope :deep, -> { with_rich_text_body.includes(:cpd_activities) }
     scope :sorted, -> { order(:position) }
 
-    before_validation(if: -> { cpd_cycle.present? }) do
-      self.position ||= (cpd_cycle.cpd_categories.map(&:position).compact.max || -1) + 1
+    before_validation do
+      self.position ||= (CpdCategory.all.maximum(:position) || -1) + 1
     end
-
-    validates :cpd_cycle, presence: true
 
     validates :title, presence: true
     validates :position, presence: true
     validates :body, presence: true
-    validates :max_credits_per_cycle, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
     def to_s
       title.presence || 'category'
     end
+
+  # You can pass a statement or a cycle...
+  # def rule_for(obj)
+  #   cycle_id = case obj
+  #     when Cycle      ; obj.id
+  #     when Statement  ; obj.cycle_id
+  #     when Integer    ; obj
+  #   end
+
+  #   rules.find { |rule| rule.cycle_id <= cycle_id }
+  # end
 
   end
 end

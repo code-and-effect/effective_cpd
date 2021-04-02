@@ -8,8 +8,11 @@ module Effective
     has_rich_text :submit_content
     has_rich_text :complete_content
 
-    has_many :cpd_categories, -> { order(:position) }, inverse_of: :cpd_cycle, dependent: :destroy
-    accepts_nested_attributes_for :cpd_categories, allow_destroy: true
+    has_many :cpd_rules, dependent: :delete_all
+    accepts_nested_attributes_for :cpd_rules, allow_destroy: true
+
+    # has_many :cpd_categories, -> { order(:position) }, inverse_of: :cpd_cycle, dependent: :destroy
+    # accepts_nested_attributes_for :cpd_categories, allow_destroy: true
 
     if respond_to?(:log_changes)
       log_changes
@@ -34,7 +37,7 @@ module Effective
       .with_rich_text_activities_content
       .with_rich_text_submit_content
       .with_rich_text_complete_content
-      .includes(cpd_categories: :cpd_activity)
+      .includes(:cpd_rules)
     }
 
     scope :sorted, -> { order(:start_at) }
@@ -43,14 +46,13 @@ module Effective
     scope :available, -> { where('start_at <= ? AND (end_at > ? OR end_at IS NULL)', Time.zone.now, Time.zone.now) }
     scope :completed, -> { where('end_at < ?', Time.zone.now) }
 
-    before_validation(if: -> { new_record? && cpd_categories.blank? }) do
+    before_validation(if: -> { new_record? && cpd_rules.blank? }) do
       cycle = CpdCycle.latest_cycle
       build_from_cycle(cycle: cycle) if cycle
     end
 
     validates :title, presence: true
     validates :start_at, presence: true
-    validates :cpd_categories, presence: true
 
     validate(if: -> { start_at.present? && end_at.present? }) do
       self.errors.add(:end_at, 'must be after the start date') unless end_at > start_at
@@ -71,18 +73,9 @@ module Effective
         self.send("#{rich_text}=", cycle.send(rich_text))
       end
 
-      # Categories
-      cycle.cpd_categories.each do |category|
-        attributes = category.dup.attributes.except('cpd_cycle_id')
-        cpd_category = self.cpd_categories.build(attributes)
-        cpd_category.body = category.body
-
-        # Category Activities
-        category.cpd_activities.each do |activity|
-          attributes = activity.dup.attributes.compact.except('cpd_cycle_id', 'cpd_category_id')
-          cpd_activity = cpd_category.cpd_activities.build(attributes)
-          cpd_activity.body = activity.body
-        end
+      cycle.cpd_rules.each do |rule|
+        attributes = rule.dup.attributes.except('cpd_cycle_id')
+        self.cpd_rules.build(attributes)
       end
 
       self

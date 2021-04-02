@@ -29,3 +29,6 @@ class ActiveSupport::TestCase
   include EffectiveCpdTestBuilder
   include EffectiveCpdTestHelper
 end
+
+# Load the seeds
+load "#{__dir__}/../db/seeds.rb"

@@ -7,8 +7,13 @@ class CpdCycleTest < ActiveSupport::TestCase
     assert cpd_cycle.valid?
   end
 
+  test 'latest cycle is present' do
+    latest_cycle = Effective::CpdCycle.latest_cycle # From seeds
+    assert latest_cycle.present?
+  end
+
   test 'build from latest' do
-    existing = build_effective_cpd_cycle()
+    existing = Effective::CpdCycle.latest_cycle
     existing.all_steps_content = "Test 123"
     existing.required_score = 100
     existing.save!
@@ -24,10 +29,9 @@ class CpdCycleTest < ActiveSupport::TestCase
     assert cpd_cycle.all_steps_content.present?
     assert cpd_cycle.all_steps_content.to_s.include?('Test 123')
 
-    assert cpd_cycle.cpd_categories.present?
-    assert_equal existing.cpd_categories.length, cpd_cycle.cpd_categories.length
-
-    assert_equal Effective::CpdActivity.where(cpd_cycle: existing).count, Effective::CpdActivity.where(cpd_cycle: cpd_cycle).count
+    assert cpd_cycle.cpd_rules.present?
+    assert_equal existing.cpd_rules.length, cpd_cycle.cpd_rules.length
+    assert_equal existing.cpd_rules.map(&:ruleable), cpd_cycle.cpd_rules.map(&:ruleable)
   end
 
 end
