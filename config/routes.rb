@@ -10,7 +10,7 @@ EffectiveCpd::Engine.routes.draw do
     resources :cpd_categories, except: [:show]
     resources :cpd_activities, except: [:show]
     resources :cpd_cycles, except: [:show]
-    resources :cpd_rules, except: [:show]
+    resources :cpd_rules, only: [:index]
   end
 
 end

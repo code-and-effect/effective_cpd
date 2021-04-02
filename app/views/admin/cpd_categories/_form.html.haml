@@ -1,9 +1,18 @@
 = tabs do
   = tab 'Category' do
+    - if cpd_category.persisted?
+      .alert.alert-warning
+        Changes to categories and activities will be displayed in all #{cpd_cycles_label}.
+
     = render 'admin/cpd_categories/form_cpd_category', cpd_category: cpd_category
 
     - if cpd_category.persisted?
       %h2 Activities
+      %p
+        After adding an activity here, please visit any existing
+        = link_to(cpd_cycles_label.titleize + ' Settings', effective_cpd.admin_cpd_cycles_path)
+        pages and build a rule before it will be displayed.
+
       - datatable = Admin::EffectiveCpdActivitiesDatatable.new(cpd_category_id: cpd_category.id)
       = render_datatable(datatable, inline: true, simple: true)
 

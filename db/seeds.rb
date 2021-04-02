@@ -46,7 +46,7 @@ Effective::CpdRule.create!(
   ruleable: activity,
   formula: 'amount',
   credit_description: '1 point equals 1 CPD point',
-  max_cycles_can_carry_forward: 0
+  max_cycles_can_carry_forward: nil
 )
 
 activity = Effective::CpdActivity.create!(
@@ -60,7 +60,7 @@ Effective::CpdRule.create!(
   ruleable: activity,
   formula: 'amount',
   credit_description: '1 point equals 1 CPD point',
-  max_cycles_can_carry_forward: 0
+  max_cycles_can_carry_forward: nil
 )
 
 # Management
@@ -87,7 +87,7 @@ Effective::CpdRule.create!(
   ruleable: activity,
   formula: 'amount',
   credit_description: '1 point equals 1 CPD point',
-  max_cycles_can_carry_forward: 0
+  max_cycles_can_carry_forward: nil
 )
 
 activity = Effective::CpdActivity.create!(
@@ -102,7 +102,7 @@ Effective::CpdRule.create!(
   ruleable: activity,
   formula: 'amount',
   credit_description: '1 point equals 1 CPD point',
-  max_cycles_can_carry_forward: 0
+  max_cycles_can_carry_forward: nil
 )
 
 activity = Effective::CpdActivity.create!(
@@ -116,7 +116,7 @@ Effective::CpdRule.create!(
   ruleable: activity,
   formula: 'amount',
   credit_description: '1 point equals 1 CPD point',
-  max_cycles_can_carry_forward: 0
+  max_cycles_can_carry_forward: nil
 )
 
 activity = Effective::CpdActivity.create!(
@@ -130,7 +130,7 @@ Effective::CpdRule.create!(
   ruleable: activity,
   formula: 'amount',
   credit_description: '1 point equals 1 CPD point',
-  max_cycles_can_carry_forward: 0
+  max_cycles_can_carry_forward: nil
 )
 
 # Formal Learning

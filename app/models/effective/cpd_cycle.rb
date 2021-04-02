@@ -62,6 +62,10 @@ module Effective
       order(id: :desc).first
     end
 
+    def to_s
+      title.presence || 'New CPD Cycle'
+    end
+
     def build_from_cycle(cycle:)
       raise('expected a CpdCycle') unless cycle.kind_of?(CpdCycle)
 
@@ -81,8 +85,12 @@ module Effective
       self
     end
 
-    def to_s
-      title.presence || 'New CPD Cycle'
+    # Find or build
+    def rule_for(ruleable)
+      raise('expected a CpdCategory or CpdActivity') unless ruleable.kind_of?(CpdActivity) || ruleable.kind_of?(CpdCategory)
+
+      rule = cpd_rules.find { |rule| rule.ruleable == ruleable }
+      rule ||= cpd_rules.build(ruleable: ruleable)
     end
 
     def available?

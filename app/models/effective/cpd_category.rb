@@ -31,16 +31,5 @@ module Effective
       title.presence || 'category'
     end
 
-  # You can pass a statement or a cycle...
-  # def rule_for(obj)
-  #   cycle_id = case obj
-  #     when Cycle      ; obj.id
-  #     when Statement  ; obj.cycle_id
-  #     when Integer    ; obj
-  #   end
-
-  #   rules.find { |rule| rule.cycle_id <= cycle_id }
-  # end
-
   end
 end

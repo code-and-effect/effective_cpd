@@ -13,50 +13,9 @@
 
     - if latest_cycle.present?
       = f.static_field :continue_from, value: latest_cycle,
-        hint: "The next #{cpd_cycle_label} will be carried forward from last one. Please make sure the above #{cpd_cycle_label} is the most recent one."
+        hint: "The next #{cpd_cycle_label} will be carried forward from last one. Please make sure this #{cpd_cycle_label} is the most recent one."
 
-    = f.submit "Save and Create Next #{cpd_cycle_label.titleize}"
+    = f.submit("Save and Create Next #{cpd_cycle_label.titleize}")
 
-    -# = f.number_field :max_credits_per_cycle,
-    -#   label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
-    -#   hint: 'leave blank for no limit'
-
-    -# = f.number_field :max_cycles_can_carry_forward,
-    -#   label: "Max #{cpd_cycles_label} can carry forward",
-    -#   hint: "leave blank for no limit"
-
-    -# = f.text_field :formula,
-    -#   hint: '30 or (amount / 15) or (amount + (amount2 * 10))'
-
-
-  -# - if f.object.persisted?
-  -#   = f.number_field :required_score,
-  -#     hint: "Statements require at least this many #{cpd_credits_label} to submit"
-
-  -#   %h2 Categories
-
-  -#   %p
-  -#     Click the Activities tab to add activities to each category.
-
-  -#   %p
-  -#     The max #{cpd_credits_label} per #{cpd_cycle_label} value determines the maximum number of
-  -#     #{cpd_credits_label} a statement from this #{cpd_cycle_label} may earn through activities
-  -#     in this category.
-
-  -#   %p
-  -#     Any remaining #{cpd_credits_label} will be carried forward to future
-  -#     #{cpd_cycles_label}, upto the activity's max #{cpd_cycles_label} can carry forward value.
-
-  -#   = f.has_many :cpd_categories, class: 'tight' do |fc|
-  -#     .card.mb-4
-  -#       .card-body
-  -#         .row
-  -#           .col
-  -#             = fc.text_field :title, label: 'Category title'
-  -#             = fc.number_field :max_credits_per_cycle,
-  -#               label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
-  -#               hint: 'leave blank for no limit'
-
-  -#           .col= fc.rich_text_area :body, required: true
-
-  -#   = f.submit
+  - if f.object.persisted?
+    = f.submit

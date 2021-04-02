@@ -32,11 +32,12 @@ module Effective
     scope :deep, -> { includes(:cpd_cycle, :ruleable) }
     scope :categories, -> { where(ruleable_type: 'Effective::CpdCategory') }
     scope :activities, -> { where(ruleable_type: 'Effective::CpdActivity') }
+    scope :unavailable, -> { where(unavailable: true) }
 
-    validates :cpd_cycle_id, uniqueness: { scope: [:ruleable_id, :ruleable_type] }
+    #validates :cpd_cycle_id, uniqueness: { scope: [:ruleable_id, :ruleable_type] }
     validates :credit_description, presence: true
-    validates :max_credits_per_cycle, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
-    validates :max_cycles_can_carry_forward, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
+    validates :max_credits_per_cycle, numericality: { greater_than: 0, allow_nil: true }
+    validates :max_cycles_can_carry_forward, numericality: { greater_than: 0, allow_nil: true }
 
     validates :formula, presence: true, if: -> { activity? }
     validates :formula, absence: true, if: -> { category? }

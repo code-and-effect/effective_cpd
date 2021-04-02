@@ -1,0 +1,56 @@
+- edit_path = effective_cpd.edit_admin_cpd_category_path(cpd_category)
+
+= effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
+  %h2= cpd_category
+  %p= cpd_category.body
+  %p= link_to 'Edit Category', edit_path, target: '_blank'
+
+  = f.fields_for :cpd_rules, cpd_cycle.rule_for(cpd_category) do |fc|
+    = fc.number_field :max_credits_per_cycle,
+      label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
+      hint: "The maximum number of #{cpd_credits_label} that may be earned in this category for this #{cpd_cycle_label}. Leave blank for no limit."
+
+    = fc.text_field :credit_description,
+      hint: "A simple description of the maximum #{cpd_credits_label} and carry forward policy of activities for this category"
+
+    = fc.check_box :unavailable, label: "Unavailable in this #{cpd_cycle_label}"
+
+  = f.submit
+
+= effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
+  %h2 Activities
+  - rules = cpd_category.cpd_activities.map { |activity| cpd_cycle.rule_for(activity) }
+
+  = f.fields_for :cpd_rules, rules do |fa|
+    - activity = fa.object.ruleable
+
+    = card do
+      .row
+        .col
+          %h5.card-title= activity
+          - if activity.body.present?
+            %p= activity.body
+
+          %p= link_to 'Edit Activity', edit_path, target: '_blank'
+
+          = f.static_field :amount_label, value: activity.amount_label.presence || '-'
+          = f.static_field :amount2_label, value: activity.amount2_label.presence || '-'
+          = f.static_field :requires_upload_file, value: (activity.requires_upload_file ? 'Yes' : '-')
+
+        .col
+          = fa.text_field :formula, hint: cpd_rule_formula_hint(activity)
+
+          = fa.text_field :credit_description, label: "#{cpd_credits_label.titleize} description",
+            hint: "A simple description of the formula and its #{cpd_credits_label} calculation"
+
+          = fa.number_field :max_credits_per_cycle,
+            label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
+            hint: 'leave blank for no limit'
+
+          = fa.number_field :max_cycles_can_carry_forward,
+            label: "Max #{cpd_cycles_label} can carry forward",
+            hint: "leave blank for no limit"
+
+          = fa.check_box :unavailable, label: "Unavailable in this #{cpd_cycle_label}"
+
+  = f.submit
