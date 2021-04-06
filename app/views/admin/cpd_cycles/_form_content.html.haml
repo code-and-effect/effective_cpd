@@ -12,12 +12,17 @@
   .card.mb-4
     .card-body
       %h5.card-title Activities Step
-      = f.rich_text_area :activities_content, label: false, hint: 'displayed on the vote step only'
+      = f.rich_text_area :activities_content, label: false, hint: 'displayed on the activities step only'
 
   .card.mb-4
     .card-body
-      %h5.card-title Review and Submit Step
-      = f.rich_text_area :submit_content, label: false, hint: 'displayed on the review and submit step only'
+      %h5.card-title Agreements Step
+      = f.rich_text_area :agreements_content, label: false, hint: 'displayed on the agreements step only'
+
+  .card.mb-4
+    .card-body
+      %h5.card-title Submit Step
+      = f.rich_text_area :submit_content, label: false, hint: 'displayed on the submit step only'
 
   .card.mb-4
     .card-body

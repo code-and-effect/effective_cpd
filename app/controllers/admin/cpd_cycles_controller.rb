@@ -5,10 +5,6 @@ module Admin
 
     include Effective::CrudController
 
-    if (config = EffectiveCpd.layout)
-      layout(config.kind_of?(Hash) ? config[:admin] : config)
-    end
-
     def permitted_params
       params.require(:effective_cpd_cycle).permit!
     end

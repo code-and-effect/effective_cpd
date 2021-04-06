@@ -1,12 +1,12 @@
 module Effective
   class CpdCycle < ActiveRecord::Base
-    acts_as_tokened
-
     has_rich_text :all_steps_content    # Update build_from_cycle() below if these change
     has_rich_text :start_content
     has_rich_text :activities_content
+    has_rich_text :agreements_content
     has_rich_text :submit_content
     has_rich_text :complete_content
+
 
     has_many :cpd_rules, dependent: :delete_all
     accepts_nested_attributes_for :cpd_rules, allow_destroy: true
@@ -14,15 +14,15 @@ module Effective
     # has_many :cpd_categories, -> { order(:position) }, inverse_of: :cpd_cycle, dependent: :destroy
     # accepts_nested_attributes_for :cpd_categories, allow_destroy: true
 
+    has_many :cpd_statements
+
     if respond_to?(:log_changes)
       log_changes
     end
 
     effective_resource do
-      # Acts as tokened
-      token                 :string, permitted: false
-
       title                 :string       # 2021 Continuing Professional Development
+
       start_at              :datetime
       end_at                :datetime
 
@@ -106,12 +106,10 @@ module Effective
     end
 
     def available_date
-      if start_at && end_at && start_at.to_date == end_at.to_date
-        "#{start_at.strftime('%F at %H:%M')} to #{end_at.strftime('%H:%M')}"
-      elsif start_at && end_at
-        "#{start_at.strftime('%F at %H:%M')} to #{end_at.strftime('%F %H:%M')}"
+      if start_at && end_at
+        "#{start_at.strftime('%F')} to #{end_at.strftime('%F')}"
       elsif start_at
-        "#{start_at.strftime('%F at %H:%M')}"
+        "#{start_at.strftime('%F')}"
       end
     end
 

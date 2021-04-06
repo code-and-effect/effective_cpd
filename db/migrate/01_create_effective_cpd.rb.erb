@@ -8,7 +8,6 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
 
       t.integer :required_score
 
-      t.string :token
       t.datetime :updated_at
       t.datetime :created_at
     end
@@ -47,6 +46,44 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.integer :max_credits_per_cycle
       t.integer :max_cycles_can_carry_forward
       t.boolean :unavailable, default: false
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
+    create_table <%= @cpd_statement_activities_table_name %> do |t|
+      t.references :cpd_statement
+      t.references :cpd_activity
+      t.references :original
+
+      t.integer :amount
+      t.integer :amount2
+
+      t.text :description
+
+      t.integer :carry_over
+      t.integer :score
+      t.integer :carry_forward
+
+      t.text :reduced_messages
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
+    create_table <%= @cpd_statements_table_name %> do |t|
+      t.references :cpd_cycle
+
+      t.integer :user_id
+      t.string :user_type
+
+      t.string :token
+
+      t.integer :score
+
+      t.datetime :completed_at
+
+      t.text :wizard_steps
 
       t.datetime :updated_at
       t.datetime :created_at

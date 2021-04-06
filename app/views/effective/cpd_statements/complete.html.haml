@@ -1,0 +1,10 @@
+= render('layout') do
+  %h1= resource.cpd_cycle
+
+  - if resource.cpd_cycle.all_steps_content.present?
+    .mb-2= resource.cpd_cycle.all_steps_content
+
+  - if resource.cpd_cycle.complete_content.present?
+    .mb-2= resource.cpd_cycle.complete_content
+
+  = link_to 'Home', root_url, class: 'btn btn-primary'

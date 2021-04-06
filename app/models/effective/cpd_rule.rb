@@ -76,18 +76,6 @@ module Effective
       end
     end
 
-    # validates :amount_label, if: -> { formula.to_s.gsub('amount2', '').include?('amount') },
-    #   presence: { message: 'must be present when used in formula' }
-
-    # validates :amount_label, unless: -> { formula.to_s.gsub('amount2', '').include?('amount') },
-    #   absence: { message: 'must be blank unless used in formula' }
-
-    # validates :amount2_label, if: -> { formula.to_s.include?('amount2') },
-    #   presence: { message: 'must be present when used in formula' }
-
-    # validates :amount2_label, unless: -> { formula.to_s.include?('amount2') },
-    #   absence: { message: 'must be blank unless used in formula' }
-
     def to_s
       formula.presence || 'category'
     end

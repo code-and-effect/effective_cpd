@@ -3,6 +3,8 @@ EffectiveCpd.setup do |config|
   config.cpd_categories_table_name = :cpd_categories
   config.cpd_activities_table_name = :cpd_activities
   config.cpd_rules_table_name = :cpd_rules
+  config.cpd_statement_activities_table_name = :cpd_statement_activities
+  config.cpd_statements_table_name = :cpd_statements
 
   # Layout Settings
   # Configure the Layout per controller, or all at once

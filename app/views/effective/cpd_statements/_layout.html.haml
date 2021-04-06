@@ -1,0 +1,32 @@
+.row
+  .col-3
+    = render_wizard_sidebar(resource)
+
+    - cpd_cycle = resource.cpd_cycle
+    - start_at = cpd_cycle.start_at
+    - end_at = cpd_cycle.end_at
+    - last_3_cycles = Effective::CpdCycle.sorted.where('start_at <= ?', start_at).last(3)
+    - last_3_scores = Effective::CpdStatement.where(cpd_cycle: last_3_cycles, user: resource.user).sum(&:score)
+
+    %table.table.mt-4
+      %tbody
+        - if end_at.present? && !resource.completed?
+          %tr{title: "#{cpd_cycle} is available #{cpd_cycle.available_date}"}
+            %td= ((end_at - Time.zone.now) / 1.day).to_i
+            %td days left to submit
+
+        %tr
+          %td= resource.score.to_i
+
+          %td
+            - if cpd_cycle.required_score.to_i > 0
+              #{cpd_credits_label} out of #{cpd_cycle.required_score} required in current #{cpd_cycle_label}
+            - else
+              #{cpd_credits_label} in current #{cpd_cycle_label}
+
+        %tr
+          %td= last_3_scores.to_i
+          %td #{cpd_credits_label} in last 3 #{cpd_cycles_label} (including this #{cpd_cycle_label})
+
+  .col-9
+    = yield
