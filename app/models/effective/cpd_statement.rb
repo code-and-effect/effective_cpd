@@ -37,7 +37,7 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { includes(:cpd_cycle, :user, :cpd_statement_activities) }
+    scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:cpd_activity]) }
     scope :completed, -> { where.not(completed_at: nil) }
 
     before_validation(if: -> { new_record? }) do
@@ -75,8 +75,8 @@ module Effective
 
     # {category1 => 20, category2 => 15}
     def score_per_category
-      Hash.new(0).tap do |scores|
-        cpd_statement_activities.each { |activity| scores[activity.cpd_category] += activity.score }
+      @score_per_category ||= Hash.new(0).tap do |scores|
+        cpd_statement_activities.each { |activity| scores[activity.cpd_activity.cpd_category_id] += activity.score.to_i }
       end
     end
 

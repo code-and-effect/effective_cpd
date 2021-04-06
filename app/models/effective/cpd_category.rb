@@ -16,7 +16,7 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { with_rich_text_body.includes(:cpd_activities) }
+    scope :deep, -> { with_rich_text_body.includes(cpd_activities: [:rich_text_body]) }
     scope :sorted, -> { order(:position) }
 
     before_validation do

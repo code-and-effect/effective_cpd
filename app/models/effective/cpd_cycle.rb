@@ -7,7 +7,6 @@ module Effective
     has_rich_text :submit_content
     has_rich_text :complete_content
 
-
     has_many :cpd_rules, dependent: :delete_all
     accepts_nested_attributes_for :cpd_rules, allow_destroy: true
 
@@ -89,7 +88,7 @@ module Effective
     def rule_for(ruleable)
       raise('expected a CpdCategory or CpdActivity') unless ruleable.kind_of?(CpdActivity) || ruleable.kind_of?(CpdCategory)
 
-      rule = cpd_rules.find { |rule| rule.ruleable == ruleable }
+      rule = cpd_rules.find { |rule| rule.ruleable_id == ruleable.id && rule.ruleable_type == ruleable.class.name }
       rule ||= cpd_rules.build(ruleable: ruleable)
     end
 

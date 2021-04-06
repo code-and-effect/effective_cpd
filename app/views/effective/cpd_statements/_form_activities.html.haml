@@ -1,0 +1,41 @@
+- categories = Effective::CpdCategory.deep.sorted
+
+= vertical_tabs do
+  .statement-activity-content.tab-pane
+    -# The javascript will load the .statement-activity-form content into here
+
+  - categories.each do |category|
+    - rule = cpd_statement.cpd_cycle.rule_for(category)
+    - next if rule.unavailable?
+
+    = tab(category) do
+      %h3
+        #{category}
+        %small
+          = cpd_statement.score_per_category[category.id].to_i
+          - if rule.max_credits_per_cycle.present?
+            = '/'
+            = rule.max_credits_per_cycle
+
+      .mb-3
+        %strong Description
+        = category.body
+
+      .mb-3
+        %strong #{cpd_credits_label.titleize} Calculation
+        %br
+        = rule.credit_description
+
+      %div
+        %strong Select an Activity to Continue
+
+      %ol
+        - category.cpd_activities.each do |activity|
+          - next if cpd_statement.cpd_cycle.rule_for(activity).unavailable?
+
+          %li
+            = link_to(activity, '#', 'data-cpd-show-activity': true)
+
+            .statement-activity-form{style: 'display: none;'}
+              - cpd_statement_activity = cpd_statement.cpd_statement_activities.build(cpd_activity: activity)
+              = render('form_activity', cpd_statement_activity: cpd_statement_activity)

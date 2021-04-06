@@ -7,7 +7,8 @@
   - if resource.cpd_cycle.activities_content.present?
     .mb-2= resource.cpd_cycle.activities_content
 
+  = render('form_activities', cpd_statement: resource)
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
-
     = f.submit 'Save and Continue', center: true

@@ -46,6 +46,11 @@ module Effective
       (original || self).cpd_statement.cpd_cycle
     end
 
+    # Will display as read-only on form
+    def locked?
+      is_carry_over? || cpd_statement&.completed?
+    end
+
     def to_s
       "id=#{id}, score=#{score}, carry_foward=#{carry_forward}, carry_from_last=#{carry_over}, original=#{original&.id}"
     end
