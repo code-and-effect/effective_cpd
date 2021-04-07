@@ -54,7 +54,7 @@ module Effective
       when :activities
         params.require(:effective_cpd_statement).permit(
           :current_step, cpd_statement_activities_attributes: [
-            :cpd_activity_id, :amount, :amount2, :description, files: []
+            :id, :cpd_category_id, :cpd_activity_id, :amount, :amount2, :description, files: []
           ]
         )
       when :agreements

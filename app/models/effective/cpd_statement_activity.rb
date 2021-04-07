@@ -1,6 +1,7 @@
 module Effective
   class CpdStatementActivity < ActiveRecord::Base
     belongs_to :cpd_statement
+    belongs_to :cpd_category
     belongs_to :cpd_activity
 
     belongs_to :original, class_name: 'CpdStatementActivity', optional: true # If this is a Carryover, the original_statement_activity will be set.
@@ -29,7 +30,7 @@ module Effective
 
     serialize :reduced_messages, Hash
 
-    scope :deep, -> { includes(:cpd_statement, :cpd_activity, :original) }
+    scope :deep, -> { includes(:cpd_statement, :cpd_category, :cpd_activity, :original) }
     scope :sorted, -> { order(:id) }
 
     validates :original, presence: true, if: -> { carry_over.to_i > 0 }

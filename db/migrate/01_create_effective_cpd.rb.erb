@@ -54,6 +54,7 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
     create_table <%= @cpd_statement_activities_table_name %> do |t|
       t.references :cpd_statement
       t.references :cpd_activity
+      t.references :cpd_category
       t.references :original
 
       t.integer :amount

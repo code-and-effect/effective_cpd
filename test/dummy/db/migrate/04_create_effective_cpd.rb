@@ -52,5 +52,44 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
+    create_table :cpd_statement_activities do |t|
+      t.references :cpd_statement
+      t.references :cpd_category
+      t.references :cpd_activity
+      t.references :original
+
+      t.integer :amount
+      t.integer :amount2
+
+      t.text :description
+
+      t.integer :carry_over
+      t.integer :score
+      t.integer :carry_forward
+
+      t.text :reduced_messages
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
+    create_table :cpd_statements do |t|
+      t.references :cpd_cycle
+
+      t.integer :user_id
+      t.string :user_type
+
+      t.string :token
+
+      t.integer :score
+
+      t.datetime :completed_at
+
+      t.text :wizard_steps
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
   end
 end

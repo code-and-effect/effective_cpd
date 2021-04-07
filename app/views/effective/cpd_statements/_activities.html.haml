@@ -1,0 +1,54 @@
+.row
+  .col-8
+  .col-2
+    %strong= cpd_credits_label.titleize
+  .col-2
+    %strong Carry Forward
+
+- cpd_statement.cpd_statement_activities.group_by { |activity| activity.cpd_category }.each do |category, statement_activities|
+  - rule = cpd_statement.cpd_cycle.rule_for(category)
+
+  .statement-activity-category
+    %h3
+      #{category}
+      %small
+        = cpd_statement.score_per_category[category.id].to_i
+        - if rule.max_credits_per_cycle.present?
+          = '/'
+          = rule.max_credits_per_cycle
+
+    .progress.my-2{style: 'height: 2px;'}
+      - valuenow = cpd_statement.score_per_category[category.id]
+      - valuemax = (rule.max_credits_per_cycle || 1)
+      - width = (valuenow / valuemax) * 100
+
+      .progress-bar{role: 'progressbar', style: "width: #{width}%", 'aria-valuenow': valuenow, 'aria-valuemin': 0, 'aria-valuemax': valuemax}
+
+    - statement_activities.each do |statement_activity|
+      .row.statement-activity
+        .col-8
+          = icon('plus')
+          = statement_activity.cpd_activity
+          - if statement_activity.is_carry_over?
+            %br
+            %small carried forward from #{statement_activity.original_cycle}
+
+        .col-2
+          - if statement_activity.reduced_messages.present?
+            %span{title: statement_activity.reduced_messages.values.join("\n\n")}= "#{statement_activity.score} *"
+          - else
+            = statement_activity.score.to_i
+
+        .col-2
+          = statement_activity.carry_forward.to_i
+
+      .row.statement-activity-form
+        .col.border= render('form_activity', cpd_statement_activity: statement_activity)
+
+%hr
+
+.row
+  .col-8
+    %strong Total #{cpd_credits_label} in statement
+  .col-2= cpd_statement.score.to_i
+  .col-2= cpd_statement.carry_forward.to_i

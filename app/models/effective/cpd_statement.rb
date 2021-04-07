@@ -44,9 +44,9 @@ module Effective
       self.user ||= current_user
     end
 
-    validates :user_id, uniqueness: {
-      scope: :cpd_cycle_id, allow_blank: true, message: 'statement already exists'
-    }
+    # validates :user_id, uniqueness: {
+    #   scope: :cpd_cycle_id, allow_blank: true, message: 'statement already exists'
+    # }
 
     # Activities / Final validations
     # validates_numericality_of :score,
@@ -70,13 +70,13 @@ module Effective
     end
 
     def carry_forward
-      cpd_statement_activities.sum(&:carry_forward)
+      cpd_statement_activities.sum { |activity| activity.carry_forward.to_i }
     end
 
     # {category1 => 20, category2 => 15}
     def score_per_category
       @score_per_category ||= Hash.new(0).tap do |scores|
-        cpd_statement_activities.each { |activity| scores[activity.cpd_activity.cpd_category_id] += activity.score.to_i }
+        cpd_statement_activities.each { |activity| scores[activity.cpd_category_id] += activity.score.to_i }
       end
     end
 
