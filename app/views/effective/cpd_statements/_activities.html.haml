@@ -25,7 +25,7 @@
       .progress-bar{role: 'progressbar', style: "width: #{width}%", 'aria-valuenow': valuenow, 'aria-valuemin': 0, 'aria-valuemax': valuemax}
 
     - statement_activities.each do |statement_activity|
-      .row.statement-activity
+      .statement-activity.row
         .col-8
           = icon('plus')
           = statement_activity.cpd_activity
@@ -42,8 +42,8 @@
         .col-2
           = statement_activity.carry_forward.to_i
 
-      .row.statement-activity-form
-        .col.border= render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity)
+      -# .row.statement-activity-form
+      -#   .col.border= render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity)
 
 %hr
 

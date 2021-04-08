@@ -1,17 +1,25 @@
-= render('layout') do
-  %h1= resource.cpd_cycle
+#cpd-statement-activities
+  .row
+    .col-3
+    .col-9
+      %h1= resource.cpd_cycle
 
-  - if resource.cpd_cycle.all_steps_content.present?
-    .mb-2= resource.cpd_cycle.all_steps_content
+  .activities-index
+    = render('layout') do
+      - if resource.cpd_cycle.all_steps_content.present?
+        .mb-2= resource.cpd_cycle.all_steps_content
 
-  - if resource.cpd_cycle.activities_content.present?
-    .mb-2= resource.cpd_cycle.activities_content
+      - if resource.cpd_cycle.activities_content.present?
+        .mb-2= resource.cpd_cycle.activities_content
 
-  - if resource.cpd_statement_activities.present?
-    = render('activities', cpd_statement: resource)
+      - if resource.cpd_statement_activities.present?
+        = render('activities', cpd_statement: resource)
 
-  = render('activities_new', cpd_statement: resource)
+      .mt-3= link_to 'Add Activity', '#', 'data-cpd-new-activity': true, class: 'btn btn-primary'
 
-  = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
-    = f.hidden_field :current_step
-    = f.submit 'Save and Continue', center: true
+      = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+        = f.hidden_field :current_step
+        = f.submit 'Save and Continue', center: true
+
+  .activities-new{style: 'display: none;'}
+    = render('activities_new', cpd_statement: resource)
