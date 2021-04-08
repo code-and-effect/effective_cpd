@@ -1,5 +1,7 @@
 module Effective
   class CpdStatementActivity < ActiveRecord::Base
+    attr_accessor :max_score
+
     belongs_to :cpd_statement
     belongs_to :cpd_category
     belongs_to :cpd_activity

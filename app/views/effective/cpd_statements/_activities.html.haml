@@ -42,8 +42,8 @@
         .col-2
           = statement_activity.carry_forward.to_i
 
-      -# .row.statement-activity-form
-      -#   .col.border= render('form_activity', cpd_statement_activity: statement_activity)
+      .row.statement-activity-form
+        .col.border= render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity)
 
 %hr
 

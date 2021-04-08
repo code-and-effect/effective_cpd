@@ -88,8 +88,16 @@ module Effective
       ruleable.kind_of?(CpdCategory)
     end
 
-    def score(amount:, amount2:)
-      equation = formula.to_s.gsub('amount2', amount2.to_s).gsub('amount', amount.to_s)
+    def score(cpd_statement_activity:)
+      raise('cpd_cycles must match') unless cpd_statement_activity.cpd_statement.cpd_cycle_id == cpd_cycle_id
+      raise('cpd_activities must match') unless cpd_statement_activity.cpd_activity_id == ruleable_id
+
+      return cpd_statement_activity.carry_over if cpd_statement_activity.is_carry_over?
+
+      equation = formula
+        .gsub('amount2', cpd_statement_activity.amount2.to_s)
+        .gsub('amount', cpd_statement_activity.amount.to_s)
+
       eval(equation).to_i
     end
 

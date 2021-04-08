@@ -1,5 +1,7 @@
 module Effective
   class CpdScorer
+    include EffectiveCpdHelper
+
     def initialize(user:)
       @cycles = CpdCycle.sorted.all
       @statements = CpdStatement.where(user: user).sorted.all
@@ -11,7 +13,7 @@ module Effective
 
         Array(prev_statement&.cpd_statement_activities).each do |activity|
           if activity.marked_for_destruction? # Cascade this down the line
-            statement.cpd_statement_activities.each { |activity| activity.mark_for_destruction if activity.original == activity }
+            statement.cpd_statement_activities.each { |a| a.mark_for_destruction if a.original == activity }
           end
 
           if can_carry_forward?(activity, statement.cpd_cycle)
@@ -36,21 +38,23 @@ module Effective
     end
 
     def score_statement(statement)
+      cycle = statement.cpd_cycle
+
       # Reset the current carry_forwards and messages
       statement.cpd_statement_activities.each do |activity|
-        activity.carry_forward = 0
+        activity.carry_forward = nil
         activity.reduced_messages.clear
       end
 
       # This scores and enforces CycleActivity.max_credits_per_cycle
-      statement.activities.group_by(&:activity).each do |cycle_activity, statement_activities|
-        cycle_rule = cycle_activity.rule_for(statement)
-        max_credits_per_cycle = cycle_rule.try(:max_credits_per_cycle) || 999999
+      statement.cpd_statement_activities.group_by(&:cpd_activity).each do |cpd_activity, activities|
+        rule = cycle.rule_for(cpd_activity)
+        max_credits_per_cycle = rule.max_credits_per_cycle
 
         activities.each do |activity|
           next if activity.marked_for_destruction?
 
-          activity.score = cycle_activity.score(activity)
+          activity.score = rule.score(cpd_statement_activity: activity)
           activity.max_score = activity.score # Hack for Category maximums below
 
           next if max_credits_per_cycle == nil
@@ -59,16 +63,16 @@ module Effective
 
           if max_credits_per_cycle < 0
             activity.carry_forward = [0 - max_credits_per_cycle, activity.score].min
-            activity.reduced_messages["activity_#{cycle_activity.id}"] = "You have reached the maximum of #{cycle_rule.try(:max_credits_per_cycle)}/#{statement.cycle.cycle_label} for this type of activity"
+            activity.reduced_messages["activity_#{cpd_activity.id}"] = "You have reached the maximum of #{rule.max_credits_per_cycle}/#{cpd_cycle_label} for this type of activity"
             activity.score = [activity.score + max_credits_per_cycle, 0].max
           end
         end
       end
 
       # This enforced CycleCategory.max_credits_per_cycle
-      statement.activities.group_by(&:category).each do |cycle_category, activities|
-        cycle_rule = cycle_category.rule_for(statement)
-        max_credits_per_cycle = cycle_rule.try(:max_credits_per_cycle) || 999999
+      statement.cpd_statement_activities.group_by(&:cpd_category).each do |cpd_category, activities|
+        rule = cycle.rule_for(cpd_category)
+        max_credits_per_cycle = rule.max_credits_per_cycle
 
         next if max_credits_per_cycle == nil
 
@@ -80,18 +84,16 @@ module Effective
           if max_credits_per_cycle < 0
             activity.score = [activity.score + max_credits_per_cycle, 0].max
             activity.carry_forward = activity.max_score - activity.score
-            activity.reduced_messages["category_#{cycle_category.id}"] = "You have reached the maximum of #{cycle_rule.try(:max_credits_per_cycle)}/#{statement.cycle.cycle_label} for activities in the #{cycle_category.title} category"
+            activity.reduced_messages["category_#{cpd_category.id}"] = "You have reached the maximum of #{rule.max_credits_per_cycle}/#{cpd_cycle_label} for activities in the #{cpd_category} category"
           end
         end
       end
 
       # This enforces the max_cycles_can_carry_forward logic
       # If an Activity cannot be carried forward another cycle, its carry_forward should be 0
-      next_cycle = @cycles[@cycles.index(statement.cycle).to_i+1]
+      next_cycle = @cycles[@cycles.index(cycle) + 1]
 
-      statement.activities.each do |activity|
-        next if (activity.carry_forward == 0 || activity.marked_for_destruction?)
-
+      statement.cpd_statement_activities.each do |activity|
         unless can_carry_forward?(activity, next_cycle)
           activity.carry_forward = 0
           activity.reduced_messages['max_cycles_can_carry_forward'] = "This activity cannot be carried forward any further"
@@ -99,14 +101,14 @@ module Effective
       end
 
       # Finally set the score from the sum of activitiy scores
-      statement.score = statement.activities.map { |activity| activity.marked_for_destruction? ? 0 : activity.score }.sum()
+      statement.score = statement.cpd_statement_activities.map { |activity| activity.marked_for_destruction? ? 0 : activity.score }.sum
     end
 
     def can_carry_forward?(activity, to_cycle = nil) # This is a StatementActivity being passed
       return false if (activity.carry_forward == 0 || activity.marked_for_destruction?)
 
       from_cycle = @cycles.find { |cycle| cycle.id == (activity.original || activity).cpd_statement.cpd_cycle_id }
-      max_cycles_can_carry_forward = from_cycle.rule_for(activity).max_cycles_can_carry_forward
+      max_cycles_can_carry_forward = from_cycle.rule_for(activity.cpd_activity).max_cycles_can_carry_forward
 
       return true if max_cycles_can_carry_forward.blank?
 
