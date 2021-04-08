@@ -3,14 +3,17 @@ $(document).on('click', '[data-cpd-new-activity]', function(event) {
   event.preventDefault()
   event.stopPropagation()
 
-  let $statement = $('#cpd-statement-activities')
+  console.log("NEW ACTIVITY")
 
+  let $statement = $('#cpd-statement-activities')
   $statement.children('.activities-index').hide()
   $statement.children('.activities-new').show()
 });
 
 // Collapse the New Activity and all Edit Activity forms
 let collapse_effective_cpd_activities = function() {
+  console.log("COLLAPSE")
+
   let $statement = $('#cpd-statement-activities')
   $statement.children('.activities-new').hide()
 
@@ -22,6 +25,8 @@ let collapse_effective_cpd_activities = function() {
 
 // When we click the Edit Activity
 $(document).on('click', '[data-cpd-edit-activity]', function(event) {
+  console.log("EDIT ACTIVITY")
+
   event.preventDefault()
 
   collapse_effective_cpd_activities()

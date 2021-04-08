@@ -19,11 +19,3 @@ $(document).on('click', '[data-cpd-back-activity]', function(event) {
 
   $(anchor).siblings('.active').removeClass('active').end().addClass('active')
 });
-
-$(document).on('effective-form:success', '.cpd-statement-activity-form', function() {
-  if(window.Turbolinks) {
-    Turbolinks.visit(window.location.toString(), {action: 'replace'})
-  } else {
-    window.location.reload()
-  }
-});
