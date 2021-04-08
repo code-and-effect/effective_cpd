@@ -10,6 +10,11 @@ module Effective
       CpdScorer.new(user: resource.cpd_statement.user).score!
     end
 
+    on :save, redirect: -> {
+      statement = resource.cpd_statement
+      effective_cpd.cpd_cycle_cpd_statement_build_path(statement.cpd_cycle, statement, :activities)
+    }
+
     def permitted_params
       params.require(:effective_cpd_statement_activity).permit(
         :id, :cpd_category_id, :cpd_activity_id, :amount, :amount2, :description, files: []

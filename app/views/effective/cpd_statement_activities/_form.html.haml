@@ -35,4 +35,16 @@
     .col
       = f.text_area :description, placeholder: 'Please provide any additional information about this activity'
 
-  = f.submit(cpd_statement_activity.new_record? ? 'Add Activity' : 'Save Activity')
+  = f.submit do
+    - if f.object.new_record?
+      = f.save 'Add Activity'
+
+      %div{style: 'position: absolute; left: 0;'}
+        = link_to('Back', '#', class: 'btn btn-secondary', 'data-cpd-back-activity': true)
+
+    - else
+      = f.save 'Save Activity'
+
+      %div{style: 'position: absolute; left: 0;'}
+        - url = effective_cpd.cpd_statement_cpd_statement_activity_path(statement, cpd_statement_activity)
+        = link_to('Delete', url, class: 'btn btn-danger', 'data-confirm': "Really delete?", 'data-method': :delete)

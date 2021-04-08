@@ -11,6 +11,15 @@ $(document).on('click', '[data-cpd-show-activity]', function(event) {
   $tabContent.addClass('active')
 });
 
+$(document).on('click', '[data-cpd-back-activity]', function(event) {
+  event.preventDefault()
+
+  let $activities = $(event.currentTarget).closest('.activities-new')
+  let anchor = $activities.find('.nav[role=tablist]').find('a.nav-link.active').first().attr('href')
+
+  $(anchor).siblings('.active').removeClass('active').end().addClass('active')
+});
+
 $(document).on('effective-form:success', '.cpd-statement-activity-form', function() {
   if(window.Turbolinks) {
     Turbolinks.visit(window.location.toString(), {action: 'replace'})
