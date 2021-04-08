@@ -9,6 +9,11 @@ EffectiveCpd::Engine.routes.draw do
         resources :build, controller: :cpd_statements, only: [:show, :update]
       end
     end
+
+    resources :cpd_statements, only: [] do
+      resources :cpd_statement_activities, except: [:index, :show]
+    end
+
   end
 
   namespace :admin do

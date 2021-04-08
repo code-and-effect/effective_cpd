@@ -1,0 +1,38 @@
+- url = (cpd_statement_activity.persisted? ? effective_cpd.cpd_statement_cpd_statement_activity_path(cpd_statement_activity.cpd_statement, cpd_statement_activity) : effective_cpd.cpd_statement_cpd_statement_activities_path(cpd_statement_activity.cpd_statement))
+
+= effective_form_with(model: cpd_statement_activity, url: url, remote: true, class: 'cpd-statement-activity-form') do |f|
+  - statement = cpd_statement_activity.cpd_statement
+  - activity = cpd_statement_activity.cpd_activity
+  - rule = statement.cpd_cycle.rule_for(activity)
+
+  %h3= activity
+
+  - if activity.body.present?
+    = activity.body
+
+  .mb-3
+    %strong #{cpd_credits_label.titleize} Calculation
+    %br
+    = rule.credit_description
+
+  = f.hidden_field :cpd_category_id
+  = f.hidden_field :cpd_activity_id
+
+  .row
+    .col
+      - if activity.amount_label.present?
+        = f.number_field :amount, label: activity.amount_label.titleize, required: true
+
+      - if activity.amount2_label.present?
+        = f.number_field :amount2, label: activity.amount2_label.titleize, required: true
+
+      - if activity.amount_label.blank? && activity.amount2_label.blank?
+        = f.hidden_field :amount, value: 1
+        %p One (1) #{activity}
+
+      = f.file_field :files, label: 'Supporting Documents', required: activity.requires_upload_file?
+
+    .col
+      = f.text_area :description, placeholder: 'Please provide any additional information about this activity'
+
+  = f.submit(cpd_statement_activity.new_record? ? 'Add Activity' : 'Save Activity')

@@ -38,4 +38,4 @@
 
             .statement-activity-form{style: 'display: none;'}
               - cpd_statement_activity = cpd_statement.cpd_statement_activities.build(cpd_category: category, cpd_activity: activity)
-              = render('form_activity', cpd_statement_activity: cpd_statement_activity)
+              = render('effective/cpd_statement_activities/form', cpd_statement_activity: cpd_statement_activity)

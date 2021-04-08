@@ -9,9 +9,8 @@ module Effective
       Effective::CpdStatement.deep.where(cpd_cycle: cycle, user: current_user)
     end
 
-    after_save(if: -> { step == :activities && params[:commit].to_s.include?('Activity') }) do
-      flash[:success] = "Saved activity"
-      @skip_to = :activities
+    after_save(if: -> { step == :start }) do
+      CpdScorer.new(user: resource.user).score!
     end
 
     # Enforce one statement per user per cycle. Redirect them to an existing statement for this cycle.
@@ -52,11 +51,7 @@ module Effective
       when :start
         params.require(:effective_cpd_statement).permit(:current_step)
       when :activities
-        params.require(:effective_cpd_statement).permit(
-          :current_step, cpd_statement_activities_attributes: [
-            :id, :cpd_category_id, :cpd_activity_id, :amount, :amount2, :description, files: []
-          ]
-        )
+        params.require(:effective_cpd_statement).permit(:current_step)
       when :agreements
         params.require(:effective_cpd_statement).permit(:current_step)
       when :submit

@@ -39,6 +39,7 @@ module Effective
 
     scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:cpd_activity]) }
     scope :completed, -> { where.not(completed_at: nil) }
+    scope :sorted, -> { order(:cpd_cycle_id) }
 
     before_validation(if: -> { new_record? }) do
       self.user ||= current_user

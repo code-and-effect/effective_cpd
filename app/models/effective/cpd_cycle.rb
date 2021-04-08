@@ -39,7 +39,7 @@ module Effective
       .includes(:cpd_rules)
     }
 
-    scope :sorted, -> { order(:start_at) }
+    scope :sorted, -> { order(:id) }
 
     scope :upcoming, -> { where('start_at > ?', Time.zone.now) }
     scope :available, -> { where('start_at <= ? AND (end_at > ? OR end_at IS NULL)', Time.zone.now, Time.zone.now) }

@@ -35,6 +35,10 @@ module Effective
 
     validates :original, presence: true, if: -> { carry_over.to_i > 0 }
 
+    def to_s
+      'activity'
+    end
+
     def reduced_messages
       self[:reduced_messages] ||= {}
     end
@@ -52,7 +56,7 @@ module Effective
       is_carry_over? || cpd_statement&.completed?
     end
 
-    def to_s
+    def to_debug
       "id=#{id}, score=#{score}, carry_foward=#{carry_forward}, carry_from_last=#{carry_over}, original=#{original&.id}"
     end
 
