@@ -3,34 +3,37 @@ $(document).on('click', '[data-cpd-new-activity]', function(event) {
   event.preventDefault()
   event.stopPropagation()
 
-  let $activities = $(event.currentTarget).closest('#cpd-statement-activities')
+  let $statement = $('#cpd-statement-activities')
 
-  $activities.children('.activities-index').hide()
-  $activities.children('.activities-new').show()
+  $statement.children('.activities-index').hide()
+  $statement.children('.activities-new').show()
 });
 
-$(document).on('click', '.activities-new', function(event) { event.stopPropagation() });
-
+// Collapse the New Activity and all Edit Activity forms
 let collapse_effective_cpd_activities = function() {
-  let $activities = $('#cpd-statement-activities')
+  let $statement = $('#cpd-statement-activities')
+  $statement.children('.activities-new').hide()
 
-  $activities.children('.activities-new').hide()
-  $activities.children('.activities-index').show()
-
-  // $('.activity-new').hide()
-  // $('.activities-index').first()
-  //   .find('tr.expanded').removeClass('expanded')
-  //   .end()
-  //   .find('tr.activity-details').hide()
-  //   .end()
-  // .show()
+  let $activities = $statement.children('.activities-index')
+  $activities.show()
+  $activities.find('.statement-activity-content').show()
+  $activities.find('.statement-activity-form').hide()
 };
 
-$(document).on('turbolinks:load', function() {
-  if($('#cpd-statement-activities').length > 0) {
-    $(document).on('click', function() { collapse_effective_cpd_activities() })
-  }
+// When we click the Edit Activity
+$(document).on('click', '[data-cpd-edit-activity]', function(event) {
+  event.preventDefault()
+
+  collapse_effective_cpd_activities()
+
+  let $activity = $(event.currentTarget).closest('.statement-activity')
+  $activity.children('.statement-activity-content').hide()
+  $activity.children('.statement-activity-form').show()
 });
+
+// When we click outside the New Activity or Edit Activity
+$(document).on('click', '#cpd-statement-activities .activities-new', function(event) { event.stopPropagation() });
+$(document).on('click', '#cpd-statement-activities .statement-activity', function(event) { event.stopPropagation() });
 
 $(document).ready(function() {
   if($('#cpd-statement-activities').length > 0) {
