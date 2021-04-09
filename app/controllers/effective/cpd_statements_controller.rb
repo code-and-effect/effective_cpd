@@ -27,7 +27,7 @@ module Effective
       end
     end
 
-    # Enforce availability
+    # Enforce cycle availability
     before_action(only: [:show, :update]) do
       cycle = resource.cpd_cycle
 

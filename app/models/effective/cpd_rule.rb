@@ -45,8 +45,16 @@ module Effective
     validate(if: -> { formula.present? }) do
       if formula.gsub('amount2', '').gsub('amount', '').gsub(' ', '').match(INVALID_FORMULA_CHARS).present?
         self.errors.add(:formula, "may only contain amount, amount2 and 0-9 + - / * ( ) characters")
+      else
+        begin
+          eval_equation(amount: 0, amount2: 0)
+        rescue Exception => e
+          self.errors.add(:formula, e.message)
+        end
+
       end
     end
+
 
     # The formula is determined by the cpd_activity's amount_label and amount2_label presence
     validate(if: -> { formula.present? && activity? }) do
@@ -88,10 +96,13 @@ module Effective
 
       return cpd_statement_activity.carry_over if cpd_statement_activity.is_carry_over?
 
-      equation = formula
-        .gsub('amount2', cpd_statement_activity.amount2.to_s)
-        .gsub('amount', cpd_statement_activity.amount.to_s)
+      eval_equation(amount: cpd_statement_activity.amount, amount2: cpd_statement_activity.amount2)
+    end
 
+    private
+
+    def eval_equation(amount: nil, amount2: nil)
+      equation = formula.gsub('amount2', amount2.to_s).gsub('amount', amount.to_s)
       eval(equation).to_i
     end
 
