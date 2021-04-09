@@ -1,4 +1,5 @@
 - url = (cpd_statement_activity.persisted? ? effective_cpd.cpd_statement_cpd_statement_activity_path(cpd_statement_activity.cpd_statement, cpd_statement_activity) : effective_cpd.cpd_statement_cpd_statement_activities_path(cpd_statement_activity.cpd_statement))
+- readonly = cpd_statement_activity.locked?
 
 = effective_form_with(model: cpd_statement_activity, url: url, remote: true, class: 'cpd-statement-activity-form') do |f|
   - statement = cpd_statement_activity.cpd_statement
@@ -9,6 +10,11 @@
 
   - if activity.body.present?
     = activity.body
+
+  - if readonly && cpd_statement_activity.is_carry_over? && (current_user.id == cpd_statement_activity.cpd_statement.user_id)
+    .alert.alert-warning
+      This activity is read-only because it was carried forward from
+      = cpd_statement_activity.original.cpd_statement.cpd_cycle
 
   .mb-3
     %strong #{cpd_credits_label.titleize} Calculation
@@ -21,30 +27,31 @@
   .row
     .col
       - if activity.amount_label.present?
-        = f.number_field :amount, label: activity.amount_label.titleize, required: true
+        = f.number_field :amount, label: activity.amount_label.titleize, required: true, readonly: readonly, disabled: readonly
 
       - if activity.amount2_label.present?
-        = f.number_field :amount2, label: activity.amount2_label.titleize, required: true
+        = f.number_field :amount2, label: activity.amount2_label.titleize, required: true, readonly: readonly, disabled: readonly
 
       - if activity.amount_label.blank? && activity.amount2_label.blank?
         = f.hidden_field :amount, value: 1
         %p One (1) #{activity}
 
-      = f.file_field :files, label: 'Supporting Documents', required: activity.requires_upload_file?
+      = f.file_field :files, label: 'Supporting Documents', required: activity.requires_upload_file?, readonly: readonly, disabled: readonly
 
     .col
-      = f.text_area :description, placeholder: 'Please provide any additional information about this activity'
+      = f.text_area :description, placeholder: 'Please provide any additional information about this activity', required: true, readonly: readonly, disabled: readonly
 
-  = f.submit do
-    - if f.object.new_record?
-      = f.save 'Add Activity'
+  - unless readonly
+    = f.submit do
+      - if f.object.new_record?
+        = f.save 'Add Activity'
 
-      %div{style: 'position: absolute; left: 0;'}
-        = link_to('Back', '#', class: 'btn btn-secondary', 'data-cpd-back-activity': true)
+        %div{style: 'position: absolute; left: 0;'}
+          = link_to('Back', '#', class: 'btn btn-secondary', 'data-cpd-back-activity': true)
 
-    - else
-      = f.save 'Save Activity'
+      - else
+        = f.save 'Save Activity'
 
-      %div{style: 'position: absolute; left: 0;'}
-        - url = effective_cpd.cpd_statement_cpd_statement_activity_path(statement, cpd_statement_activity)
-        = link_to('Delete', url, class: 'btn btn-danger', 'data-confirm': "Really delete?", 'data-method': :delete)
+        %div{style: 'position: absolute; left: 0;'}
+          - url = effective_cpd.cpd_statement_cpd_statement_activity_path(statement, cpd_statement_activity)
+          = link_to('Delete', url, class: 'btn btn-danger', 'data-confirm': "Really delete?", 'data-method': :delete)

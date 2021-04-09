@@ -4,7 +4,7 @@ end
 
 EffectiveCpd::Engine.routes.draw do
   scope module: 'effective' do
-    resources :cpd_cycles, path: "cpd_#{EffectiveCpd.cycle_label.pluralize}", only: [:show] do
+    resources :cpd_cycles, path: "cpd_#{EffectiveCpd.cycle_label.pluralize.parameterize.underscore}", only: [:show] do
       resources :cpd_statements, path: :statements, only: [:new, :show] do
         resources :build, controller: :cpd_statements, only: [:show, :update]
       end

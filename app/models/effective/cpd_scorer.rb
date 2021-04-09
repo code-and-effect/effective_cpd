@@ -17,10 +17,15 @@ module Effective
           end
 
           if can_carry_forward?(activity, statement.cpd_cycle)
-            update_or_create_carry_forward_activity(activity, statement)
+            save_carry_forward_activity(activity, statement)
           else
             delete_carry_forward_activity(activity, statement)
           end
+        end
+
+        # An activity was deleted from a previous statement
+        statement.cpd_statement_activities.each do |activity|
+          activity.mark_for_destruction if activity.original_id.present? && activity.original.blank?
         end
 
         score_statement(statement)
@@ -116,25 +121,31 @@ module Effective
       cycles_carried <= max_cycles_can_carry_forward
     end
 
-    def update_or_create_carry_forward_activity(activity, statement)
-      existing = statement.cpd_statement_activities.find { |a| a.original == (activity.original || activity) }
-      existing ||= statement.cpd_statement_activities.build()
+    def save_carry_forward_activity(existing, statement)
+      activity = statement.cpd_statement_activities.find { |a| a.original == (existing.original || existing) }
+      activity ||= statement.cpd_statement_activities.build()
 
-      existing.assign_attributes(
-        cpd_category: activity.cpd_category,
-        cpd_activity: activity.cpd_activity,
-        amount: activity.amount,
-        amount2: activity.amount2,
-        description: activity.description
+      activity.assign_attributes(
+        cpd_category: existing.cpd_category,
+        cpd_activity: existing.cpd_activity,
+        amount: existing.amount,
+        amount2: existing.amount2,
+        description: existing.description,
       )
 
-      existing.assign_attributes(carry_over: activity.carry_forward, original: activity.original || activity)
-      existing
+      existing.files.each { |file| activity.files.attach(file.blob) }
+
+      activity.assign_attributes(
+        carry_over: existing.carry_forward,
+        original: existing.original || existing
+      )
+
+      activity
     end
 
-    def delete_carry_forward_activity(activity, statement)
-      existing = statement.cpd_statement_activities.find { |a| a.original == (activity.original || activity) }
-      existing&.mark_for_destruction
+    def delete_carry_forward_activity(existing, statement)
+      activity = statement.cpd_statement_activities.find { |a| a.original == (existing.original || existing) }
+      activity.mark_for_destruction if activity
     end
 
   end
