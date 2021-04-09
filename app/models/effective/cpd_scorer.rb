@@ -42,22 +42,20 @@ module Effective
 
       # Reset the current carry_forwards and messages
       statement.cpd_statement_activities.each do |activity|
-        activity.carry_forward = nil
+        activity.carry_forward = 0
         activity.reduced_messages.clear
       end
 
       # This scores and enforces CycleActivity.max_credits_per_cycle
       statement.cpd_statement_activities.group_by(&:cpd_activity).each do |cpd_activity, activities|
         rule = cycle.rule_for(cpd_activity)
-        max_credits_per_cycle = rule.max_credits_per_cycle
+        max_credits_per_cycle = rule.max_credits_per_cycle || 9999999
 
         activities.each do |activity|
           next if activity.marked_for_destruction?
 
           activity.score = rule.score(cpd_statement_activity: activity)
           activity.max_score = activity.score # Hack for Category maximums below
-
-          next if max_credits_per_cycle == nil
 
           max_credits_per_cycle -= activity.score  # Counting down...
 
@@ -94,6 +92,8 @@ module Effective
       next_cycle = @cycles[@cycles.index(cycle) + 1]
 
       statement.cpd_statement_activities.each do |activity|
+        next if (activity.carry_forward == 0 || activity.marked_for_destruction?)
+
         unless can_carry_forward?(activity, next_cycle)
           activity.carry_forward = 0
           activity.reduced_messages['max_cycles_can_carry_forward'] = "This activity cannot be carried forward any further"

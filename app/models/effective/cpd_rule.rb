@@ -45,12 +45,6 @@ module Effective
     validate(if: -> { formula.present? }) do
       if formula.gsub('amount2', '').gsub('amount', '').gsub(' ', '').match(INVALID_FORMULA_CHARS).present?
         self.errors.add(:formula, "may only contain amount, amount2 and 0-9 + - / * ( ) characters")
-      else
-        begin
-          score(amount: 0, amount2: 0)
-        rescue Exception => e
-          self.errors.add(:formula, e.message)
-        end
       end
     end
 
