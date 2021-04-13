@@ -30,7 +30,7 @@ module EffectiveCpdTestBuilder
   end
 
   # Create a StatementActivity for each activity.
-  def create_scoreable_cpd_statement!(cpd_cycle: nil, user: nil, continue: false)
+  def create_scoreable_cpd_statement!(cpd_cycle: nil, user: nil, amount: 10, amount2: 10, continue: false)
     cpd_statement = create_effective_cpd_statement!(cpd_cycle: cpd_cycle, user: user)
 
     unless continue
@@ -39,8 +39,8 @@ module EffectiveCpdTestBuilder
           csa = cpd_statement.cpd_statement_activities.create!(
             cpd_category: category,
             cpd_activity: activity,
-            amount: (10 if activity.amount_label.present?),
-            amount2: (10 if activity.amount2_label.present?),
+            amount: (amount if activity.amount_label.present?),
+            amount2: (amount2 if activity.amount2_label.present?),
           )
         end
       end
