@@ -1,10 +1,8 @@
-- categories = Effective::CpdCategory.deep.sorted
-
 = vertical_tabs do
   .statement-activity-content.tab-pane
     -# The javascript will load the .statement-activity-form content into here
 
-  - categories.each do |category|
+  - effective_cpd_categories.each do |category|
     - rule = cpd_statement.cpd_cycle.rule_for(category)
     - next if rule.unavailable?
 

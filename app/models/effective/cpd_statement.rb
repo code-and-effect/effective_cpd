@@ -10,6 +10,7 @@ module Effective
     accepts_nested_attributes_for :cpd_statement_activities
 
     has_many_attached :files
+    log_changes if respond_to?(:log_changes)
 
     acts_as_tokened
 
@@ -37,7 +38,7 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:files_attachments, cpd_activity: [:rich_text_body]]) }
+    scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:files_attachments, :cpd_category, :original, cpd_activity: [:rich_text_body]]) }
     scope :completed, -> { where.not(completed_at: nil) }
     scope :sorted, -> { order(:cpd_cycle_id) }
 
@@ -71,7 +72,7 @@ module Effective
       cpd_statement_activities.sum { |activity| activity.carry_forward.to_i }
     end
 
-    # {category1 => 20, category2 => 15}
+    # {category_id => 20, category_id => 15}
     def score_per_category
       @score_per_category ||= Hash.new(0).tap do |scores|
         cpd_statement_activities.each { |activity| scores[activity.cpd_category_id] += activity.score.to_i }

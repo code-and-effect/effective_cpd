@@ -6,11 +6,11 @@
 
   .activities-index
     = render('layout') do
-      -# - if resource.cpd_cycle.all_steps_content.present?
-      -#   .mb-2= resource.cpd_cycle.all_steps_content
+      - if resource.cpd_cycle.all_steps_content.present?
+        .mb-2= resource.cpd_cycle.all_steps_content
 
-      -# - if resource.cpd_cycle.activities_content.present?
-      -#   .mb-2= resource.cpd_cycle.activities_content
+      - if resource.cpd_cycle.activities_content.present?
+        .mb-2= resource.cpd_cycle.activities_content
 
       - if resource.cpd_statement_activities.present?
         = render('activities', cpd_statement: resource)
@@ -21,5 +21,5 @@
         = f.hidden_field :current_step
         = f.submit 'Save and Continue', center: true
 
-  -# .activities-new{style: 'display: none;'}
-  -#   = render('activities_new', cpd_statement: resource)
+  .activities-new{style: 'display: none;'}
+    = render('activities_new', cpd_statement: resource)

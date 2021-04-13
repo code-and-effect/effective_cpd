@@ -10,13 +10,10 @@ module Effective
     has_many :cpd_rules, dependent: :delete_all
     accepts_nested_attributes_for :cpd_rules, allow_destroy: true
 
-    # has_many :cpd_categories, -> { order(:position) }, inverse_of: :cpd_cycle, dependent: :destroy
-    # accepts_nested_attributes_for :cpd_categories, allow_destroy: true
-
     has_many :cpd_statements
 
     if respond_to?(:log_changes)
-      log_changes
+      log_changes(except: [:cpd_statements])
     end
 
     effective_resource do
