@@ -16,7 +16,8 @@
             %td days left to submit
 
         %tr
-          %td= resource.score.to_i
+          %td
+            %h4= resource.score.to_i
 
           %td
             - if cpd_cycle.required_score.to_i > 0
@@ -25,7 +26,9 @@
               #{cpd_credits_label} in current #{cpd_cycle_label}
 
         %tr
-          %td= last_3_scores.to_i
+          %td
+            %h4= last_3_scores.to_i
+
           %td #{cpd_credits_label} in last 3 #{cpd_cycles_label} (including this #{cpd_cycle_label})
 
   .col-9

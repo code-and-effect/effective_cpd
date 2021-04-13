@@ -2,8 +2,9 @@
 
 class EffectiveCpdDatatable < Effective::Datatable
   datatable do
-    order :start_at
+    order :id
 
+    col :id, label: "#{cpd_cycle_label.titleize}", visible: false
     col :start_at, visible: false
 
     col :title

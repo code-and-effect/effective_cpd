@@ -30,4 +30,8 @@ module EffectiveCpdHelper
     end
   end
 
+  def effective_cpd_categories
+    @effective_cpd_categories ||= Effective::CpdCategory.deep.sorted
+  end
+
 end

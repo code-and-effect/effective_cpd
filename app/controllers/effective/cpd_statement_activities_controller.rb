@@ -6,17 +6,9 @@ module Effective
 
     resource_scope -> { CpdStatement.find(params[:cpd_statement_id]).cpd_statement_activities }
 
-    # Enforce cycle availability
-    before_action do
-      unless resource.cpd_statement.cpd_cycle.available?
-        flash[:danger] = "This #{cpd_cycle_label} is unavailable"
-        redirect_to(root_path)
-      end
-    end
-
     # Score all statements when we change any activity
     after_save do
-      CpdScorer.new(user: resource.cpd_statement.user).score!
+      CpdScorer.new(user: resource.cpd_statement.user, from: resource.cpd_statement).score!
     end
 
     # Redirect the remote form back to the activities page

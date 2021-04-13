@@ -2,9 +2,15 @@ module Effective
   class CpdScorer
     include EffectiveCpdHelper
 
-    def initialize(user:)
-      @cycles = CpdCycle.sorted.all
-      @statements = CpdStatement.where(user: user).sorted.all
+    def initialize(user:, from: nil)
+      @cycles = CpdCycle.deep.sorted.all
+      @statements = CpdStatement.deep.where(user: user).sorted.all
+
+      if from.present?
+        raise('expected from to be a CpdStatement') unless from.kind_of?(CpdStatement)
+        @statements = @statements.where('cpd_cycle_id >= ?', from.cpd_cycle_id)
+      end
+
     end
 
     def score!

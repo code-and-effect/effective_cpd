@@ -37,7 +37,7 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:cpd_activity]) }
+    scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:files_attachments, cpd_activity: [:rich_text_body]]) }
     scope :completed, -> { where.not(completed_at: nil) }
     scope :sorted, -> { order(:cpd_cycle_id) }
 

@@ -16,10 +16,26 @@
       This activity is read-only because it was carried forward from
       = cpd_statement_activity.original.cpd_statement.cpd_cycle
 
-  .mb-3
-    %strong #{cpd_credits_label.titleize} Calculation
-    %br
-    = rule.credit_description
+  .row.my-3
+    .col-8
+      %strong #{cpd_credits_label.titleize} Calculation
+      %br
+      = rule.credit_description
+
+    .col-2
+      - if f.object.persisted?
+        %strong= cpd_credits_label.titleize
+        %br
+        - if f.object.reduced_messages.present?
+          %span{title: f.object.reduced_messages.values.join("\n\n")}= "#{f.object.score} *"
+        - else
+          = f.object.score.to_i
+
+    .col-2
+      - if f.object.persisted?
+        %strong Carry Forward
+        %br
+        = f.object.carry_forward.to_i
 
   = f.hidden_field :cpd_category_id
   = f.hidden_field :cpd_activity_id
@@ -43,15 +59,11 @@
 
   - unless readonly
     = f.submit do
-      - if f.object.new_record?
-        = f.save 'Add Activity'
+      = f.save 'Save Activity'
 
-        %div{style: 'position: absolute; left: 0;'}
+      %div{style: 'position: absolute; left: 0;'}
+        - if f.object.new_record?
           = link_to('Back', '#', class: 'btn btn-secondary', 'data-cpd-back-activity': true)
-
-      - else
-        = f.save 'Save Activity'
-
-        %div{style: 'position: absolute; left: 0;'}
+        - else
           - url = effective_cpd.cpd_statement_cpd_statement_activity_path(statement, cpd_statement_activity)
           = link_to('Delete', url, class: 'btn btn-danger', 'data-confirm': "Really delete?", 'data-method': :delete)
