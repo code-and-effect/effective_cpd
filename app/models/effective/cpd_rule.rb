@@ -51,10 +51,8 @@ module Effective
         rescue Exception => e
           self.errors.add(:formula, e.message)
         end
-
       end
     end
-
 
     # The formula is determined by the cpd_activity's amount_label and amount2_label presence
     validate(if: -> { formula.present? && activity? }) do

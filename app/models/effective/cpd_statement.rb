@@ -43,16 +43,13 @@ module Effective
 
     before_validation(if: -> { new_record? }) do
       self.user ||= current_user
+      self.score ||= 0
     end
 
-    # validates :user_id, uniqueness: {
-    #   scope: :cpd_cycle_id, allow_blank: true, message: 'statement already exists'
-    # }
-
-    # Activities / Final validations
-    # validates_numericality_of :score,
-    #   :greater_than_or_equal_to => Proc.new { |statement| statement.cycle.required_score_to_finish.to_i },
-    #   :if => Proc.new { |statement| (statement.finished? || statement.current_step == :activities) && statement.cycle.required_score_to_finish.to_i > 0 }
+    validate(if: -> { completed? && cpd_cycle.required_score.present? }) do
+      min = cpd_cycle.required_score
+      self.errors.add(:score, "must be #{min} or greater to submit statement") if score < min
+    end
 
     def to_s
       persisted? ? "#{id}-#{cpd_cycle}" : 'statement'

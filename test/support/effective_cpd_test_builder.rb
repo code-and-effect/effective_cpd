@@ -15,6 +15,20 @@ module EffectiveCpdTestBuilder
     cpd_cycle
   end
 
+  def create_effective_cpd_statement!(cpd_cycle: nil, user: nil)
+    build_effective_cpd_statement(cpd_cycle: cpd_cycle, user: user).tap { |cpd_statement| cpd_statement.save! }
+  end
+
+  def build_effective_cpd_statement(cpd_cycle: nil, user: nil)
+    cpd_cycle ||= create_effective_cpd_cycle!
+    user ||= create_user!
+
+    cpd_statement = Effective::CpdStatement.new(
+      cpd_cycle: cpd_cycle,
+      user: user
+    )
+  end
+
   def create_user!
     build_user.tap { |user| user.save! }
   end

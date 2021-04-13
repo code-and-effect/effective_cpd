@@ -87,9 +87,43 @@ ActiveRecord::Schema.define(version: 4) do
     t.string "formula"
     t.integer "max_credits_per_cycle"
     t.integer "max_cycles_can_carry_forward"
+    t.boolean "unavailable", default: false
     t.datetime "updated_at"
     t.datetime "created_at"
     t.index ["cpd_cycle_id"], name: "index_cpd_rules_on_cpd_cycle_id"
+  end
+
+  create_table "cpd_statement_activities", force: :cascade do |t|
+    t.bigint "cpd_statement_id"
+    t.bigint "cpd_category_id"
+    t.bigint "cpd_activity_id"
+    t.bigint "original_id"
+    t.integer "amount"
+    t.integer "amount2"
+    t.text "description"
+    t.integer "carry_over"
+    t.integer "score"
+    t.integer "carry_forward"
+    t.text "reduced_messages"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_activity_id"], name: "index_cpd_statement_activities_on_cpd_activity_id"
+    t.index ["cpd_category_id"], name: "index_cpd_statement_activities_on_cpd_category_id"
+    t.index ["cpd_statement_id"], name: "index_cpd_statement_activities_on_cpd_statement_id"
+    t.index ["original_id"], name: "index_cpd_statement_activities_on_original_id"
+  end
+
+  create_table "cpd_statements", force: :cascade do |t|
+    t.bigint "cpd_cycle_id"
+    t.integer "user_id"
+    t.string "user_type"
+    t.string "token"
+    t.integer "score"
+    t.datetime "completed_at"
+    t.text "wizard_steps"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_cycle_id"], name: "index_cpd_statements_on_cpd_cycle_id"
   end
 
   create_table "users", force: :cascade do |t|
