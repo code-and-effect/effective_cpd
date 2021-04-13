@@ -29,6 +29,29 @@ module EffectiveCpdTestBuilder
     )
   end
 
+  # Create a StatementActivity for each activity.
+  def create_scoreable_cpd_statement!(cpd_cycle: nil, user: nil, continue: false)
+    cpd_statement = create_effective_cpd_statement!(cpd_cycle: cpd_cycle, user: user)
+
+    unless continue
+      Effective::CpdCategory.sorted.all.each do |category|
+        category.cpd_activities.each do |activity|
+          csa = cpd_statement.cpd_statement_activities.create!(
+            cpd_category: category,
+            cpd_activity: activity,
+            amount: (10 if activity.amount_label.present?),
+            amount2: (10 if activity.amount2_label.present?),
+          )
+        end
+      end
+    end
+
+    Effective::CpdScorer.new(user: cpd_statement.user).score!
+    cpd_statement.reload
+
+    cpd_statement
+  end
+
   def create_user!
     build_user.tap { |user| user.save! }
   end

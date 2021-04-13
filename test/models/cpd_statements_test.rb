@@ -34,6 +34,7 @@ class CpdStatementsTest < ActiveSupport::TestCase
     Effective::CpdScorer.new(user: cpd_statement.user).score!
     cpd_statement.reload
 
+    assert_equal 5, cpd_statement.score
     assert_equal 5, cpd_statement.cpd_statement_activities.first.score
     assert cpd_statement.submit!
   end
