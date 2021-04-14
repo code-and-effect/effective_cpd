@@ -1,5 +1,5 @@
 - url = (cpd_statement_activity.persisted? ? effective_cpd.cpd_statement_cpd_statement_activity_path(cpd_statement_activity.cpd_statement, cpd_statement_activity) : effective_cpd.cpd_statement_cpd_statement_activities_path(cpd_statement_activity.cpd_statement))
-- readonly = cpd_statement_activity.locked?
+- readonly = cpd_statement_activity.locked? || local_assigns[:readonly]
 
 = effective_form_with(model: cpd_statement_activity, url: url, remote: true, class: 'cpd-statement-activity-form') do |f|
   - statement = cpd_statement_activity.cpd_statement
@@ -43,19 +43,20 @@
   .row
     .col
       - if activity.amount_label.present?
-        = f.number_field :amount, label: activity.amount_label.titleize, required: true, readonly: readonly, disabled: readonly
+        = f.number_field :amount, label: activity.amount_label.titleize, required: true, readonly: true, disabled: readonly
 
       - if activity.amount2_label.present?
-        = f.number_field :amount2, label: activity.amount2_label.titleize, required: true, readonly: readonly, disabled: readonly
+        = f.number_field :amount2, label: activity.amount2_label.titleize, required: true, readonly: true, disabled: readonly
 
       - if activity.amount_label.blank? && activity.amount2_label.blank?
         = f.hidden_field :amount, value: 1
         %p One (1) #{activity}
 
-      = f.file_field :files, label: 'Supporting Documents', required: activity.requires_upload_file?, readonly: readonly, disabled: readonly
+      - unless readonly && f.object.files.blank?
+        = f.file_field :files, label: 'Supporting Documents', required: activity.requires_upload_file?, disabled: readonly
 
     .col
-      = f.text_area :description, placeholder: 'Please provide any additional information about this activity', required: true, readonly: readonly, disabled: readonly
+      = f.text_area :description, placeholder: 'Please provide any additional information about this activity', readonly: true, disabled: readonly
 
   - unless readonly
     = f.submit do

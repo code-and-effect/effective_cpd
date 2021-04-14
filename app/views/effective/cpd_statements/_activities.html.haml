@@ -53,7 +53,7 @@
           .statement-activity-form.row{style: 'display: none;'}
             .col.mb-3
               .border.px-3
-                = render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity)
+                = render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity, readonly: local_assigns[:readonly])
 
   %hr
 

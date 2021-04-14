@@ -1,1 +1,7 @@
 %p Statement
+
+= card(cpd_statement.cpd_cycle.to_s + ' Statement') do
+  = render('summary', cpd_statement: cpd_statement)
+
+= card('Activities') do
+  = render('activities', cpd_statement: cpd_statement, readonly: true)
