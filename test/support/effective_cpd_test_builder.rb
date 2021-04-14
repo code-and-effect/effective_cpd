@@ -41,6 +41,7 @@ module EffectiveCpdTestBuilder
             cpd_activity: activity,
             amount: (amount if activity.amount_label.present?),
             amount2: (amount2 if activity.amount2_label.present?),
+            description: 'test'
           )
         end
       end

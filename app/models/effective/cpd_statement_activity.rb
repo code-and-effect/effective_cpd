@@ -36,6 +36,18 @@ module Effective
     scope :sorted, -> { order(:id) }
 
     validates :original, presence: true, if: -> { carry_over.to_i > 0 }
+    validates :description, presence: true
+
+    validate(if: -> { cpd_statement.present? }) do
+      self.errors.add(:base, "statement has already been completed") if cpd_statement.completed?
+      self.errors.add(:base, "cycle is unavailable") unless cpd_statement.cpd_cycle.available?
+    end
+
+    def destroy
+      return false if cpd_statement.completed?
+      return false unless cpd_statement.cpd_cycle.available?
+      super
+    end
 
     def to_s
       'activity'

@@ -28,7 +28,7 @@ class CpdStatementsTest < ActiveSupport::TestCase
     cpd_activity = cpd_category.cpd_activities.first
 
     cpd_statement.cpd_statement_activities.create!(
-      cpd_activity: cpd_activity, cpd_category: cpd_category, amount: 5
+      cpd_activity: cpd_activity, cpd_category: cpd_category, amount: 5, description: 'test'
     )
 
     Effective::CpdScorer.new(user: cpd_statement.user).score!
