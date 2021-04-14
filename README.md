@@ -46,83 +46,52 @@ rake db:migrate
 Render the "available statements for current_user" datatable on your user dashboard:
 
 ```haml
-%h2 Continuing Professional Development STatements
-%p You may submit a statement for the following years.
-= render_datatable(EffectiveCpdStatementsDatatable.new, simple: true)
+%h2 Continuing Professional Development
+
+%p Please submit a CPD statement for the following available #{cpd_cycles_label}:
+= render_datatable(EffectiveCpdDatatable.new, simple: true)
+
+- datatable = EffectiveCpdStatementsDatatable.new(self)
+- if datatable.present?
+  .mt-4
+    %p You completed these statements:
+    = render_datatable(datatable, simple: true)
+
 ```
 
 Add a link to the admin menu:
 
 ```haml
 - if can? :admin, :effective_cpd
-  = link_to 'CPD', effective_cpd.admin_cpd_years_path
+  = link_to 'CPD Categories', effective_cpd.admin_cpd_categories_path
+  = link_to 'CPD Cycles', effective_cpd.admin_cpd_cycles_path
+  = link_to 'CPD Statements', effective_cpd.admin_cpd_statements_path
 ```
 
-Set up your permissions:
+## Authorization
+
+All authorization checks are handled via the effective_resources gem found in the `config/initializers/effective_resources.rb` file.
+
+## Permissions
+
+The permissions you actually want to define are as follows (using CanCan):
 
 ```ruby
 # Regular signed up user. Guest users not supported.
 if user.persisted?
+  can :new, Effective::CpdStatement
+  can [:index, :show, :update], Effective::CpdStatement, user_id: user.id
+  can [:index, :show], Effective::CpdCycle
+  can([:create, :update, :destroy], Effective::CpdStatementActivity) { |sa| sa.cpd_statement.user_id == user.id }
 end
 
 if user.admin?
   can :admin, :effective_cpd
-end
-```
-
-## Usage
-
-%ODO
-
-
-## Authorization
-
-All authorization checks are handled via the config.authorization_method found in the `app/config/initializers/effective_cpd.rb` file.
-
-It is intended for flow through to CanCan or Pundit, but neither of those gems are required.
-
-This method is called by all controller actions with the appropriate action and resource
-
-Action will be one of [:index, :show, :new, :create, :edit, :update, :destroy]
-
-Resource will the appropriate Effective::CpdStatement object or class
-
-The authorization method is defined in the initializer file:
-
-```ruby
-# As a Proc (with CanCan)
-config.authorization_method = Proc.new { |controller, action, resource| authorize!(action, resource) }
-```
-
-```ruby
-# As a Custom Method
-config.authorization_method = :my_authorization_method
-```
-
-and then in your application_controller.rb:
-
-```ruby
-def my_authorization_method(action, resource)
-  current_user.is?(:admin) || EffectivePunditPolicy.new(current_user, resource).send('#{action}?')
-end
-```
-
-or disabled entirely:
-
-```ruby
-config.authorization_method = false
-```
-
-If the method or proc returns false (user is not authorized) an Effective::AccessDenied exception will be raised
-
-You can rescue from this exception by adding the following to your application_controller.rb:
-
-```ruby
-rescue_from Effective::AccessDenied do |exception|
-  respond_to do |format|
-    format.html { render 'static_pages/access_denied', status: 403 }
-    format.any { render text: 'Access Denied', status: 403 }
-  end
+  can :manage, Effective::CpdActivity
+  can :manage, Effective::CpdCategory
+  can :manage, Effective::CpdCycle
+  can :manage, Effective::CpdRule
+  can :manage, Effective::CpdStatement
 end
 ```
 
