@@ -7,6 +7,8 @@ if Rails.env.test?
   Effective::CpdCategory.delete_all
   Effective::CpdActivity.delete_all
   Effective::CpdRule.delete_all
+
+  ActionText::RichText.where(record_type: ['Effective::CpdCycle', 'Effective::CpdCycle', 'Effective::CpdActivity']).delete_all
 end
 
 # Build the first CpdCycle

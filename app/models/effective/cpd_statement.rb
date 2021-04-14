@@ -23,18 +23,19 @@ module Effective
     )
 
     effective_resource do
+      score                   :integer
+
+      confirm_read            :boolean
+      confirm_factual         :boolean
+      confirm_readonly        :boolean
+
+      completed_at           :datetime, permitted: false
+
       # Acts as tokened
       token                  :string, permitted: false
 
       # Acts as Wizard
       wizard_steps           :text, permitted: false
-
-      # More fields
-      completed_at           :datetime, permitted: false
-
-      # The score for this statement
-      score                   :integer
-
       timestamps
     end
 
@@ -52,8 +53,17 @@ module Effective
       self.errors.add(:score, "must be #{min} or greater to submit statement") if score < min
     end
 
+    with_options(if: -> { current_step == :agreements }) do
+      validates :confirm_read, acceptance: true
+      validates :confirm_factual, acceptance: true
+    end
+
+    with_options(if: -> { current_step == :submit}) do
+      validates :confirm_readonly, acceptance: true
+    end
+
     def to_s
-      persisted? ? "#{id}-#{cpd_cycle}" : 'statement'
+      (cpd_cycle || 'statement').to_s
     end
 
     # This is the review step where they click Submit Ballot

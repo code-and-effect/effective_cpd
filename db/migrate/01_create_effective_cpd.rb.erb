@@ -82,6 +82,10 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
 
       t.integer :score
 
+      t.boolean :confirm_read
+      t.boolean :confirm_factual
+      t.boolean :confirm_readonly
+
       t.datetime :completed_at
 
       t.text :wizard_steps

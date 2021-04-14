@@ -7,7 +7,12 @@
   - if resource.cpd_cycle.submit_content.present?
     .mb-2= resource.cpd_cycle.submit_content
 
+  = render(resource)
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
+
+    = f.check_box :confirm_readonly,
+      label: 'Yes, I understand that I will not be able to modify this statement after submission'
 
     = f.submit 'Save and Continue', center: true

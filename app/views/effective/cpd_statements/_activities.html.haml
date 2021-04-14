@@ -51,8 +51,9 @@
               %p= statement_activity.carry_forward.to_i
 
           .statement-activity-form.row{style: 'display: none;'}
-            .col.border.mb-3
-              = render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity)
+            .col.mb-3
+              .border.px-3
+                = render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity)
 
   %hr
 

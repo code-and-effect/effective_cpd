@@ -1,0 +1,6 @@
+%h2 Agreements
+= f.check_box :confirm_read, label: "Yes, I have read the above content and agreements"
+= f.check_box :confirm_factual, label: "Yes, I declare all provided information to be factual and complete"
+
+%h2 Resume
+= f.file_field :files, label: 'Attach resume', hint: 'Please attach your resume or other CPD related documents'

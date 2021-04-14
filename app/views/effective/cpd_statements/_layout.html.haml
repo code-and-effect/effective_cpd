@@ -12,7 +12,9 @@
       %tbody
         - if end_at.present? && !resource.completed?
           %tr{title: "#{cpd_cycle} is available #{cpd_cycle.available_date}"}
-            %td= ((end_at - Time.zone.now) / 1.day).to_i
+            %td
+              %h4= ((end_at - Time.zone.now) / 1.day).to_i
+
             %td days left to submit
 
         %tr
@@ -21,7 +23,7 @@
 
           %td
             - if cpd_cycle.required_score.to_i > 0
-              #{cpd_credits_label} out of #{cpd_cycle.required_score} required in current #{cpd_cycle_label}
+              #{cpd_credits_label} out of #{cpd_cycle.required_score} required
             - else
               #{cpd_credits_label} in current #{cpd_cycle_label}
 

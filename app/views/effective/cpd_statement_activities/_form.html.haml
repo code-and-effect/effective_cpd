@@ -22,7 +22,7 @@
       %br
       = rule.credit_description
 
-    .col-2
+    .col-2.text-center
       - if f.object.persisted?
         %strong= cpd_credits_label.titleize
         %br
@@ -31,7 +31,7 @@
         - else
           = f.object.score.to_i
 
-    .col-2
+    .col-2.text-center
       - if f.object.persisted?
         %strong Carry Forward
         %br

@@ -8,6 +8,7 @@
     .mb-2= resource.cpd_cycle.agreements_content
 
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+    = render('agreements', f: f, form: f)
     = f.hidden_field :current_step
 
     = f.submit 'Save and Continue', center: true

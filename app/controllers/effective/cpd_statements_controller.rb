@@ -53,9 +53,13 @@ module Effective
       when :activities
         params.require(:effective_cpd_statement).permit(:current_step)
       when :agreements
-        params.require(:effective_cpd_statement).permit(:current_step)
+        params.require(:effective_cpd_statement).permit(
+          :current_step, :confirm_read, :confirm_factual, files: []
+        )
       when :submit
-        params.require(:effective_cpd_statement).permit(:current_step)
+        params.require(:effective_cpd_statement).permit(
+          :current_step, :confirm_readonly
+        )
       when :complete
         raise('unexpected post to complete')
       else

@@ -50,7 +50,7 @@ module Effective
     end
 
     def to_s
-      'activity'
+      (cpd_activity || 'activity').to_s
     end
 
     def reduced_messages
