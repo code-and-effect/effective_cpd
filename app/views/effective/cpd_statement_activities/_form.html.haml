@@ -1,7 +1,7 @@
 - url = (cpd_statement_activity.persisted? ? effective_cpd.cpd_statement_cpd_statement_activity_path(cpd_statement_activity.cpd_statement, cpd_statement_activity) : effective_cpd.cpd_statement_cpd_statement_activities_path(cpd_statement_activity.cpd_statement))
 - readonly = cpd_statement_activity.locked? || local_assigns[:readonly]
 
-= effective_form_with(model: cpd_statement_activity, url: url, remote: true, class: 'cpd-statement-activity-form') do |f|
+= effective_form_with(model: cpd_statement_activity, url: (readonly ? '#' : url), remote: true, class: 'cpd-statement-activity-form') do |f|
   - statement = cpd_statement_activity.cpd_statement
   - activity = cpd_statement_activity.cpd_activity
   - rule = statement.cpd_cycle.rule_for(activity)
@@ -11,7 +11,7 @@
   - if activity.body.present?
     = activity.body
 
-  - if readonly && cpd_statement_activity.is_carry_over? && (current_user.id == cpd_statement_activity.cpd_statement.user_id)
+  - if cpd_statement_activity.is_carry_over? && (current_user.id == cpd_statement_activity.cpd_statement.user_id)
     .alert.alert-warning
       This activity is read-only because it was carried forward from
       = cpd_statement_activity.original.cpd_statement.cpd_cycle
@@ -37,9 +37,6 @@
         %br
         = f.object.carry_forward.to_i
 
-  = f.hidden_field :cpd_category_id
-  = f.hidden_field :cpd_activity_id
-
   .row
     .col
       - if activity.amount_label.present?
@@ -59,6 +56,9 @@
       = f.text_area :description, placeholder: 'Please provide any additional information about this activity', readonly: true, disabled: readonly
 
   - unless readonly
+    = f.hidden_field :cpd_category_id
+    = f.hidden_field :cpd_activity_id
+
     = f.submit do
       = f.save 'Save Activity'
 
