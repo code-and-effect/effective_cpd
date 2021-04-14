@@ -21,6 +21,8 @@ EffectiveCpd::Engine.routes.draw do
     resources :cpd_activities, except: [:show]
     resources :cpd_cycles, except: [:show]
     resources :cpd_rules, only: [:index]
+
+    resources :cpd_statements, only: [:index, :edit, :update]
   end
 
 end

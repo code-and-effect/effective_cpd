@@ -1,0 +1,6 @@
+= tabs do
+  = tab 'Statement' do
+    = render('effective/cpd_statements/cpd_statement', cpd_statement: cpd_statement)
+
+  = tab 'Logs' do
+    = render_inline_datatable(cpd_statement.log_changes_datatable)

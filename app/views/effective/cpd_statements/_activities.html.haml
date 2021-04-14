@@ -29,29 +29,27 @@
         .progress-bar{role: 'progressbar', style: "width: #{width}%", 'aria-valuenow': valuenow, 'aria-valuemin': 0, 'aria-valuemax': valuemax}
 
       - statement_activities.each do |statement_activity|
-        .statement-activity
+        .statement-activity.mb-3
           .statement-activity-content.row
             .col-8
-              %p
-                = link_to('#', 'data-cpd-edit-activity': true) do
-                  = icon('plus-circle', class: 'small-1')
-                  = statement_activity.cpd_activity
-                  - if statement_activity.is_carry_over?
-                    %br
-                    %small carried forward from #{statement_activity.original_cycle}
+              = link_to('#', 'data-cpd-edit-activity': true) do
+                = icon('plus-circle', class: 'small-1')
+                = statement_activity.cpd_activity
+                - if statement_activity.is_carry_over?
+                  %br
+                  %small carried forward from #{statement_activity.original_cycle}
 
             .col-2.score
-              %p
-                - if statement_activity.reduced_messages.present?
-                  %span{title: statement_activity.reduced_messages.values.join("\n\n")}= "#{statement_activity.score} *"
-                - else
-                  = statement_activity.score.to_i
+              - if statement_activity.reduced_messages.present?
+                %span{title: statement_activity.reduced_messages.values.join("\n\n")}= "#{statement_activity.score} *"
+              - else
+                = statement_activity.score.to_i
 
             .col-2.carry-forward
-              %p= statement_activity.carry_forward.to_i
+              = statement_activity.carry_forward.to_i
 
           .statement-activity-form.row{style: 'display: none;'}
-            .col.mb-3
+            .col
               .border.px-3
                 = render('effective/cpd_statement_activities/form', cpd_statement_activity: statement_activity, readonly: local_assigns[:readonly])
 

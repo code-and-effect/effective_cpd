@@ -3,7 +3,7 @@ module Admin
     datatable do
       order :start_at, :desc
 
-      col :token, visible: false
+      col :id, visible: false
       col :created_at, visible: false
       col :updated_at, visible: false
 

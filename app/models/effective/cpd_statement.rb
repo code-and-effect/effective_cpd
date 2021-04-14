@@ -40,8 +40,10 @@ module Effective
     end
 
     scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:files_attachments, :cpd_category, :original, cpd_activity: [:rich_text_body]]) }
-    scope :completed, -> { where.not(completed_at: nil) }
     scope :sorted, -> { order(:cpd_cycle_id) }
+
+    scope :draft, -> { where(completed_at: nil) }
+    scope :completed, -> { where.not(completed_at: nil) }
 
     before_validation(if: -> { new_record? }) do
       self.user ||= current_user
