@@ -40,10 +40,10 @@
   .row
     .col
       - if activity.amount_label.present?
-        = f.number_field :amount, label: activity.amount_label.titleize, required: true, readonly: true, disabled: readonly
+        = f.number_field :amount, label: activity.amount_label.titleize, required: true, readonly: readonly, disabled: readonly
 
       - if activity.amount2_label.present?
-        = f.number_field :amount2, label: activity.amount2_label.titleize, required: true, readonly: true, disabled: readonly
+        = f.number_field :amount2, label: activity.amount2_label.titleize, required: true, readonly: readonly, disabled: readonly
 
       - if activity.amount_label.blank? && activity.amount2_label.blank?
         = f.hidden_field :amount, value: 1
@@ -53,7 +53,7 @@
         = f.file_field :files, label: 'Supporting Documents', required: activity.requires_upload_file?, disabled: readonly
 
     .col
-      = f.text_area :description, placeholder: 'Please provide any additional information about this activity', readonly: true, disabled: readonly
+      = f.text_area :description, placeholder: 'Please provide any additional information about this activity', readonly: readonly, disabled: readonly
 
   - unless readonly
     = f.hidden_field :cpd_category_id

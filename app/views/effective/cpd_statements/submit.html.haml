@@ -9,6 +9,8 @@
 
   = render(resource)
 
+  %p= link_to 'Change Activities', wizard_path(:activities)
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 

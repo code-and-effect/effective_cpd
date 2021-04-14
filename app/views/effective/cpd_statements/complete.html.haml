@@ -7,4 +7,7 @@
   - if resource.cpd_cycle.complete_content.present?
     .mb-2= resource.cpd_cycle.complete_content
 
-  = link_to 'Home', root_url, class: 'btn btn-primary'
+  = render(resource)
+
+  %hr
+  .text-center= link_to 'Home', root_url, class: 'btn btn-primary'

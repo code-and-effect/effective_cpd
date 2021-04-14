@@ -12,6 +12,11 @@
           %th User
           %td= link_to(cpd_statement.user, edit_admin_user_path(cpd_statement.user))
 
+    - if cpd_statement.completed?
+      %tr
+        %th Completed
+        %td= cpd_statement.completed_at.strftime('%F %H:%M')
+
     %tr
       %th= cpd_cycle_label.titleize
       %td= cpd_statement.cpd_cycle
