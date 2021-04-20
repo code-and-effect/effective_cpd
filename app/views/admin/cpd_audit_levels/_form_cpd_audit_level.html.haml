@@ -1,0 +1,12 @@
+= effective_form_with(model: [:admin, cpd_audit_level], engine: true) do |f|
+  = f.text_field :title, hint: 'The title of this kind of audit'
+
+  %h3 Sections
+  %p
+    Please add at least one section.
+    Each section is a step on the audit wizard with its own content and questions.
+
+  = f.has_many :cpd_audit_sections, class: 'tight' do |fas|
+    = fas.text_field :title, label: false
+
+  = effective_submit(f)

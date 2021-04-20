@@ -23,6 +23,9 @@ EffectiveCpd::Engine.routes.draw do
     resources :cpd_rules, only: [:index]
 
     resources :cpd_statements, only: [:index, :edit, :update]
+
+    resources :cpd_audit_levels, except: [:show]
+    resources :cpd_audit_questions, except: [:show]
   end
 
 end
