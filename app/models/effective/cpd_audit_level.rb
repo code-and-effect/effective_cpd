@@ -8,7 +8,19 @@ module Effective
     has_many :cpd_audit_questions, -> { CpdAuditQuestion.sorted }, through: :cpd_audit_sections
 
     effective_resource do
-      title       :string
+      title                 :string
+
+      conflict_of_interest    :boolean      # Feature flags
+      can_request_exemption   :boolean
+      can_request_extension   :boolean
+
+      days_to_declare_conflict      :integer
+      days_to_request_exemption     :integer
+      days_to_request_extension     :integer
+
+      days_to_submit                :integer  # For auditee to submit statement
+      days_to_review                :integer  # For auditor/audit_review to be completed
+
       timestamps
     end
 

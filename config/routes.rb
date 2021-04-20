@@ -4,16 +4,22 @@ end
 
 EffectiveCpd::Engine.routes.draw do
   scope module: 'effective' do
+    # Statements wizard
     resources :cpd_cycles, path: "cpd_#{EffectiveCpd.cycle_label.pluralize.parameterize.underscore}", only: [:show] do
       resources :cpd_statements, path: :statements, only: [:new, :show] do
         resources :build, controller: :cpd_statements, only: [:show, :update]
       end
     end
 
+    # CRUD StatementActivities
     resources :cpd_statements, only: [] do
       resources :cpd_statement_activities, except: [:index, :show]
     end
 
+    # Audits wizard
+    resources :cpd_audits, only: [:new, :show] do
+      resources :build, controller: :cpd_audits, only: [:show, :update]
+    end
   end
 
   namespace :admin do
@@ -26,6 +32,8 @@ EffectiveCpd::Engine.routes.draw do
 
     resources :cpd_audit_levels, except: [:show]
     resources :cpd_audit_questions, except: [:show]
+
+    resources :cpd_audits, except: [:show]
   end
 
 end

@@ -36,6 +36,7 @@ module Effective
 
       # Acts as Wizard
       wizard_steps           :text, permitted: false
+
       timestamps
     end
 
