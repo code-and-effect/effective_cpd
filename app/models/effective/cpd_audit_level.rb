@@ -10,6 +10,8 @@ module Effective
     effective_resource do
       title                         :string
 
+      determinations                :text
+
       days_to_submit                :integer  # For auditee to submit statement
       days_to_review                :integer  # For auditor/audit_review to be completed
 
@@ -23,6 +25,8 @@ module Effective
 
       timestamps
     end
+
+    serialize :determinations, Array
 
     scope :deep, -> { all }
     scope :sorted, -> { order(:title) }

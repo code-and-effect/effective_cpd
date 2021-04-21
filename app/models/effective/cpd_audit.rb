@@ -6,14 +6,15 @@ module Effective
     belongs_to :cpd_audit_level
     belongs_to :user, polymorphic: true  # The user being audited
 
-    #has_many :cpd_audit_reviews
-    #has_many :cpd_audit_responses
-
-    #has_many :cpd_statement_activities, -> { order(:id) }, inverse_of: :cpd_statement, dependent: :destroy
-    #accepts_nested_attributes_for :cpd_statement_activities
+    has_many :cpd_audit_reviews, -> { order(:id) }, inverse_of: :cpd_audit, dependent: :destroy
+    accepts_nested_attributes_for :cpd_audit_reviews
 
     has_many_attached :files
     log_changes(except: :step_progress) if respond_to?(:log_changes)
+
+    if Rails.env.test? # So our tests can override the required_steps method
+      cattr_accessor :test_required_steps
+    end
 
     acts_as_tokened
 
@@ -53,12 +54,15 @@ module Effective
       determination            :string
 
       # Auditee response
-      conflict_of_interest     :boolean
+      conflict_of_interest          :boolean
+      conflict_of_interest_reason   :text
 
-      exemption_request        :text
+      exemption_request             :boolean
+      exemption_request_reason      :text
 
-      extension_request        :text
-      extension_request_date   :date
+      extension_request             :boolean
+      extension_request_date        :date
+      extension_request_reason      :text
 
       # acts_as_statused
       status                  :string
