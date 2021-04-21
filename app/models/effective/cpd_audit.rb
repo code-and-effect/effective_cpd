@@ -130,7 +130,7 @@ module Effective
 
     def dynamic_wizard_steps
       cpd_audit_level.cpd_audit_sections.each_with_object({}) do |section, h|
-        h["questions_#{section.position}".to_sym] = section.title
+        h["section#{section.position+1}".to_sym] = section.title
       end
     end
 
@@ -141,8 +141,11 @@ module Effective
         (:conflict if cpd_audit_level.conflict_of_interest?),
         (:exemption if cpd_audit_level.can_request_exemption?),
         (:extension if cpd_audit_level.can_request_extension?),
-        (:waiting if cpd_audit_level.can_request_exemption? || cpd_audit_level.can_request_extension?)
       ].compact
+
+      if exemption_request? || extension_request?
+        steps += [:waiting]
+      end
 
       steps += [:questionaire] + dynamic_wizard_steps.keys + [:files, :submit, :complete]
 
@@ -157,10 +160,28 @@ module Effective
       (extension_date || notification_date)
     end
 
-    # We completed the questionaire
+    # These methods are automatically called by acts_as_wizard wizard controller
+    def start!
+      started!
+    end
+
+    def conflict!
+      conflict_of_interest? ? conflicted! : save!
+    end
+
+    def exemption!
+      exemption_request? ? exemption_requested! : save!
+    end
+
+    def extension!
+      extension_request? ? extension_requested! : save!
+    end
+
     def submit!
       submitted!
     end
+
+    # These methods are overrides of automatically created ones by acts_as_statused
 
   end
 end
