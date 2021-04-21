@@ -97,7 +97,7 @@ module Effective
     validates :notification_date, presence: true
 
     def to_s
-      (cpd_audit_level || 'audit').to_s
+      'audit'
     end
 
     def deadline_date

@@ -1,0 +1,17 @@
+.row
+  .col-3
+    = render_wizard_sidebar(resource)
+
+    - last_3_cycles = Effective::CpdCycle.sorted.where('start_at <= ?', Time.zone.now).last(3)
+    - last_3_scores = Effective::CpdStatement.where(cpd_cycle: last_3_cycles, user: resource.user).sum(&:score)
+
+    %table.table.mt-4
+      %tbody
+        %tr
+          %td
+            %h4= last_3_scores.to_i
+
+          %td #{cpd_credits_label} in last 3 #{cpd_cycles_label} (including this #{cpd_cycle_label})
+
+  .col-9
+    = yield

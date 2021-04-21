@@ -1,6 +1,18 @@
 = effective_form_with(model: [:admin, cpd_audit], engine: true) do |f|
-  = f.select :cpd_audit_level_id, Effective::CpdAuditLevel.all.sorted
+  = f.select :user, {'Users' => User.all.sorted}, label: 'Auditee', polymorphic: true
 
-  = f.select :user, {'Users' => User.all.sorted}, polymorphic: true
+  = f.select :cpd_audit_level_id, Effective::CpdAuditLevel.all.sorted, label: 'Audit level'
+
+  = f.date_field :notification_date, label: 'Date of notification', required: false,
+    hint: "the starting date for any deadline calculations. leave blank for today's date"
+
+  - if f.object.new_record?
+    = card('Auditors') do
+      %p.text-muted An audit review will be created for each selected auditor.
+
+      = f.has_many :cpd_audit_reviews, class: 'tight' do |fr|
+        = fr.select :user, {'Users' => User.all.sorted}, label: false, polymorphic: true
+
+  %p.text-muted TODO: This action should send an email to both the auditor and auditees
 
   = effective_submit(f)

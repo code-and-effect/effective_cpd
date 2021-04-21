@@ -1,5 +1,10 @@
 module Effective
   class CpdAuditLevel < ActiveRecord::Base
+    has_rich_text :all_steps_content  # Update build_from_cycle() below if these change
+    has_rich_text :start_content
+    has_rich_text :submit_content
+    has_rich_text :complete_content
+
     log_changes if respond_to?(:log_changes)
 
     has_many :cpd_audit_sections, -> { CpdAuditSection.sorted }, inverse_of: :cpd_audit_level, dependent: :destroy

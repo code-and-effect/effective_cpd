@@ -3,14 +3,14 @@
     = render 'admin/cpd_cycles/form_cpd_cycle', cpd_cycle: cpd_cycle
 
   - if cpd_cycle.persisted?
-    = tab 'Content' do
-      = render 'admin/cpd_cycles/form_content', cpd_cycle: cpd_cycle
-
     = tab 'Category and Activity Rules' do
       = tabs do
         - Effective::CpdCategory.deep.sorted.each do |cpd_category|
           = tab(cpd_category.to_s) do
             = render 'admin/cpd_cycles/form_cpd_rules', cpd_cycle: cpd_cycle, cpd_category: cpd_category
+
+    = tab 'Content' do
+      = render 'admin/cpd_cycles/form_content', cpd_cycle: cpd_cycle
 
     - if cpd_cycle.respond_to?(:log_changes_datatable)
       = tab 'Logs' do

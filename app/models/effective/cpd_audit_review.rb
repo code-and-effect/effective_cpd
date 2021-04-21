@@ -54,6 +54,10 @@ module Effective
     scope :in_progress, -> { where(completed_at: nil) }
     scope :completed, -> { where.not(completed_at: nil) }
 
+    before_validation(if: -> { new_record? }) do
+      self.cpd_audit_level ||= cpd_audit&.cpd_audit_level
+    end
+
     def to_s
       'audit review'
     end

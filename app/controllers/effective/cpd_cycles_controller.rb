@@ -2,6 +2,7 @@ module Effective
   class CpdCyclesController < ApplicationController
     before_action(:authenticate_user!) if defined?(Devise)
 
+    # If they visit /cpd_cycles/1, redirect to their statement for that cycle
     def show
       cycle = Effective::CpdCycle.find(params[:id])
       EffectiveResources.authorize!(self, :show, cycle)

@@ -9,6 +9,9 @@
           = tab(cpd_audit_section.to_s) do
             = render 'admin/cpd_audit_levels/form_cpd_audit_section', cpd_audit_level: cpd_audit_level, cpd_audit_section: cpd_audit_section
 
+    = tab 'Content' do
+      = render 'admin/cpd_audit_levels/form_content', cpd_cycle: cpd_cycle
+
     - if cpd_audit_level.respond_to?(:log_changes_datatable)
       = tab 'Logs' do
         = render_datatable(cpd_audit_level.log_changes_datatable)
