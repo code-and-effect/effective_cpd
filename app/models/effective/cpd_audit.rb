@@ -31,8 +31,8 @@ module Effective
       :waiting,               # Waiting on exemption or extension request
       :readied,               # Ready for auditee to complete questions.
       :submitted,             # Audittee has completed questionaire submitted. Audittee is done.
-      :reviewed,              # All audit reviews completed. Ready for a decision.
-      :audited                # Set by admin and/or audit committee. Exit state. All done.
+      :reviewed,              # All audit reviews completed. Ready for a determination.
+      :audited                # Determination made by admin and/or audit committee. Exit state. All done.
     )
 
     acts_as_wizard(
@@ -128,9 +128,13 @@ module Effective
       complete: 'Complete'
     )
 
-    def required_steps
-      return self.class.test_required_steps if Rails.env.test? && self.class.test_required_steps.present?
+    def dynamic_wizard_steps
+      cpd_audit_level.cpd_audit_sections.each_with_object({}) do |section, h|
+        h["questions_#{section.position}".to_sym] = section.title
+      end
+    end
 
+    def required_steps
       steps = [:start, :information, :instructions]
 
       steps += [
@@ -140,15 +144,13 @@ module Effective
         (:waiting if cpd_audit_level.can_request_exemption? || cpd_audit_level.can_request_extension?)
       ].compact
 
-      steps += [:questionaire]
-
-      steps += cpd_audit_level.cpd_audit_sections.map.with_index do |cpd_audit_section, index|
-        "questions_#{index+1}".to_sym
-      end
-
-      steps += [:files, :submit, :complete]
+      steps += [:questionaire] + dynamic_wizard_steps.keys + [:files, :submit, :complete]
 
       steps
+    end
+
+    def wizard_step_title(step)
+      WIZARD_STEPS[step] || dynamic_wizard_steps.fetch(step)
     end
 
     def deadline_date
