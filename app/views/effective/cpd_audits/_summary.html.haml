@@ -1,0 +1,43 @@
+%table.table
+  %tbody
+    %tr
+      %th Auditee
+      %td
+        = cpd_audit.user
+        %br
+        %small= mail_to cpd_audit.user.email
+
+      - if request.path.start_with?('/admin') && respond_to?(:edit_admin_user_path)
+        %tr
+          %th User
+          %td= link_to(cpd_audit.user, edit_admin_user_path(cpd_audit.user))
+
+      %tr
+        %th Date of notification
+        %td= cpd_audit.notification_date.strftime('%F')
+
+      - if cpd_audit.extension_date.present?
+        %tr Approved date of extension
+        %td= cpd_audit.extension_date.strftime('%F')
+
+      %tr
+        %th Status
+        %td
+          %span.badge.badge-secondary= cpd_audit.status
+
+      %tr
+        %th Summary
+        %td TODO
+
+      %tr
+        %th Determination
+        %td= cpd_audit.determination.presence || '-'
+
+    %tr
+      %th Attachments
+      %td
+        - if cpd_audit.files.blank?
+          None
+        - else
+        - cpd_audit.files.each do |file|
+          %div= link_to(file.filename, url_for(file), target: '_blank')

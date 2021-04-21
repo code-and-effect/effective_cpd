@@ -1,0 +1,5 @@
+= card(cpd_audit.cpd_audit_level.to_s + ' Audit') do
+  = render('effective/cpd_audits/summary', cpd_audit: cpd_audit)
+
+-# = card('Activities') do
+-#   = render('effective/cpd_audits/activities', cpd_audit: cpd_audit, readonly: true)

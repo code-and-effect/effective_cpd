@@ -48,7 +48,7 @@ module Effective
     effective_resource do
       # Important dates
       notification_date        :date     # created_at, but editable
-      extension_date           :date     # set by admin if extension is granted
+      extension_date           :date     # set by admin if extension if granted
 
       # Final determination
       determination            :string
