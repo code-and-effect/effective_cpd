@@ -1,6 +1,4 @@
 = effective_form_with(model: [:admin, cpd_audit_level], engine: true) do |f|
-  %h2 Content
-
   = f.fields_for :cpd_audit_sections, cpd_audit_section do |fas|
     = fas.rich_text_area :top_content
     = fas.rich_text_area :bottom_content

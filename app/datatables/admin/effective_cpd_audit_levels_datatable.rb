@@ -9,17 +9,17 @@ module Admin
 
       col :title
 
-      col :days_to_submit, label: false
-      col :days_to_review, label: false
+      col :days_to_submit, visible: false
+      col :days_to_review, visible: false
 
-      col :conflict_of_interest, label: false
-      col :days_to_declare_conflict, label: false
+      col :conflict_of_interest, visible: false
+      col :days_to_declare_conflict, visible: false
 
-      col :can_request_exemption, label: false
-      col :days_to_request_exemption, label: false
+      col :can_request_exemption, visible: false
+      col :days_to_request_exemption, visible: false
 
-      col :can_request_extension, label: false
-      col :days_to_request_extension, label: false
+      col :can_request_extension, visible: false
+      col :days_to_request_extension, visible: false
 
       col :cpd_audit_sections, label: 'Sections', action: false
       col :cpd_audit_questions, label: 'Questions', action: false

@@ -4,14 +4,18 @@
 
   - if cpd_audit_level.persisted?
     = tab 'Sections and Questions' do
+      %p
+        Each of the following sections is a step on the audit wizard.
+        The All Steps content will be displayed as well as the top and bottom content.
+
       = tabs do
         - cpd_audit_level.cpd_audit_sections.each do |cpd_audit_section|
           = tab(cpd_audit_section.to_s) do
             = render 'admin/cpd_audit_levels/form_cpd_audit_section', cpd_audit_level: cpd_audit_level, cpd_audit_section: cpd_audit_section
 
     = tab 'Content' do
-      = render 'admin/cpd_audit_levels/form_content', cpd_cycle: cpd_cycle
+      = render 'admin/cpd_audit_levels/form_content', cpd_audit_level: cpd_audit_level
 
     - if cpd_audit_level.respond_to?(:log_changes_datatable)
       = tab 'Logs' do
-        = render_datatable(cpd_audit_level.log_changes_datatable)
+        = render_inline_datatable(cpd_audit_level.log_changes_datatable)

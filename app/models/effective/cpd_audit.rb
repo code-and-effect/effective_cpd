@@ -28,19 +28,28 @@ module Effective
       :extension_requested,   # Audittee has requested an extension
       :extension_granted,     # Extension granted
       :extension_denied,      # Extension denied
-      :waiting,               # Waiting on auditer reviews conflict of interest
-      :readied,               # Ready for auditee to submit
-      :submitted,             # Audittee has completed questionaire
-      :reviewed,              # All audit reviews completed
-      :audited                # Set by admin. Exit state. All done.
+      :waiting,               # Waiting on exemption or extension request
+      :readied,               # Ready for auditee to complete questions.
+      :submitted,             # Audittee has completed questionaire submitted. Audittee is done.
+      :reviewed,              # All audit reviews completed. Ready for a decision.
+      :audited                # Set by admin and/or audit committee. Exit state. All done.
     )
 
     acts_as_wizard(
       start: 'Start',
+      information: 'Information',
+      instructions: 'Instructions',
+
+      # These 4 steps are determined by audit_level settings
       conflict: 'Conflict of Interest',
       exemption: 'Request Exemption',
       extension: 'Request Extension',
       waiting: 'Waiting on Request',
+
+      questionaire: 'Questionaire',
+      # ... There will be one step per cpd_audit_sections here
+      files: 'Upload Resume',
+
       submit: 'Confirm & Submit',
       complete: 'Complete'
     )
@@ -97,7 +106,49 @@ module Effective
     validates :notification_date, presence: true
 
     def to_s
-      'audit'
+      persisted? ? "#{cpd_audit_level} audit of #{user}" : 'audit'
+    end
+
+    acts_as_wizard(
+      start: 'Start',
+      information: 'Information',
+      instructions: 'Instructions',
+
+      # These 4 steps are determined by audit_level settings
+      conflict: 'Conflict of Interest',
+      exemption: 'Request Exemption',
+      extension: 'Request Extension',
+      waiting: 'Waiting on Request',
+
+      questionaire: 'Questionaire',
+      # ... There will be one step per cpd_audit_sections here
+      files: 'Upload Resume',
+
+      submit: 'Confirm & Submit',
+      complete: 'Complete'
+    )
+
+    def required_steps
+      return self.class.test_required_steps if Rails.env.test? && self.class.test_required_steps.present?
+
+      steps = [:start, :information, :instructions]
+
+      steps += [
+        (:conflict if cpd_audit_level.conflict_of_interest?),
+        (:exemption if cpd_audit_level.can_request_exemption?),
+        (:extension if cpd_audit_level.can_request_extension?),
+        (:waiting if cpd_audit_level.can_request_exemption? || cpd_audit_level.can_request_extension?)
+      ].compact
+
+      steps += [:questionaire]
+
+      steps += cpd_audit_level.cpd_audit_sections.map.with_index do |cpd_audit_section, index|
+        "questions_#{index+1}".to_sym
+      end
+
+      steps += [:files, :submit, :complete]
+
+      steps
     end
 
     def deadline_date
