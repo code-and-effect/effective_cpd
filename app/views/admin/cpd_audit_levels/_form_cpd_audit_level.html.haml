@@ -1,7 +1,38 @@
 = effective_form_with(model: [:admin, cpd_audit_level], engine: true) do |f|
   = f.text_field :title, hint: 'The title of this kind of audit'
 
-  %h3 Sections
+  %h2 Deadlines
+  %p.text-muted Leave blank for no deadlines
+  .row
+    .col= f.text_field :days_to_submit, label: 'Days for auditee to submit', hint: "The number of business days from the date of notification or approved extension that an auditee has to complete their submission."
+    .col= f.text_field :days_to_review, label: 'Days for auditor to review', hint: "The number of business days from the auditee's deadline that an auditor has to review the submission and provide a recommendation."
+
+  %h2 Workflows
+  %p.text-muted Each of these workflows will be displayed to the audittee and/or auditor on their wizard steps. Leave blank for no deadlines.
+
+  .row
+    .col
+      %h3 Conflict of Interest
+      = f.check_box :conflict_of_interest, label: 'Yes, the auditee and auditor(s) may declare a conflict of interest with the matching'
+
+      = f.show_if :conflict_of_interest, true do
+        = f.text_field :days_to_declare_conflict, label: 'Days to declare conflict of interest', hint: "The number of business days from the date of notification that an auditee and auditors have to declare a conflict of interest with the matching."
+
+    .col
+      %h3 Exemption
+      = f.check_box :can_request_exemption, label: "Yes, the auditee may request an exemption<br><br>".html_safe
+
+      = f.show_if :can_request_exemption, true do
+        = f.text_field :days_to_request_exemption, label: 'Days to request exemption', hint: "The number of business days from the date of notification that an auditee may request an exemption."
+
+    .col
+      %h3 Extension
+      = f.check_box :can_request_extension, label: "Yes, the auditee may request an extension<br><br>"
+
+      = f.show_if :can_request_extension, true do
+        = f.text_field :days_to_request_extension, label: 'Days to request extension', hint: "The number of business days from the date of notification that an auditee may request an extension."
+
+  %h2 Sections
   %p
     Please add at least one section.
     Each section is a step on the audit wizard with its own content and questions.
