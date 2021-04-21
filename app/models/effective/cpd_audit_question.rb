@@ -2,7 +2,7 @@ module Effective
   class CpdAuditQuestion < ActiveRecord::Base
     belongs_to :cpd_audit_section
 
-    has_many :cpd_audit_question_options, -> { order(:position) }, inverse_of: :cpd_audit_question, dependent: :delete_all
+    has_many :cpd_audit_question_options, -> { CpdAuditQuestionOption.sorted }, inverse_of: :cpd_audit_question, dependent: :delete_all
     accepts_nested_attributes_for :cpd_audit_question_options, reject_if: :all_blank, allow_destroy: true
 
     has_rich_text :body

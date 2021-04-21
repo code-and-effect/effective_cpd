@@ -13,15 +13,15 @@ module Effective
       cattr_accessor :test_required_steps
     end
 
-    # has_many :applicant_review_items, -> { order(:id) }, inverse_of: :applicant_review
-    # accepts_nested_attributes_for :applicant_review_items, reject_if: :all_blank, allow_destroy: true
+    has_many :cpd_audit_review_items, -> { CpdAuditReviewItem.sorted }, inverse_of: :cpd_audit_review
+    accepts_nested_attributes_for :cpd_audit_review_items, reject_if: :all_blank, allow_destroy: true
 
     acts_as_tokened
 
     acts_as_wizard(
       start: 'Start',
       conflict: 'Conflict of Interest',
-      review: 'Review items'
+      review: 'Review items',
       submit: 'Confirm & Submit',
       complete: 'Complete'
     )
@@ -49,6 +49,7 @@ module Effective
     end
 
     scope :deep, -> { includes(:cpd_audit, :cpd_audit_level, :user) }
+    scope :sorted, -> { order(:id) }
 
     scope :in_progress, -> { where(completed_at: nil) }
     scope :completed, -> { where.not(completed_at: nil) }

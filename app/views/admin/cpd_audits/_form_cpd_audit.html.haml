@@ -1,0 +1,6 @@
+= effective_form_with(model: [:admin, cpd_audit], engine: true) do |f|
+  = f.select :cpd_audit_level_id, Effective::CpdAuditLevel.all.sorted
+
+  = f.select :user, {'Users' => User.all.sorted}, polymorphic: true
+
+  = effective_submit(f)

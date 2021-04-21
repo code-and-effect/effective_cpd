@@ -7,6 +7,9 @@ module Effective
 
     has_many :cpd_audit_questions, -> { CpdAuditQuestion.sorted }, through: :cpd_audit_sections
 
+    has_many :cpd_audit_reviews, -> { CpdAuditReview.sorted }, inverse_of: :cpd_audit_level, dependent: :destroy
+    accepts_nested_attributes_for :cpd_audit_reviews, allow_destroy: true
+
     effective_resource do
       title                         :string
 
@@ -32,20 +35,26 @@ module Effective
     scope :sorted, -> { order(:title) }
 
     validates :title, presence: true
+    validates :determinations, presence: true
 
     validates :days_to_submit, numericality: { greater_than: 0, allow_nil: true }
-    validates :days_to_submit, numericality: { greater_than: 0, allow_nil: true }
+    validates :days_to_review, numericality: { greater_than: 0, allow_nil: true }
 
     validates :days_to_declare_conflict, presence: true, if: -> { conflict_of_interest? }
-    validates :days_to_request_exemption, presence: true, if: -> { can_request_exemption? }
-    validates :days_to_request_extension, presence: true, if: -> { can_request_extension? }
-
     validates :days_to_declare_conflict, numericality: { greater_than: 0, allow_nil: true }
+
+    validates :days_to_request_exemption, presence: true, if: -> { can_request_exemption? }
     validates :days_to_request_exemption, numericality: { greater_than: 0, allow_nil: true }
+
+    validates :days_to_request_extension, presence: true, if: -> { can_request_extension? }
     validates :days_to_request_extension, numericality: { greater_than: 0, allow_nil: true }
 
     def to_s
       title.presence || 'audit level'
+    end
+
+    def determinations
+      Array(self[:determinations]) - [nil, '']
     end
 
   end

@@ -31,7 +31,7 @@ module Admin
     end
 
     collection do
-      Effective::CpdAuditLevel.all.deep
+      Effective::CpdAudit.all.deep
     end
   end
 end

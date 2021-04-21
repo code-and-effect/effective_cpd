@@ -1,6 +1,6 @@
 # Displays past cpd statements that were completed by the user
 
-class EffectiveCpdStatementsDatatable < Effective::Datatable
+class EffectiveCpdCompletedStatementsDatatable < Effective::Datatable
   datatable do
     order :cpd_cycle_id
 

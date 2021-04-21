@@ -83,32 +83,25 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> {
-      includes(:cpd_audit_level, :cpd_cycle, :cpd_statement, :user)
-      #includes(cpd_statement: [:cpd_cycle, :user, cpd_statement_activities: [:files_attachments, :cpd_category, :original, cpd_activity: [:rich_text_body]]]) }
-    }
+    scope :deep, -> { includes(:cpd_audit_level, :user, cpd_audit_reviews: [:cpd_audit_review_items]) }
 
-    scope :sorted, -> { order(:cpd_cycle, :cpd_statement_id) }
+    scope :sorted, -> { order(:id) }
 
     scope :draft, -> { where(completed_at: nil) }
     scope :completed, -> { where.not(completed_at: nil) }
 
     before_validation(if: -> { new_record? }) do
-      self.user ||= current_user
-      self.cpd_cycle ||= cpd_statement&.cpd_cycle
+      self.notification_date ||= Time.zone.now
     end
 
-    # with_options(if: -> { current_step == :agreements }) do
-    #   validates :confirm_read, acceptance: true
-    #   validates :confirm_factual, acceptance: true
-    # end
-
-    # with_options(if: -> { current_step == :submit}) do
-    #   validates :confirm_readonly, acceptance: true
-    # end
+    validates :notification_date, presence: true
 
     def to_s
       (cpd_audit_level || 'audit').to_s
+    end
+
+    def deadline_date
+      (extension_date || notification_date)
     end
 
     # We completed the questionaire

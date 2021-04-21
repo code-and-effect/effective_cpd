@@ -13,6 +13,7 @@ module Effective
     end
 
     scope :deep, -> { includes(:cpd_audit_review, :cpd_audit_question) }
+    scope :sorted, -> { order(:id) }
 
     validates :cpd_audit_question_id, presence: true, uniqueness: { scope: [:cpd_audit_review_id] }
 

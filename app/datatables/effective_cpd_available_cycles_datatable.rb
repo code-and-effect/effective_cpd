@@ -1,6 +1,6 @@
 # Displays available cpd_cycles that the current_user may complete
 
-class EffectiveCpdDatatable < Effective::Datatable
+class EffectiveCpdAvailableCyclesDatatable < Effective::Datatable
   datatable do
     order :start_at
 
@@ -14,8 +14,6 @@ class EffectiveCpdDatatable < Effective::Datatable
 
       if statement.blank?
         dropdown_link_to('Start', effective_cpd.cpd_cycle_cpd_statement_build_path(cpd_cycle, :new, :start))
-      elsif statement.completed?
-        'Complete'
       else
         dropdown_link_to('Continue', effective_cpd.cpd_cycle_cpd_statement_build_path(cpd_cycle, statement, statement.next_step))
       end
@@ -24,7 +22,8 @@ class EffectiveCpdDatatable < Effective::Datatable
 
   collection do
     raise('expected a current_user') unless current_user.present?
-    Effective::CpdCycle.available
+    completed = Effective::CpdStatement.completed.where(user: current_user)
+    Effective::CpdCycle.available.where.not(id: completed.select('cpd_cycle_id as id'))
   end
 
 end

@@ -14,4 +14,4 @@
 
     - if cpd_cycle.respond_to?(:log_changes_datatable)
       = tab 'Logs' do
-        = render_datatable(cpd_cycle.log_changes_datatable)
+        = render_inline_datatable(cpd_cycle.log_changes_datatable)
