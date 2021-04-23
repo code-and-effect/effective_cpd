@@ -1,0 +1,20 @@
+= render('layout') do
+  %h1= @page_title
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  - if resource.cpd_audit_level.waiting_content.present?
+    .mb-2= resource.cpd_audit_level.waiting_content
+
+  - if resource.exemption_request?
+    = render("effective/cpd_audits/exemption", cpd_audit: resource, step: :exemption)
+
+  - if resource.exemption_requested? || resource.extension_requested?
+    .alert.alert-warning.text-center
+      Please wait for your request to be granted or denied before you may continue.
+
+  - if resource.has_completed_step?(step)
+    = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+      = f.hidden_field :current_step
+      = f.submit 'Save and Continue', center: true

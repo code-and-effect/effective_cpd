@@ -1,0 +1,32 @@
+= render('layout') do
+  %h1= @page_title
+
+  - raise('expected a submitted cpd_audit') unless resource.was_submitted? || resource.was_conflicted?
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  - if resource.cpd_audit_level.complete_content.present?
+    .mb-2= resource.cpd_audit_level.complete_content
+
+  .text-center
+    .row
+      .col-2
+      .col-8
+        .alert.alert-success Audit Submitted!
+
+  %p
+    The following audit was successfully submitted at
+    = succeed('.') do
+      = resource.submitted_at.strftime('%F')
+
+    - unless resource.determination.present?
+      Your audit must be reviewed and a final determination made.
+      We will send
+      %strong= resource.user.email
+      an email notifying you of the determination.
+
+  .mb-4= render(resource)
+
+  %br
+  .text-center= link_to 'Home', root_path, class: 'btn btn-primary'

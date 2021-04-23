@@ -1,0 +1,12 @@
+= card(cpd_audit.wizard_step_title(step)) do
+  %table.table
+    %tbody
+      %tr
+        %th Files
+        %td
+          - if cpd_audit.files.blank?
+            None
+          - else
+            %ul
+              - cpd_audit.files.each do |file|
+                = link_to(file.filename, url_for(file), target: '_blank')

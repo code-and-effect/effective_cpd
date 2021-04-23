@@ -1,0 +1,14 @@
+.row
+  .col
+    %h3= cpd_audit_question
+    %p.text-muted.mb-2= cpd_audit_question.category
+
+    - if cpd_audit_question.body.present?
+      .mb-3= cpd_audit_question.body
+
+    = f.hidden_field :cpd_audit_id
+    = f.hidden_field :cpd_audit_question_id
+
+    - cpd_audit_response = f.object
+    - partial = 'effective/cpd_audit_responses/fields/' + cpd_audit_question.category_partial
+    = render(partial, f: f, cpd_audit_response: cpd_audit_response, cpd_audit_question: cpd_audit_question)

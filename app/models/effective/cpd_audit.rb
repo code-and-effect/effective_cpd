@@ -9,6 +9,9 @@ module Effective
     has_many :cpd_audit_reviews, -> { order(:id) }, inverse_of: :cpd_audit, dependent: :destroy
     accepts_nested_attributes_for :cpd_audit_reviews
 
+    has_many :cpd_audit_responses, -> { order(:id) }, inverse_of: :cpd_audit, dependent: :destroy
+    accepts_nested_attributes_for :cpd_audit_responses
+
     has_many_attached :files
     log_changes(except: :step_progress) if respond_to?(:log_changes)
 
@@ -21,15 +24,12 @@ module Effective
     acts_as_statused(
       :opened,                # Just Opened
       :started,               # First screen clicked
-      :conflicted,            # Auditee declared conflict of interest
       :exemption_requested,   # Auditee has requested an exemption
-      :exemption_granted,     # Exemption granted -> Audit is cancelled
+      :exemption_granted,     # Exemption granted -> Audit is cancelled. Exit state.
       :exemption_denied,      # Exemption denied
       :extension_requested,   # Audittee has requested an extension
       :extension_granted,     # Extension granted
       :extension_denied,      # Extension denied
-      :waiting,               # Waiting on exemption or extension request
-      :readied,               # Ready for auditee to complete questions.
       :submitted,             # Audittee has completed questionaire submitted. Audittee is done.
       :reviewed,              # All audit reviews completed. Ready for a determination.
       :audited                # Determination made by admin and/or audit committee. Exit state. All done.
@@ -46,7 +46,7 @@ module Effective
       extension: 'Request Extension',
       waiting: 'Waiting on Request',
 
-      questionaire: 'Questionaire',
+      questionnaire: 'Questionnaire',
       # ... There will be one step per cpd_audit_sections here
       files: 'Upload Resume',
 
@@ -106,7 +106,7 @@ module Effective
     validates :notification_date, presence: true
 
     def to_s
-      persisted? ? "#{cpd_audit_level} audit of #{user}" : 'audit'
+      persisted? ? "#{cpd_audit_level} Audit of #{user}" : 'audit'
     end
 
     acts_as_wizard(
@@ -134,20 +134,31 @@ module Effective
       end
     end
 
+    def can_visit_step?(step)
+      return (step == :complete) if was_submitted?  # Can only view complete step once submitted
+      can_revisit_completed_steps(step)
+    end
+
     def required_steps
       steps = [:start, :information, :instructions]
 
-      steps += [
-        (:conflict if cpd_audit_level.conflict_of_interest?),
-        (:exemption if cpd_audit_level.can_request_exemption?),
-        (:extension if cpd_audit_level.can_request_extension?),
-      ].compact
+      steps << :conflict if cpd_audit_level.conflict_of_interest?
+
+      if conflict_of_interest?
+        return steps + [:submit, :complete]
+      end
+
+      steps << :exemption if cpd_audit_level.can_request_exemption?
+
+      unless exemption_request?
+        steps << :extension if cpd_audit_level.can_request_extension?
+      end
 
       if exemption_request? || extension_request?
         steps += [:waiting]
       end
 
-      steps += [:questionaire] + dynamic_wizard_steps.keys + [:files, :submit, :complete]
+      steps += [:questionnaire] + dynamic_wizard_steps.keys + [:files, :submit, :complete]
 
       steps
     end
@@ -160,13 +171,20 @@ module Effective
       (extension_date || notification_date)
     end
 
+    def cpd_audit_section(wizard_step)
+      position = (wizard_step.to_s.split('section').last.to_i rescue false)
+      cpd_audit_level.cpd_audit_sections.find { |section| (section.position + 1) == position }
+    end
+
+    # Find or build
+    def cpd_audit_response(cpd_audit_question)
+      cpd_audit_response = cpd_audit_responses.find { |r| r.cpd_audit_question_id == cpd_audit_question.id }
+      cpd_audit_response ||= cpd_audit_responses.build(cpd_audit: self, cpd_audit_question: cpd_audit_question)
+    end
+
     # These methods are automatically called by acts_as_wizard wizard controller
     def start!
       started!
-    end
-
-    def conflict!
-      conflict_of_interest? ? conflicted! : save!
     end
 
     def exemption!
@@ -175,6 +193,32 @@ module Effective
 
     def extension!
       extension_request? ? extension_requested! : save!
+    end
+
+    def exemption_requested!
+      update!(status: :exemption_requested)
+
+      #Effective::CpdMailer.audit_exemption_requested(self).deliver_later
+      true
+    end
+
+    # By admin
+    def exemption_granted!
+      wizard_steps[:waiting] ||= Time.zone.now
+      wizard_steps[:submit] ||= Time.zone.now
+
+      submitted! && update!(status: :exemption_granted)
+
+      #Effective::CpdMailer.audit_exemption_granted(self).deliver_later if email.present?
+      true
+    end
+
+    def exemption_denied!
+      wizard_steps[:waiting] ||= Time.zone.now
+      update!(status: :exemption_denied)
+
+      #Effective::CpdMailer.audit_exemption_denied(self).deliver_later if email.present?
+      true
     end
 
     def submit!

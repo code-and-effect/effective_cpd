@@ -1,0 +1,19 @@
+= render('layout') do
+  %h1= @page_title
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  - if resource.cpd_audit_level.exemption_content.present?
+    .mb-2= resource.cpd_audit_level.exemption_content
+
+  = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+    = f.hidden_field :current_step
+
+    = f.radios :exemption_request, cpd_audit_exemption_request_collection,
+      inline: true, required: true
+
+    = f.show_if :exemption_request, true do
+      = f.text_area :exemption_request_reason, required: true
+
+    = f.submit 'Save and Continue', center: true

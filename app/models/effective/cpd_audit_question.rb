@@ -61,7 +61,7 @@ module Effective
       define_method(category.parameterize.underscore + '?') { self.category == category }
     end
 
-    def audit_question_option?
+    def question_option?
       WITH_OPTIONS_CATEGORIES.include?(category)
     end
 

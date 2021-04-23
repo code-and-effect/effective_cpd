@@ -1,0 +1,13 @@
+= render('layout') do
+  %h1= @page_title
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  - if resource.cpd_audit_level.information_content.present?
+    .mb-2= resource.cpd_audit_level.information_content
+
+  = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+    = f.hidden_field :current_step
+
+    = f.submit 'Save and Continue', center: true

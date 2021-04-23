@@ -1,5 +1,12 @@
-= card(cpd_audit.cpd_audit_level.to_s + ' Audit') do
+.effective-cpd-audit
   = render('effective/cpd_audits/summary', cpd_audit: cpd_audit)
 
--# = card('Activities') do
--#   = render('effective/cpd_audits/activities', cpd_audit: cpd_audit, readonly: true)
+  - steps = cpd_audit.required_steps.select { |step| cpd_audit.has_completed_step?(step) }
+  - blacklist = [:start, :information, :instructions, :waiting, :questionnaire, :submit, :complete]
+
+  - (steps - blacklist).each do |step|
+    - if cpd_audit.dynamic_wizard_steps.keys.include?(step)
+      - cpd_audit_section = cpd_audit.cpd_audit_section(step) || raise("no cpd audit section for #{step}")
+      = render("effective/cpd_audits/cpd_audit_section", cpd_audit: cpd_audit, step: step, cpd_audit_section: cpd_audit_section)
+    - else
+      = render("effective/cpd_audits/#{step}", cpd_audit: cpd_audit, step: step)

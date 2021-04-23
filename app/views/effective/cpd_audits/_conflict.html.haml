@@ -1,0 +1,15 @@
+= card(cpd_audit.wizard_step_title(step)) do
+  %table.table
+    %tbody
+      %tr
+        %th Conflict of Interest
+        %td
+          - if cpd_audit.conflict_of_interest?
+            Yes, there is a conflict of interest
+          - else
+            No conflict of interest
+
+      - if cpd_audit.conflict_of_interest?
+        %tr
+          %th Reason
+          %td= cpd_audit.conflict_of_interest_reason

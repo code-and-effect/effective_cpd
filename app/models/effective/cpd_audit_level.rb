@@ -1,7 +1,15 @@
 module Effective
   class CpdAuditLevel < ActiveRecord::Base
-    has_rich_text :all_steps_content  # Update build_from_cycle() below if these change
+    has_rich_text :all_steps_content
     has_rich_text :start_content
+    has_rich_text :information_content
+    has_rich_text :instructions_content
+    has_rich_text :conflict_content
+    has_rich_text :exemption_content
+    has_rich_text :extension_content
+    has_rich_text :waiting_content
+    has_rich_text :questionnaire_content
+    has_rich_text :files_content
     has_rich_text :submit_content
     has_rich_text :complete_content
 

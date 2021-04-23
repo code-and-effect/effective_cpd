@@ -4,8 +4,8 @@
   - if resource.cpd_audit_level.all_steps_content.present?
     .mb-2= resource.cpd_audit_level.all_steps_content
 
-  - if resource.cpd_audit_level.start_content.present?
-    .mb-2= resource.cpd_audit_level.start_content
+  - if resource.cpd_audit_level.conflict_content.present?
+    .mb-2= resource.cpd_audit_level.conflict_content
 
   %p You have been selected for #{resource.cpd_audit_level} audit and matched with:
 
@@ -16,4 +16,10 @@
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
-    = f.submit 'Start', center: true
+    = f.radios :conflict_of_interest, cpd_audit_conflict_of_interest_collection,
+      inline: true, required: true
+
+    = f.show_if :conflict_of_interest, true do
+      = f.text_area :conflict_of_interest_reason, required: true
+
+    = f.submit 'Save and Continue', center: true

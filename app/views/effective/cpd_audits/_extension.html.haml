@@ -1,0 +1,19 @@
+= card(cpd_audit.wizard_step_title(step)) do
+  %table.table
+    %tbody
+      %tr
+        %th Extension
+        %td
+          - if cpd_audit.extension_request?
+            Yes, an extension has been requested
+          - else
+            No extension request
+
+      - if cpd_audit.exemption_request?
+        %tr
+          %th Requested Date
+          %th= cpd_audit.extension_request_date&.strftime('%F')
+
+        %tr
+          %th Reason
+          %td= cpd_audit.exemption_request_reason

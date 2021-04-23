@@ -1,0 +1,26 @@
+= card(cpd_audit.wizard_step_title(step)) do
+  %table.table
+    %tbody
+      %tr
+        %th Exemption
+        %td
+          - if cpd_audit.exemption_request?
+            Yes, an exemption has been requested
+          - else
+            No exemption request
+
+      - if cpd_audit.exemption_request?
+        %tr
+          %th Reason
+          %td= cpd_audit.exemption_request_reason
+
+        %tr
+          %th Status
+          %td
+            %span.badge.badge-secondary
+              - if cpd_audit.exemption_requested?
+                Requested
+              - elsif cpd_audit.was_exemption_granted?
+                Granted
+              - elsif cpd_audit.was_exemption_denied?
+                Denied

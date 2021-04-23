@@ -1,0 +1,4 @@
+- if cpd_audit_response.response&.attached?
+  = link_to(cpd_audit_response.response.filename, url_for(cpd_audit_response.response), target: '_blank')
+- else
+  = '-'
