@@ -12,25 +12,20 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { includes(:cpd_audit_review, :cpd_audit_level_question) }
+    scope :deep, -> { includes(:cpd_audit_review, :item) }
     scope :sorted, -> { order(:id) }
 
+    validates :recommendation, presence: true
     validates :item_id, presence: true, uniqueness: { scope: [:cpd_audit_review_id, :item_type] }
+
+    validate(if: -> { cpd_audit_review.present? && recommendation.present? }) do
+      unless cpd_audit_review.cpd_audit_level.determinations.include?(recommendation)
+        self.errors.add(:recommendation, 'must exist in this audit level')
+      end
+    end
 
     def to_s
       recommendation.presence || 'cpd audit review item'
-    end
-
-    def available_recommendations
-      ['Accept', 'Reject']
-    end
-
-    def accepted?
-      recommendation == 'Accept'
-    end
-
-    def rejected?
-      recommendation == 'Reject'
     end
 
   end
