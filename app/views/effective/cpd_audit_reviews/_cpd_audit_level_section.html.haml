@@ -1,14 +1,23 @@
-= card(cpd_audit.wizard_step_title(step)) do
+= card(cpd_audit_review.wizard_step_title(step)) do
   %table.table.table-hover
     %thead
-      %tr
-        %th Question
-        %th Response
+      %th Question and #{resource.cpd_audit.user}'s Response
+      %th Your Review
+    %tbody
+      - cpd_audit_level_section.cpd_audit_level_questions.each_with_index do |cpd_audit_level_question, index|
+        - cpd_audit_response = resource.cpd_audit.cpd_audit_response(cpd_audit_level_question)
+        - next if cpd_audit_response.new_record?
 
-    %body
-      - cpd_audit_level_section.cpd_audit_level_questions.each do |cpd_audit_level_question|
-        - cpd_audit_response = cpd_audit.cpd_audit_response(cpd_audit_level_question)
+        - cpd_audit_review_item = resource.cpd_audit_review_item(cpd_audit_response)
 
         %tr
-          %td= cpd_audit_level_question
-          %td= render('effective/cpd_audit_responses/cpd_audit_response', cpd_audit_response: cpd_audit_response)
+          %td
+            .mb-3= render(cpd_audit_level_question)
+
+            %p
+              %strong Auditee Response:
+
+            .mb-3= render(cpd_audit_response)
+
+          %td
+            = render(cpd_audit_review_item)

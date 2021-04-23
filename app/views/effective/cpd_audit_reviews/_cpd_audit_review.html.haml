@@ -1,0 +1,12 @@
+.effective-cpd-audit-review
+  = render('effective/cpd_audit_reviews/summary', cpd_audit_review: cpd_audit_review)
+
+  - steps = cpd_audit_review.required_steps.select { |step| cpd_audit_review.has_completed_step?(step) }
+  - blacklist = [:start, :review, :submit, :complete]
+
+  - (steps - blacklist).each do |step|
+    - if cpd_audit_review.dynamic_wizard_steps.keys.include?(step)
+      - cpd_audit_level_section = cpd_audit_review.cpd_audit_level_section(step) || raise("no cpd audit section for #{step}")
+      = render("effective/cpd_audit_reviews/cpd_audit_level_section", cpd_audit_review: cpd_audit_review, step: step, cpd_audit_level_section: cpd_audit_level_section)
+    - else
+      = render("effective/cpd_audit_reviews/#{step}", cpd_audit_review: cpd_audit_review, step: step)

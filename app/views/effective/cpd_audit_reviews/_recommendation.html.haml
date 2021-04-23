@@ -1,0 +1,9 @@
+= card(cpd_audit_review.wizard_step_title(step)) do
+  %table.table
+    %tbody
+      %tr
+        %th Recommendation
+        %td= cpd_audit_review.recommendation
+
+      %tr
+        %td{colspan: 2}= cpd_audit_review.comments.presence || 'No comments'

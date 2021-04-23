@@ -10,4 +10,7 @@
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
+    %p The following comments will be displayed to you on each step.
+    = f.text_area :comments, label: 'Reviewer comments'
+
     = f.submit 'Save and Continue', center: true

@@ -1,0 +1,29 @@
+= render('layout') do
+  %h1= @page_title
+
+  /- raise('expected a submitted cpd_audit_review') unless resource.was_submitted? || resource.was_conflicted?
+  /- raise('expected a completed cpd_audit_review') unless resource.completed?
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  - if resource.cpd_audit_level.complete_content.present?
+    .mb-2= resource.cpd_audit_level.complete_content
+
+  .text-center
+    .row
+      .col-2
+      .col-8
+        .alert.alert-success Audit Review Submitted!
+
+  %p
+    The following audit review was successfully submitted at
+    = succeed('.') do
+      = resource.completed_at&.strftime('%F')
+
+  %p Thank you for your review.
+
+  .mb-4= render(resource)
+
+  %br
+  .text-center= link_to 'Home', root_path, class: 'btn btn-primary'

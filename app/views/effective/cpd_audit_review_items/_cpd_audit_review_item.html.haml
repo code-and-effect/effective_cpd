@@ -1,0 +1,5 @@
+.cpd-audit-review-item
+  %p= cpd_audit_review_item.recommendation
+
+  - if cpd_audit_review_item.comments.present?
+    %p= cpd_audit_review_item.comments

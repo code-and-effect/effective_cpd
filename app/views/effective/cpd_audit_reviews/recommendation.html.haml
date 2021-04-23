@@ -1,0 +1,28 @@
+= render('layout') do
+  %h1= @page_title
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  -# - if resource.cpd_audit_level.conflict_content.present?
+  -#   .mb-2= resource.cpd_audit_level.conflict_content
+
+  .mb-3
+    = collapse('Show / hide audit review...', show: true, card_class: '') do
+      = render(resource)
+
+  %p Please provide your final recommendation on #{resource.cpd_audit.user}:
+
+  = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+    = f.hidden_field :current_step
+
+    - determinations = resource.cpd_audit_level.determinations
+
+    - if determinations.length > 3
+      = f.select :recommendation, determinations
+    - else
+      = f.radios :recommendation, determinations, inline: true
+
+    = f.text_area :comments, label: 'Reviewer comments'
+
+    = f.submit 'Save and Continue', center: true

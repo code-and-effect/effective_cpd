@@ -1,0 +1,17 @@
+= render('layout') do
+  %h1= @page_title
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  - if resource.cpd_audit_level.submit_content.present?
+    .mb-2= resource.cpd_audit_level.submit_content
+
+  %p Please review your recommendations before submitting.
+
+  .mb-4= render(resource)
+
+  = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+    = f.hidden_field :current_step
+
+    = f.submit 'Submit Audit Review', center: true

@@ -20,8 +20,14 @@ module Effective
 
     acts_as_wizard(
       start: 'Start',
+
+      # Optional based on cpd_audit_level options
       conflict: 'Conflict of Interest',
+
       review: 'Review items',
+      # ... There will be one step per cpd_audit_level_sections here
+
+      recommendation: 'Recommendation',
       submit: 'Confirm & Submit',
       complete: 'Complete'
     )
@@ -62,6 +68,15 @@ module Effective
       'audit review'
     end
 
+    def to_s
+      persisted? ? "#{cpd_audit_level} Audit Review by #{user}" : 'audit review'
+    end
+
+    def cpd_audit_level_section(wizard_step)
+      position = (wizard_step.to_s.split('section').last.to_i rescue false)
+      cpd_audit_level.cpd_audit_level_sections.find { |section| (section.position + 1) == position }
+    end
+
     # Find or build
     def cpd_audit_review_item(item)
       unless item.kind_of?(CpdAuditResponse) || item.kind_of?(CpdStatementActivity)
@@ -92,13 +107,18 @@ module Effective
         return steps + [:submit, :complete]
       end
 
-      steps += [:review] + dynamic_wizard_steps.keys + [:submit, :complete]
+      steps += [:review] + dynamic_wizard_steps.keys + [:recommendation, :submit, :complete]
 
       steps
     end
 
     def wizard_step_title(step)
       WIZARD_STEPS[step] || dynamic_wizard_steps.fetch(step)
+    end
+
+    # Called by wizard submit step
+    def submit!
+      update!(completed_at: Time.zone.now)
     end
 
     def in_progress?

@@ -23,20 +23,25 @@
       %tbody
         - cpd_audit_level_section.cpd_audit_level_questions.each_with_index do |cpd_audit_level_question, index|
           - cpd_audit_response = resource.cpd_audit.cpd_audit_response(cpd_audit_level_question)
+          - next if cpd_audit_response.new_record?
+
           - cpd_audit_review_item = resource.cpd_audit_review_item(cpd_audit_response)
 
           %tr
             %td
-              = render(cpd_audit_level_question)
+              .mb-3= render(cpd_audit_level_question)
 
               %p
                 %strong Auditee Response:
-              = render(cpd_audit_response)
+
+              .mb-3= render(cpd_audit_response)
             %td
               = f.fields_for :cpd_audit_review_items, cpd_audit_review_item do |fi|
                 = render('/effective/cpd_audit_review_items/fields', f: fi, cpd_audit_review: resource)
 
     - if cpd_audit_level_section.bottom_content.present?
       .mb-2= cpd_audit_level_section.bottom_content
+
+    = f.text_area :comments, label: 'Reviewer comments'
 
     = f.submit 'Save and Continue', center: true
