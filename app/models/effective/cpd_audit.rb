@@ -21,6 +21,8 @@ module Effective
 
     acts_as_tokened
 
+    COMPLETED_STATES = [:exemption_granted, :audited]
+
     acts_as_statused(
       :opened,                # Just Opened
       :started,               # First screen clicked
@@ -97,7 +99,9 @@ module Effective
     scope :sorted, -> { order(:id) }
 
     scope :draft, -> { where(completed_at: nil) }
-    scope :completed, -> { where.not(completed_at: nil) }
+
+    scope :available, -> { where.not(status: COMPLETED_STATES) }
+    scope :completed, -> { where(status: COMPLETED_STATES) }
 
     before_validation(if: -> { new_record? }) do
       self.notification_date ||= Time.zone.now

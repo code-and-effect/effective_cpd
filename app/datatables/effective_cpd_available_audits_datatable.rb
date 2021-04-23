@@ -1,6 +1,6 @@
-# Displays cpd audits for this user
+# Displays cpd audits for this auditee user
 
-class EffectiveCpdAuditsDatatable < Effective::Datatable
+class EffectiveCpdAvailableAuditsDatatable < Effective::Datatable
   datatable do
     order :notification_date
 
@@ -15,6 +15,7 @@ class EffectiveCpdAuditsDatatable < Effective::Datatable
       if cpd_audit.opened?
         dropdown_link_to('Start', effective_cpd.cpd_audit_build_path(cpd_audit, cpd_audit.next_step))
       elsif cpd_audit.audited?
+        # This shouldn't happen as audited is an exit state
         dropdown_link_to('Show', effective_cpd.cpd_audit_build_path(cpd_audit, cpd_audit.last_completed_step))
       else
         dropdown_link_to('Continue', effective_cpd.cpd_audit_build_path(cpd_audit, cpd_audit.next_step))
@@ -24,7 +25,7 @@ class EffectiveCpdAuditsDatatable < Effective::Datatable
 
   collection do
     raise('expected a current_user') unless current_user.present?
-    Effective::CpdAudit.where(user: current_user)
+    Effective::CpdAudit.available.where(user: current_user)
   end
 
 end

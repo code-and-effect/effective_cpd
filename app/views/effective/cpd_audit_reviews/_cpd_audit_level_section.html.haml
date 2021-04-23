@@ -1,0 +1,14 @@
+= card(cpd_audit.wizard_step_title(step)) do
+  %table.table.table-hover
+    %thead
+      %tr
+        %th Question
+        %th Response
+
+    %body
+      - cpd_audit_level_section.cpd_audit_level_questions.each do |cpd_audit_level_question|
+        - cpd_audit_response = cpd_audit.cpd_audit_response(cpd_audit_level_question)
+
+        %tr
+          %td= cpd_audit_level_question
+          %td= render('effective/cpd_audit_responses/cpd_audit_response', cpd_audit_response: cpd_audit_response)

@@ -1,0 +1,58 @@
+= render('layout') do
+  %h1= @page_title
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  - cpd_audit_level_section = resource.cpd_audit.cpd_audit_level_section(step)
+  - raise("no cpd audit section for #{step}") if cpd_audit_level_section.blank?
+
+  = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+    = f.hidden_field :current_step
+
+    - if cpd_audit_level_section.top_content.present?
+      .mb-2= cpd_audit_level_section.top_content
+
+    %h3 Review
+    %p Please review the following:
+
+    %table.table
+      %thead
+        %th
+        %th Question
+        %th Response
+        %td Your Review
+      %tbody
+        - cpd_audit_level_section.cpd_audit_level_questions.each_with_index do |cpd_audit_level_question, index|
+          - cpd_audit_response = resource.cpd_audit.cpd_audit_response(cpd_audit_level_question)
+          - cpd_audit_review_item = resource.cpd_audit_review_item(cpd_audit_response)
+
+          %tr
+            %td= index + 1
+            %td= render(cpd_audit_level_question)
+            %td= render(cpd_audit_response)
+            %td
+              = f.fields_for :cpd_audit_review_items, cpd_audit_review_item do |fi|
+                = render('/effective/cpd_audit_review_items/fields', f: fi)
+
+    -# - current_applicant.applicant_communications.each_with_index do |applicant_communication, index|
+    -#   - applicant_review_item = current_applicant_review.applicant_review_item(applicant_communication)
+
+    -#   = f.fields_for :applicant_review_items, applicant_review_item do |fi|
+    -#     %h6 Scientific Communication ##{index + 1}
+
+    -#     .row.mb-4
+    -#       .col-sm-8= render(applicant_communication)
+    -#       .col-sm-4= render('/applicant_review_items/fields', f: fi)
+
+
+    -# - cpd_audit_level_section.cpd_audit_level_questions.each do |cpd_audit_level_question|
+    -#   - cpd_audit_response = resource.cpd_audit.cpd_audit_response(cpd_audit_level_question)
+
+    -#   = f.fields_for :cpd_audit_responses, cpd_audit_response do |fcar|
+    -#     = render('/effective/cpd_audit_responses/fields', f: fcar, cpd_audit_level_question: cpd_audit_level_question)
+
+    - if cpd_audit_level_section.bottom_content.present?
+      .mb-2= cpd_audit_level_section.bottom_content
+
+    = f.submit 'Start', center: true

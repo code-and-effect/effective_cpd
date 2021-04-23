@@ -16,9 +16,14 @@ EffectiveCpd::Engine.routes.draw do
       resources :cpd_statement_activities, except: [:index, :show]
     end
 
-    # Audits wizard
+    # Audits Auditee wizard
     resources :cpd_audits, only: [:new, :show] do
       resources :build, controller: :cpd_audits, only: [:show, :update]
+    end
+
+    # Audits Auditor / Audit Reviewer wizard
+    resources :cpd_audit_reviews, only: [:new, :show] do
+      resources :build, controller: :cpd_audit_reviews, only: [:show, :update]
     end
   end
 

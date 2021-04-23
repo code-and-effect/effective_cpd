@@ -51,7 +51,7 @@ module Effective
     scope :deep, -> { includes(:cpd_audit, :cpd_audit_level, :user) }
     scope :sorted, -> { order(:id) }
 
-    scope :in_progress, -> { where(completed_at: nil) }
+    scope :available, -> { where(completed_at: nil) }
     scope :completed, -> { where.not(completed_at: nil) }
 
     before_validation(if: -> { new_record? }) do
@@ -60,6 +60,45 @@ module Effective
 
     def to_s
       'audit review'
+    end
+
+    # Find or build
+    def cpd_audit_review_item(item)
+      unless item.kind_of?(CpdAuditResponse) || item.kind_of?(CpdStatementActivity)
+        raise("expected a cpd_audit_response or cpd_statement_activity")
+      end
+
+      cpd_audit_review_item = cpd_audit_review_items.find { |cari| cari.item == item }
+      cpd_audit_review_item ||= cpd_audit_review_items.build(item: item)
+    end
+
+    def dynamic_wizard_steps
+      cpd_audit_level.cpd_audit_level_sections.each_with_object({}) do |section, h|
+        h["section#{section.position+1}".to_sym] = section.title
+      end
+    end
+
+    def can_visit_step?(step)
+      return (step == :complete) if completed?  # Can only view complete step once submitted
+      can_revisit_completed_steps(step)
+    end
+
+    def required_steps
+      steps = [:start]
+
+      steps << :conflict if cpd_audit_level.conflict_of_interest?
+
+      if conflict_of_interest?
+        return steps + [:submit, :complete]
+      end
+
+      steps += [:review] + dynamic_wizard_steps.keys + [:submit, :complete]
+
+      steps
+    end
+
+    def wizard_step_title(step)
+      WIZARD_STEPS[step] || dynamic_wizard_steps.fetch(step)
     end
 
     def in_progress?

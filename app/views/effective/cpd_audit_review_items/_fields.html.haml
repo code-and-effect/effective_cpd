@@ -1,0 +1,6 @@
+= f.hidden_field :item_id
+= f.hidden_field :item_type
+
+= f.radios :recommendation, f.object.available_recommendations, inline: true
+
+= f.text_area :comments

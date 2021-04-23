@@ -1,10 +1,9 @@
 .row
   .col
-    %h3= cpd_audit_level_question
-    %p.text-muted.mb-2= cpd_audit_level_question.category
+    = render(cpd_audit_level_question)
 
-    - if cpd_audit_level_question.body.present?
-      .mb-3= cpd_audit_level_question.body
+    %p.text-muted
+      %small= cpd_audit_level_question.category
 
     = f.hidden_field :cpd_audit_id
     = f.hidden_field :cpd_audit_level_question_id
