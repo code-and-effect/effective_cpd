@@ -7,9 +7,9 @@ EffectiveCpd.setup do |config|
   config.cpd_statements_table_name = :cpd_statements
 
   config.cpd_audit_levels_table_name = :cpd_audit_levels
-  config.cpd_audit_sections_table_name = :cpd_audit_sections
-  config.cpd_audit_questions_table_name = :cpd_audit_questions
-  config.cpd_audit_question_options_table_name = :cpd_audit_question_options
+  config.cpd_audit_level_sections_table_name = :cpd_audit_level_sections
+  config.cpd_audit_level_questions_table_name = :cpd_audit_level_questions
+  config.cpd_audit_level_question_options_table_name = :cpd_audit_level_question_options
 
   # Layout Settings
   # Configure the Layout per controller, or all at once

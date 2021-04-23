@@ -15,10 +15,10 @@ module Effective
 
     log_changes if respond_to?(:log_changes)
 
-    has_many :cpd_audit_sections, -> { CpdAuditSection.sorted }, inverse_of: :cpd_audit_level, dependent: :destroy
-    accepts_nested_attributes_for :cpd_audit_sections, allow_destroy: true
+    has_many :cpd_audit_level_sections, -> { CpdAuditLevelSection.sorted }, inverse_of: :cpd_audit_level, dependent: :destroy
+    accepts_nested_attributes_for :cpd_audit_level_sections, allow_destroy: true
 
-    has_many :cpd_audit_questions, -> { CpdAuditQuestion.sorted }, through: :cpd_audit_sections
+    has_many :cpd_audit_level_questions, -> { CpdAuditLevelQuestion.sorted }, through: :cpd_audit_level_sections
 
     has_many :cpd_audit_reviews, -> { CpdAuditReview.sorted }, inverse_of: :cpd_audit_level, dependent: :destroy
     accepts_nested_attributes_for :cpd_audit_reviews, allow_destroy: true

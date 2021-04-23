@@ -21,8 +21,8 @@ module Admin
       col :can_request_extension, visible: false
       col :days_to_request_extension, visible: false
 
-      col :cpd_audit_sections, label: 'Sections', action: false
-      col :cpd_audit_questions, label: 'Questions', action: false
+      col :cpd_audit_level_sections, label: 'Sections', action: false
+      col :cpd_audit_level_questions, label: 'Questions', action: false
 
       actions_col
     end

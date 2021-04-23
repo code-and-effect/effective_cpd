@@ -1,7 +1,7 @@
 module Effective
   class CpdAuditReviewItem < ActiveRecord::Base
     belongs_to :cpd_audit_review
-    belongs_to :cpd_audit_question
+    belongs_to :item, polymorphic: true # CpdAuditResponse or CpdStatementActivity
 
     log_changes(to: :cpd_audit_review) if respond_to?(:log_changes)
 
@@ -12,10 +12,10 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { includes(:cpd_audit_review, :cpd_audit_question) }
+    scope :deep, -> { includes(:cpd_audit_review, :cpd_audit_level_question) }
     scope :sorted, -> { order(:id) }
 
-    validates :cpd_audit_question_id, presence: true, uniqueness: { scope: [:cpd_audit_review_id] }
+    validates :item_id, presence: true, uniqueness: { scope: [:cpd_audit_review_id, :item_type] }
 
     def to_s
       recommendation.presence || 'cpd audit review item'

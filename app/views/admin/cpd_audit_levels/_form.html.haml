@@ -9,9 +9,9 @@
         The All Steps content will be displayed as well as the top and bottom content.
 
       = tabs do
-        - cpd_audit_level.cpd_audit_sections.each do |cpd_audit_section|
-          = tab(cpd_audit_section.to_s) do
-            = render 'admin/cpd_audit_levels/form_cpd_audit_section', cpd_audit_level: cpd_audit_level, cpd_audit_section: cpd_audit_section
+        - cpd_audit_level.cpd_audit_level_sections.each do |cpd_audit_level_section|
+          = tab(cpd_audit_level_section.to_s) do
+            = render 'admin/cpd_audit_levels/form_cpd_audit_level_section', cpd_audit_level: cpd_audit_level, cpd_audit_level_section: cpd_audit_level_section
 
     = tab 'Content' do
       = render 'admin/cpd_audit_levels/form_content', cpd_audit_level: cpd_audit_level

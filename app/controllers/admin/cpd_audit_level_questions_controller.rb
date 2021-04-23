@@ -1,12 +1,12 @@
 module Admin
-  class CpdAuditQuestionsController < ApplicationController
+  class CpdAuditLevelQuestionsController < ApplicationController
     before_action(:authenticate_user!) if defined?(Devise)
     before_action { EffectiveResources.authorize!(self, :admin, :effective_cpd) }
 
     include Effective::CrudController
 
     def permitted_params
-      params.require(:effective_cpd_audit_question).permit!
+      params.require(:effective_cpd_audit_level_question).permit!
     end
 
   end

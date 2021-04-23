@@ -10,7 +10,7 @@
     Please add at least one section.
     Each section is a step on the audit wizard with its own content and questions.
 
-  = f.has_many :cpd_audit_sections, class: 'tight' do |fas|
+  = f.has_many :cpd_audit_level_sections, class: 'tight' do |fas|
     = fas.text_field :title, label: false
 
   %h2 Deadlines

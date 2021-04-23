@@ -1,14 +1,14 @@
-= effective_form_with(model: [:admin, cpd_audit_question], engine: true) do |f|
+= effective_form_with(model: [:admin, cpd_audit_level_question], engine: true) do |f|
   - if inline_datatable?
-    = f.hidden_field :cpd_audit_section_id
+    = f.hidden_field :cpd_audit_level_section_id
   - else
-    = f.select :cpd_audit_section_id, Effective::CpdAuditSection.sorted.all
+    = f.select :cpd_audit_level_section_id, Effective::CpdAuditLevelSection.sorted.all
 
   = f.text_field :title, label: 'Question Title'
   = f.rich_text_area :body, label: 'Body (optional)'
 
   = f.check_box :required, hint: 'A response to this question will be required'
-  = f.select :category, Effective::CpdAuditQuestion::CATEGORIES
+  = f.select :category, Effective::CpdAuditLevelQuestion::CATEGORIES
 
   = f.show_if :category, 'Choose one' do
     .card
@@ -88,13 +88,13 @@
         %h5 Upload File
         %p Display a file field to upload a file
 
-  = f.show_if_any :category, Effective::CpdAuditQuestion::WITH_OPTIONS_CATEGORIES do
+  = f.show_if_any :category, Effective::CpdAuditLevelQuestion::WITH_OPTIONS_CATEGORIES do
     .mt-3.card
       .card-body
         %h5 Options
         %p Display the following options:
 
-        = f.has_many :cpd_audit_question_options, class: 'tight' do |fa|
+        = f.has_many :cpd_audit_level_question_options, class: 'tight' do |fa|
           = fa.text_field :title, label: false
 
   = effective_submit(f)

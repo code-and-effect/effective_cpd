@@ -1,10 +1,10 @@
 = effective_form_with(model: [:admin, cpd_audit_level], engine: true) do |f|
-  = f.fields_for :cpd_audit_sections, cpd_audit_section do |fas|
+  = f.fields_for :cpd_audit_level_sections, cpd_audit_level_section do |fas|
     = fas.rich_text_area :top_content
     = fas.rich_text_area :bottom_content
 
   = f.submit
 
 %h2 Questions
-- datatable = Admin::EffectiveCpdAuditQuestionsDatatable.new(cpd_audit_section_id: cpd_audit_section.id)
+- datatable = Admin::EffectiveCpdAuditLevelQuestionsDatatable.new(cpd_audit_level_section_id: cpd_audit_level_section.id)
 = render_datatable(datatable, inline: true, simple: true)

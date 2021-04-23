@@ -1,5 +1,5 @@
-- cpd_audit_response.response.each do |cpd_audit_question_option|
-  %div= cpd_audit_question_option.title
+- cpd_audit_response.response.each do |cpd_audit_level_question_option|
+  %div= cpd_audit_level_question_option.title
 
 - if cpd_audit_response.response.blank?
   = '-'

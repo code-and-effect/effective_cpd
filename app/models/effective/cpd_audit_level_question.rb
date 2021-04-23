@@ -1,12 +1,13 @@
 module Effective
-  class CpdAuditQuestion < ActiveRecord::Base
-    belongs_to :cpd_audit_section
+  class CpdAuditLevelQuestion < ActiveRecord::Base
+    belongs_to :cpd_audit_level
+    belongs_to :cpd_audit_level_section
 
-    has_many :cpd_audit_question_options, -> { CpdAuditQuestionOption.sorted }, inverse_of: :cpd_audit_question, dependent: :delete_all
-    accepts_nested_attributes_for :cpd_audit_question_options, reject_if: :all_blank, allow_destroy: true
+    has_many :cpd_audit_level_question_options, -> { CpdAuditLevelQuestionOption.sorted }, inverse_of: :cpd_audit_level_question, dependent: :delete_all
+    accepts_nested_attributes_for :cpd_audit_level_question_options, reject_if: :all_blank, allow_destroy: true
 
     has_rich_text :body
-    log_changes(to: :cpd_audit_section) if respond_to?(:log_changes)
+    log_changes(to: :cpd_audit_level) if respond_to?(:log_changes)
 
     CATEGORIES = [
       'Choose one',   # Radios
@@ -44,17 +45,18 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { with_rich_text_body.includes(:cpd_audit_section, :cpd_audit_question_options) }
+    scope :deep, -> { with_rich_text_body.includes(:cpd_audit_level_section, :cpd_audit_level_question_options) }
     scope :sorted, -> { order(:position) }
 
-    before_validation(if: -> { cpd_audit_section.present? }) do
-      self.position ||= (cpd_audit_section.cpd_audit_questions.map(&:position).compact.max || -1) + 1
+    before_validation(if: -> { cpd_audit_level_section.present? }) do
+      self.cpd_audit_level = cpd_audit_level_section.cpd_audit_level
+      self.position ||= (cpd_audit_level_section.cpd_audit_level_questions.map(&:position).compact.max || -1) + 1
     end
 
     validates :title, presence: true
     validates :category, presence: true, inclusion: { in: CATEGORIES }
     validates :position, presence: true
-    validates :cpd_audit_question_options, presence: true, if: -> { audit_question_option? }
+    validates :cpd_audit_level_question_options, presence: true, if: -> { question_option? }
 
     # Create choose_one? and select_all_that_apply? methods for each category
     CATEGORIES.each do |category|

@@ -28,9 +28,9 @@ module EffectiveCpd
         @cpd_statements = ':' + EffectiveCpd.cpd_statements_table_name.to_s
 
         @cpd_audit_levels = ':' + EffectiveCpd.cpd_audit_levels_table_name.to_s
-        @cpd_audit_sections = ':' + EffectiveCpd.cpd_audit_sections_table_name.to_s
-        @cpd_audit_questions = ':' + EffectiveCpd.cpd_audit_questions_table_name.to_s
-        @cpd_audit_question_options = ':' + EffectiveCpd.cpd_audit_question_options_table_name.to_s
+        @cpd_audit_level_sections = ':' + EffectiveCpd.cpd_audit_level_sections_table_name.to_s
+        @cpd_audit_level_questions = ':' + EffectiveCpd.cpd_audit_level_questions_table_name.to_s
+        @cpd_audit_level_question_options = ':' + EffectiveCpd.cpd_audit_level_question_options_table_name.to_s
 
         migration_template ('../' * 3) + 'db/migrate/01_create_effective_cpd.rb.erb', 'db/migrate/create_effective_cpd.rb'
       end

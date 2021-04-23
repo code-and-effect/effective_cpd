@@ -1,5 +1,5 @@
 module Admin
-  class EffectiveCpdAuditQuestionsDatatable < Effective::Datatable
+  class EffectiveCpdAuditLevelQuestionsDatatable < Effective::Datatable
     datatable do
       reorder :position
 
@@ -7,10 +7,10 @@ module Admin
       col :updated_at, visible: false
       col :id, visible: false
 
-      col :cpd_audit_section
+      col :cpd_audit_level_section
 
-      col :position do |cpd_audit_question|
-        cpd_audit_question.position.to_i + 1
+      col :position do |cpd_audit_level_question|
+        cpd_audit_level_question.position.to_i + 1
       end
 
       col :title
@@ -18,13 +18,13 @@ module Admin
       col :required
 
       col :category, label: 'Type'
-      col :cpd_audit_question_options, label: 'Options'
+      col :cpd_audit_level_question_options, label: 'Options'
 
       actions_col
     end
 
     collection do
-      Effective::CpdAuditQuestion.all.deep
+      Effective::CpdAuditLevelQuestion.all.deep
     end
   end
 end

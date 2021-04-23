@@ -6,9 +6,9 @@
         %th Response
 
     %body
-      - cpd_audit_section.cpd_audit_questions.each do |cpd_audit_question|
-        - cpd_audit_response = cpd_audit.cpd_audit_response(cpd_audit_question)
+      - cpd_audit_level_section.cpd_audit_level_questions.each do |cpd_audit_level_question|
+        - cpd_audit_response = cpd_audit.cpd_audit_response(cpd_audit_level_question)
 
         %tr
-          %td= cpd_audit_question
+          %td= cpd_audit_level_question
           %td= render('effective/cpd_audit_responses/cpd_audit_response', cpd_audit_response: cpd_audit_response)

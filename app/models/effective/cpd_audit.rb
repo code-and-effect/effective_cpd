@@ -47,7 +47,7 @@ module Effective
       waiting: 'Waiting on Request',
 
       questionnaire: 'Questionnaire',
-      # ... There will be one step per cpd_audit_sections here
+      # ... There will be one step per cpd_audit_level_sections here
       files: 'Upload Resume',
 
       submit: 'Confirm & Submit',
@@ -121,7 +121,7 @@ module Effective
       waiting: 'Waiting on Request',
 
       questionaire: 'Questionaire',
-      # ... There will be one step per cpd_audit_sections here
+      # ... There will be one step per cpd_audit_level_sections here
       files: 'Upload Resume',
 
       submit: 'Confirm & Submit',
@@ -129,7 +129,7 @@ module Effective
     )
 
     def dynamic_wizard_steps
-      cpd_audit_level.cpd_audit_sections.each_with_object({}) do |section, h|
+      cpd_audit_level.cpd_audit_level_sections.each_with_object({}) do |section, h|
         h["section#{section.position+1}".to_sym] = section.title
       end
     end
@@ -171,15 +171,15 @@ module Effective
       (extension_date || notification_date)
     end
 
-    def cpd_audit_section(wizard_step)
+    def cpd_audit_level_section(wizard_step)
       position = (wizard_step.to_s.split('section').last.to_i rescue false)
-      cpd_audit_level.cpd_audit_sections.find { |section| (section.position + 1) == position }
+      cpd_audit_level.cpd_audit_level_sections.find { |section| (section.position + 1) == position }
     end
 
     # Find or build
-    def cpd_audit_response(cpd_audit_question)
-      cpd_audit_response = cpd_audit_responses.find { |r| r.cpd_audit_question_id == cpd_audit_question.id }
-      cpd_audit_response ||= cpd_audit_responses.build(cpd_audit: self, cpd_audit_question: cpd_audit_question)
+    def cpd_audit_response(cpd_audit_level_question)
+      cpd_audit_response = cpd_audit_responses.find { |r| r.cpd_audit_level_question_id == cpd_audit_level_question.id }
+      cpd_audit_response ||= cpd_audit_responses.build(cpd_audit: self, cpd_audit_level_question: cpd_audit_level_question)
     end
 
     # These methods are automatically called by acts_as_wizard wizard controller
