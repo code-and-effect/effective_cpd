@@ -7,18 +7,6 @@
   - cpd_statement = resource.cpd_statement(step)
   - raise("no cpd statement for #{step}") if cpd_statement.blank?
 
-  %h3 Review Activities
-  %p Please review auditee cpd statements:
-
-  - auditee = resource.cpd_audit.user
-  - datatable = EffectiveCpdCompletedStatementsDatatable.new(user_id: auditee.id, actions: false)
-
-  - if datatable.blank?(self)
-    %p
-      %strong There are no completed CPD statements from #{auditee}.
-  - else
-    = render_datatable(datatable, simple: true)
-
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
