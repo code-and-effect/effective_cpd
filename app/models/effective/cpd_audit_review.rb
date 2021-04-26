@@ -92,9 +92,14 @@ module Effective
       cpd_audit_review_item ||= cpd_audit_review_items.build(item: item)
     end
 
+    def cpd_statement(wizard_step)
+      cpd_cycle_id = (wizard_step.to_s.split('statement').last.to_i rescue false)
+      cpd_audit.user.cpd_statements.find { |cpd_statement| cpd_statement.cpd_cycle_id == cpd_cycle_id }
+    end
+
     def dynamic_wizard_statement_steps
-      @statement_steps ||= cpd_audit.user.cpd_statements.sorted.last(3).each_with_object({}) do |cpd_statement, h|
-        h["statement#{cpd_statement.cpd_cycle_id}".to_sym] = cpd_statement.cpd_cycle.to_s
+      @statement_steps ||= cpd_audit.user.cpd_statements.last(3).each_with_object({}) do |cpd_statement, h|
+        h["statement#{cpd_statement.cpd_cycle_id}".to_sym] = "#{cpd_statement.cpd_cycle.to_s} Activities"
       end
     end
 

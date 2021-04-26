@@ -4,6 +4,9 @@
   - if resource.cpd_audit_level.all_steps_content.present?
     .mb-2= resource.cpd_audit_level.all_steps_content
 
+  - cpd_statement = resource.cpd_statement(step)
+  - raise("no cpd statement for #{step}") if cpd_statement.blank?
+
   %h3 Review Activities
   %p Please review auditee cpd statements:
 
@@ -22,22 +25,21 @@
     %h3 Review Activities
     %p Please review the following activities:
 
-    - auditee.cpd_statements.completed.each do |cpd_statement|
-      %table.table.table-hover
-        %thead
-          %th #{resource.cpd_audit.user}'s #{cpd_statement}
-          %th Your Review
-        %tbody
-          - cpd_statement.cpd_statement_activities.each do |cpd_statement_activity|
-            - cpd_audit_review_item = resource.cpd_audit_review_item(cpd_statement_activity)
+    %table.table.table-hover
+      %thead
+        %th #{resource.cpd_audit.user}'s #{cpd_statement}
+        %th Your Review
+      %tbody
+        - cpd_statement.cpd_statement_activities.each do |cpd_statement_activity|
+          - cpd_audit_review_item = resource.cpd_audit_review_item(cpd_statement_activity)
 
-            %tr
-              %td
-                .mb-3
-                  = render('/effective/cpd_statement_activities/cpd_statement_activity', cpd_statement_activity: cpd_statement_activity)
-              %td
-                = f.fields_for :cpd_audit_review_items, cpd_audit_review_item do |fi|
-                  = render('/effective/cpd_audit_review_items/fields', f: fi, cpd_audit_review: resource)
+          %tr
+            %td
+              .mb-3
+                = render('/effective/cpd_statement_activities/cpd_statement_activity', cpd_statement_activity: cpd_statement_activity)
+            %td
+              = f.fields_for :cpd_audit_review_items, cpd_audit_review_item do |fi|
+                = render('/effective/cpd_audit_review_items/fields', f: fi, cpd_audit_review: resource)
 
     %hr
     = f.text_area :comments, label: 'Reviewer comments'
