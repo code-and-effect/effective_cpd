@@ -14,6 +14,15 @@
           %td= link_to(cpd_audit.user, edit_admin_user_path(cpd_audit.user))
 
       %tr
+        %th Audit Reviewer
+        %td
+          - cpd_audit.cpd_audit_reviews.each do |cpd_audit_review|
+            %p
+              = cpd_audit_review.user
+              %br
+              %small= mail_to cpd_audit_review.user.email
+
+      %tr
         %th Determination
         %td= cpd_audit.determination.presence || '-'
 

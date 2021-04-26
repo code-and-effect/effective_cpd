@@ -6,12 +6,12 @@
       = render 'admin/cpd_audits/form_cpd_audit', cpd_audit: cpd_audit
 
   - if cpd_audit.persisted?
-    = tab 'Audit Reviews' do
-      - datatable = Admin::EffectiveCpdAuditReviewsDatatable.new(cpd_audit_id: cpd_audit.id)
+    = tab 'Statements' do
+      - datatable = Admin::EffectiveCpdStatementsDatatable.new(user_id: cpd_audit.user.id, user_type: cpd_audit.user.class.name)
       = render_inline_datatable(datatable)
 
-    = tab 'Auditee CPD Statements' do
-      - datatable = Admin::EffectiveCpdStatementsDatatable.new(user_id: cpd_audit.user.id, user_type: cpd_audit.user.class.name)
+    = tab 'Audit Reviews' do
+      - datatable = Admin::EffectiveCpdAuditReviewsDatatable.new(cpd_audit_id: cpd_audit.id)
       = render_inline_datatable(datatable)
 
     - if cpd_audit.respond_to?(:log_changes_datatable)

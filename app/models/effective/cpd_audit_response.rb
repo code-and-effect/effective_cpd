@@ -22,15 +22,6 @@ module Effective
     scope :submitted, -> { where(cpd_audit: Effective::CpdAudit.where.not(submitted_at: nil)) }
     scope :deep, -> { includes(:cpd_audit, :cpd_audit_level_question) }
 
-    # Sanity check. These shouldn't happen.
-    # validate(if: -> { poll.present? && ballot.present? }) do
-    #   self.errors.add(:ballot, 'must match poll') unless ballot.poll_id == poll.id
-    # end
-
-    # validate(if: -> { poll.present? && cpd_audit_level_question.present? }) do
-    #   self.errors.add(:cpd_audit_level_question, 'must match poll') unless cpd_audit_level_question.poll_id == poll.id
-    # end
-
     validates :date, presence: true, if: -> { cpd_audit_level_question&.required? && cpd_audit_level_question.date? }
     validates :email, presence: true, email: true, if: -> { cpd_audit_level_question&.required? && cpd_audit_level_question.email? }
     validates :number, presence: true, if: -> { cpd_audit_level_question&.required? && cpd_audit_level_question.number? }

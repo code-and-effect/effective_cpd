@@ -7,7 +7,7 @@ module Effective
     belongs_to :cpd_audit_level
     belongs_to :user, polymorphic: true    # Auditor
 
-    log_changes(to: :cpd_audit, except: :step_progress) if respond_to?(:log_changes)
+    log_changes(to: :cpd_audit, except: :wizard_steps) if respond_to?(:log_changes)
 
     if Rails.env.test? # So our tests can override the required_steps method
       cattr_accessor :test_required_steps
@@ -77,13 +77,6 @@ module Effective
       persisted? ? "#{cpd_audit_level} Audit Review by #{user}" : 'audit review'
     end
 
-    # Controlls the reviewed cpd_statements
-    def auditee_cpd_statements
-      cpd_audit.user.cpd_statements.select do |cpd_statement|
-        cpd_statement.completed? && (completed_at.blank? || cpd_statement.completed_at < completed_at)
-      end
-    end
-
     # Find or build
     def cpd_audit_review_item(item)
       unless item.kind_of?(CpdAuditResponse) || item.kind_of?(CpdStatementActivity)
@@ -94,20 +87,28 @@ module Effective
       cpd_audit_review_item ||= cpd_audit_review_items.build(item: item)
     end
 
+    # The dynamic CPD Statement review steps
+    def auditee_cpd_statements
+      cpd_audit.user.cpd_statements.select do |cpd_statement|
+        cpd_statement.completed? && (completed_at.blank? || cpd_statement.completed_at < completed_at)
+      end
+    end
+
     def cpd_statement(wizard_step)
       cpd_cycle_id = (wizard_step.to_s.split('statement').last.to_i rescue false)
       auditee_cpd_statements.find { |cpd_statement| cpd_statement.cpd_cycle_id == cpd_cycle_id }
-    end
-
-    def cpd_audit_level_section(wizard_step)
-      position = (wizard_step.to_s.split('section').last.to_i rescue false)
-      cpd_audit_level.cpd_audit_level_sections.find { |section| (section.position + 1) == position }
     end
 
     def dynamic_wizard_statement_steps
       @statement_steps ||= auditee_cpd_statements.each_with_object({}) do |cpd_statement, h|
         h["statement#{cpd_statement.cpd_cycle_id}".to_sym] = "#{cpd_statement.cpd_cycle.to_s} Activities"
       end
+    end
+
+    # The dynamic CPD Audit Level Sections steps
+    def cpd_audit_level_section(wizard_step)
+      position = (wizard_step.to_s.split('section').last.to_i rescue false)
+      cpd_audit_level.cpd_audit_level_sections.find { |section| (section.position + 1) == position }
     end
 
     def dynamic_wizard_questionnaire_steps

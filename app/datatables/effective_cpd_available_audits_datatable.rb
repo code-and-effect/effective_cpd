@@ -14,8 +14,7 @@ class EffectiveCpdAvailableAuditsDatatable < Effective::Datatable
     actions_col(actions: []) do |cpd_audit|
       if cpd_audit.opened?
         dropdown_link_to('Start', effective_cpd.cpd_audit_build_path(cpd_audit, cpd_audit.next_step))
-      elsif cpd_audit.audited?
-        # This shouldn't happen as audited is an exit state
+      elsif cpd_audit.was_submitted?
         dropdown_link_to('Show', effective_cpd.cpd_audit_build_path(cpd_audit, cpd_audit.last_completed_step))
       else
         dropdown_link_to('Continue', effective_cpd.cpd_audit_build_path(cpd_audit, cpd_audit.next_step))

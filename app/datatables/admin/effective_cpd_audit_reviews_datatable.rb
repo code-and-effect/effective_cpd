@@ -6,7 +6,7 @@ module Admin
       col :id, visible: false
 
       col :cpd_audit
-      col :user, label: 'Auditor'
+      col :user, label: 'Audit Reviewer'
       col :recommendation
       col :comments
       col :completed_at
