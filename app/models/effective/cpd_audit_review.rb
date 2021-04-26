@@ -20,11 +20,16 @@ module Effective
 
     acts_as_wizard(
       start: 'Start',
+      information: 'Information',
+      instructions: 'Instructions',
 
       # Optional based on cpd_audit_level options
       conflict: 'Conflict of Interest',
 
-      review: 'Review items',
+      statements: 'Review CPD Statements',
+      # ... There will be one step per cpd_statement here. "statement1"
+
+      questionaire: 'Review Questionnaire Responses',
       # ... There will be one step per cpd_audit_level_sections here
 
       recommendation: 'Recommendation',
@@ -87,10 +92,20 @@ module Effective
       cpd_audit_review_item ||= cpd_audit_review_items.build(item: item)
     end
 
-    def dynamic_wizard_steps
+    def dynamic_wizard_statement_steps
+      cpd_audit.user.cpd_statements.sorted.last(3).each_with_object({}) do |cpd_statement, h|
+        h["statement#{cpd_statement.cpd_cycle_id}".to_sym] = cpd_statement.cpd_cycle.to_s
+      end
+    end
+
+    def dynamic_wizard_questionnaire_steps
       cpd_audit_level.cpd_audit_level_sections.each_with_object({}) do |section, h|
         h["section#{section.position+1}".to_sym] = section.title
       end
+    end
+
+    def dynamic_wizard_steps
+      dynamic_wizard_statement_steps.merge(dynamic_wizard_questionnaire_steps)
     end
 
     def can_visit_step?(step)
@@ -99,7 +114,7 @@ module Effective
     end
 
     def required_steps
-      steps = [:start]
+      steps = [:start, :information, :instructions]
 
       steps << :conflict if cpd_audit_level.conflict_of_interest?
 
@@ -107,7 +122,9 @@ module Effective
         return steps + [:submit, :complete]
       end
 
-      steps += [:review] + dynamic_wizard_steps.keys + [:recommendation, :submit, :complete]
+      steps += [:statements] + dynamic_wizard_statement_steps.keys
+      steps += [:questionaire] + dynamic_wizard_questionnaire_steps.keys
+      steps += [:recommendation, :submit, :complete]
 
       steps
     end

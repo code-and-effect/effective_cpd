@@ -2,7 +2,7 @@
   - cpd_activity = cpd_statement_activity.cpd_activity
   - rule = cpd_statement_activity.cpd_statement.cpd_cycle.rule_for(cpd_activity)
 
-  %h3= cpd_statement_activity
+  %p= cpd_statement_activity
 
   - if cpd_activity.body.present?
     .mb-3= cpd_activity.body

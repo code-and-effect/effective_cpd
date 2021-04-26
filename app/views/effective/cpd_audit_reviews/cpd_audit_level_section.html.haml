@@ -7,14 +7,14 @@
   - cpd_audit_level_section = resource.cpd_audit.cpd_audit_level_section(step)
   - raise("no cpd audit section for #{step}") if cpd_audit_level_section.blank?
 
+  %h3 Review Section
+  %p Please review auditee responses to the #{cpd_audit_level_section} section:
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
     - if cpd_audit_level_section.top_content.present?
       .mb-2= cpd_audit_level_section.top_content
-
-    %h3 Review
-    %p Please review the following:
 
     %table.table.table-hover
       %thead

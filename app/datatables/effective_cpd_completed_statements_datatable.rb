@@ -9,15 +9,20 @@ class EffectiveCpdCompletedStatementsDatatable < Effective::Datatable
     end
 
     col :completed_at, label: 'Completed'
+    col :score
+    col :carry_forward
 
-    actions_col(actions: []) do |cpd_statement|
-      dropdown_link_to('Show', effective_cpd.cpd_cycle_cpd_statement_build_path(cpd_statement.cpd_cycle, cpd_statement, cpd_statement.last_completed_step))
+    unless attributes[:actions] == false
+      actions_col(actions: []) do |cpd_statement|
+        dropdown_link_to('Show', effective_cpd.cpd_cycle_cpd_statement_build_path(cpd_statement.cpd_cycle, cpd_statement, cpd_statement.last_completed_step))
+      end
     end
   end
 
   collection do
     raise('expected a current_user') unless current_user.present?
-    Effective::CpdStatement.completed.where(user: current_user).includes(:cpd_cycle)
+    user = (current_user.class.find(attributes[:user_id]) if attributes[:user_id])
+    Effective::CpdStatement.completed.where(user: user || current_user).includes(:cpd_cycle)
   end
 
 end

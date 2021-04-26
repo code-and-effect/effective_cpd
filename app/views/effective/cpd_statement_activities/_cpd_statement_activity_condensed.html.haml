@@ -1,0 +1,38 @@
+.cpd-statement-activity
+  - cpd_activity = cpd_statement_activity.cpd_activity
+  - rule = cpd_statement_activity.cpd_statement.cpd_cycle.rule_for(cpd_activity)
+
+  %p= cpd_statement_activity
+
+  .row
+    .col
+      - if cpd_activity.amount_label.present?
+        %strong #{cpd_activity.amount_label.titleize.pluralize}:
+        = cpd_statement_activity.amount
+
+      - if cpd_activity.amount2_label.present?
+        %strong #{cpd_activity.amount2_label.titleize.pluralize}
+        = cpd_statement_activity.amount2
+
+      - if cpd_activity.amount_static?
+        %strong One (1) #{activity}:
+        1
+
+    .col.mr-auto
+      %p
+        %strong Score:
+        #{cpd_statement_activity.score.to_i} #{cpd_credits_label}
+        - if cpd_statement_activity.carry_forward.to_i > 0
+          carry #{cpd_statement_activity.carry_forward.to_i}
+
+  - if cpd_statement_activity.files.present?
+    %p
+      %strong
+      %br
+      Supporting Documents
+
+      %ul
+        - cpd_statement_activity.files.each do |file|
+          = link_to(file.filename, url_for(file), target: '_blank')
+
+  %p= cpd_statement_activity.description
