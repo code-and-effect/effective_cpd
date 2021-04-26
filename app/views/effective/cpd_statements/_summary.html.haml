@@ -1,36 +1,37 @@
-%table.table
-  %tbody
-    %tr
-      %th Name
-      %td
-        = cpd_statement.user
-        %br
-        %small= mail_to cpd_statement.user.email
-
-      - if request.path.start_with?('/admin') && respond_to?(:edit_admin_user_path)
-        %tr
-          %th User
-          %td= link_to(cpd_statement.user, edit_admin_user_path(cpd_statement.user))
-
-    - if cpd_statement.completed?
+= card(cpd_statement) do
+  %table.table
+    %tbody
       %tr
-        %th Completed
-        %td= cpd_statement.completed_at.strftime('%F %H:%M')
+        %th Name
+        %td
+          = cpd_statement.user
+          %br
+          %small= mail_to cpd_statement.user.email
 
-    %tr
-      %th= cpd_cycle_label.titleize
-      %td= cpd_statement.cpd_cycle
-    %tr
-      %th Total #{cpd_credits_label.titleize}
-      %td= cpd_statement.score
-    %tr
-      %th Carry Forward
-      %td= cpd_statement.carry_forward
-    %tr
-      %th Attachments
-      %td
-        - if cpd_statement.files.blank?
-          None
-        - else
-          - cpd_statement.files.each do |file|
-            %div= link_to(file.filename, url_for(file), target: '_blank')
+        - if request.path.start_with?('/admin') && respond_to?(:edit_admin_user_path)
+          %tr
+            %th User
+            %td= link_to(cpd_statement.user, edit_admin_user_path(cpd_statement.user))
+
+      - if cpd_statement.completed?
+        %tr
+          %th Completed
+          %td= cpd_statement.completed_at.strftime('%F %H:%M')
+
+      %tr
+        %th= cpd_cycle_label.titleize
+        %td= cpd_statement.cpd_cycle
+      %tr
+        %th Total #{cpd_credits_label.titleize}
+        %td= cpd_statement.score
+      %tr
+        %th Carry Forward
+        %td= cpd_statement.carry_forward
+      %tr
+        %th Attachments
+        %td
+          - if cpd_statement.files.blank?
+            None
+          - else
+            - cpd_statement.files.each do |file|
+              %div= link_to(file.filename, url_for(file), target: '_blank')

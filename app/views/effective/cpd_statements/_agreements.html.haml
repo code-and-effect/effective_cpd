@@ -1,6 +1,20 @@
-%h2 Agreements
-= f.check_box :confirm_read, label: "Yes, I have read the above content and agreements"
-= f.check_box :confirm_factual, label: "Yes, I declare all provided information to be factual and complete"
+= card('Agreements') do
+  %table.table
+    %tbody
+      %tr
+        %th Read all contents and agreements
+        %td= cpd_statement.confirm_read ? 'Yes' : 'No'
 
-%h2 Resume
-= f.file_field :files, label: 'Attach resume', hint: 'Please attach your resume or other CPD related documents'
+      %tr
+        %th Declared all information factual
+        %td= cpd_statement.confirm_factual ? 'Yes' : 'No'
+
+      %tr
+        %th Files
+        %td
+          - if cpd_statement.files.blank?
+            None
+          - else
+            %ul
+              - cpd_statement.files.each do |file|
+                = link_to(file.filename, url_for(file), target: '_blank')

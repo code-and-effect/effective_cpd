@@ -66,7 +66,7 @@ module Effective
     end
 
     def to_s
-      (cpd_cycle || 'statement').to_s
+      cpd_cycle.present? ? "#{cpd_cycle} Statement" : 'statement'
     end
 
     # This is the review step where they click Submit Ballot

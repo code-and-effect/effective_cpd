@@ -1,0 +1,60 @@
+.cpd-statement-activity
+  - cpd_activity = cpd_statement_activity.cpd_activity
+  - rule = cpd_statement_activity.cpd_statement.cpd_cycle.rule_for(cpd_activity)
+
+  %h3= cpd_statement_activity
+
+  - if cpd_activity.body.present?
+    = cpd_activity.body
+
+  .row
+    .col-8
+      %strong #{cpd_credits_label.titleize} Calculation
+      %br
+      = rule.credit_description
+
+    .col-2.text-center
+      %strong= cpd_credits_label.titleize
+      %br
+      - if cpd_statement_activity.reduced_messages.present?
+        %span{title: cpd_statement_activity.reduced_messages.values.join("\n\n")}= "#{cpd_statement_activity.score} *"
+      - else
+        = cpd_statement_activity.score.to_i
+
+    .col-2.text-center
+      %strong Carry Forward
+      %br
+      = cpd_statement_activity.carry_forward.to_i
+
+  .row
+    .col
+      - if cpd_activity.amount_label.present?
+        %p
+          %strong= cpd_activity.amount_label
+          = cpd_statement_activity.amount
+
+      - if cpd_activity.amount2_label.present?
+        %p
+          %strong= cpd_activity.amount2_label
+          = cpd_statement_activity.amount2
+
+      - if cpd_activity.amount_label.blank? && cpd_activity.amount2_label.blank?
+        %p
+          %strong One (1) #{activity}
+          1
+
+      %p
+        %strong Supporting Documents
+
+        - if cpd_statement_activity.files.present?
+          None
+        - else
+          %ul
+            - cpd_statement_activity.files.each do |file|
+              = link_to(file.filename, url_for(file), target: '_blank')
+
+    .col
+      %p
+        %strong Description
+        %br
+        = cpd_statement_activity.description

@@ -13,7 +13,7 @@
         .mb-2= resource.cpd_cycle.activities_content
 
       - if resource.cpd_statement_activities.present?
-        = render('activities', cpd_statement: resource)
+        = render('activities_edit', cpd_statement: resource)
 
       .mt-3= link_to 'Add Activity', '#', 'data-cpd-new-activity': true, class: 'btn btn-primary'
 
