@@ -1,4 +1,8 @@
 .effective-cpd-statement
   = render('effective/cpd_statements/summary', cpd_statement: cpd_statement)
-  = render('effective/cpd_statements/activities', cpd_statement: cpd_statement)
-  = render('effective/cpd_statements/agreements', cpd_statement: cpd_statement)
+
+  - steps = cpd_statement.required_steps.select { |step| cpd_statement.has_completed_step?(step) }
+  - blacklist = [:start, :submit, :complete]
+
+  - (steps - blacklist).each do |step|
+    = render("effective/cpd_statements/#{step}", cpd_statement: cpd_statement, step: step)

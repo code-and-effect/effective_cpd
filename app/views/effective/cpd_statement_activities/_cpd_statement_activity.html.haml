@@ -5,9 +5,9 @@
   %h3= cpd_statement_activity
 
   - if cpd_activity.body.present?
-    = cpd_activity.body
+    .mb-3= cpd_activity.body
 
-  .row
+  .row.mb-3
     .col-8
       %strong #{cpd_credits_label.titleize} Calculation
       %br
@@ -26,27 +26,31 @@
       %br
       = cpd_statement_activity.carry_forward.to_i
 
-  .row
+  .row.mb-3
     .col
       - if cpd_activity.amount_label.present?
         %p
-          %strong= cpd_activity.amount_label
+          %strong= cpd_activity.amount_label.titleize.pluralize
+          %br
           = cpd_statement_activity.amount
 
       - if cpd_activity.amount2_label.present?
         %p
-          %strong= cpd_activity.amount2_label
+          %strong= cpd_activity.amount2_label.titleize.pluralize
+          %br
           = cpd_statement_activity.amount2
 
-      - if cpd_activity.amount_label.blank? && cpd_activity.amount2_label.blank?
+      - if cpd_activity.amount_static?
         %p
           %strong One (1) #{activity}
+          %br
           1
 
       %p
         %strong Supporting Documents
 
-        - if cpd_statement_activity.files.present?
+        - if cpd_statement_activity.files.blank?
+          %br
           None
         - else
           %ul

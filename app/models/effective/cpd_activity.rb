@@ -37,5 +37,9 @@ module Effective
       title.presence || 'activity'
     end
 
+    def amount_static?
+      amount_label.blank? && amount2_label.blank?
+    end
+
   end
 end

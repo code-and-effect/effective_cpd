@@ -21,17 +21,11 @@
       %tr
         %th= cpd_cycle_label.titleize
         %td= cpd_statement.cpd_cycle
+
       %tr
         %th Total #{cpd_credits_label.titleize}
         %td= cpd_statement.score
+
       %tr
         %th Carry Forward
         %td= cpd_statement.carry_forward
-      %tr
-        %th Attachments
-        %td
-          - if cpd_statement.files.blank?
-            None
-          - else
-            - cpd_statement.files.each do |file|
-              %div= link_to(file.filename, url_for(file), target: '_blank')
