@@ -1,3 +1,3 @@
 = card('Activities') do
-  = render('activities_table', cpd_statement: cpd_statement) do |cpd_statement_activity|
-    = render(cpd_statement_activity)
+  = render('effective/cpd_statements/activities_table', cpd_statement: cpd_statement) do |cpd_statement_activity|
+    = render('effective/cpd_statement_activities/cpd_statement_activity', cpd_statement_activity: cpd_statement_activity)

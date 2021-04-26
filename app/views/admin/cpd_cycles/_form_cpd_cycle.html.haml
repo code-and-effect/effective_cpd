@@ -8,6 +8,9 @@
   = f.date_field :end_at,
     hint: "The last date statements may be created for this #{cpd_cycle_label}. leave blank for no end date."
 
+  = f.number_field :required_score,
+    hint: "The minimum required #{cpd_credits_label} to submit statements for this #{cpd_cycle_label}. leave blank to submit any score."
+
   - if f.object.new_record?
     - latest_cycle = Effective::CpdCycle.latest_cycle
 

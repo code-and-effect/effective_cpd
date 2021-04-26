@@ -49,6 +49,7 @@ module Effective
 
     validates :title, presence: true
     validates :start_at, presence: true
+    validates :required_score, numericality: { greater_than: 0, allow_nil: true }
 
     validate(if: -> { start_at.present? && end_at.present? }) do
       self.errors.add(:end_at, 'must be after the start date') unless end_at > start_at
