@@ -2,63 +2,64 @@
   - cpd_activity = cpd_statement_activity.cpd_activity
   - rule = cpd_statement_activity.cpd_statement.cpd_cycle.rule_for(cpd_activity)
 
-  %p= cpd_statement_activity
+  %p
+    = cpd_statement_activity
+    %br
+    %small.text-muted= rule.credit_description
 
   - if cpd_activity.body.present?
     .mb-3= cpd_activity.body
 
-  .row.mb-3
-    .col-8
-      %strong #{cpd_credits_label.titleize} Calculation
+  - if cpd_statement_activity.is_carry_over?
+    %p
+      %strong Carried Forward From
       %br
-      = rule.credit_description
-
-    .col-2.text-center
-      %strong= cpd_credits_label.titleize
-      %br
-      - if cpd_statement_activity.reduced_messages.present?
-        %span{title: cpd_statement_activity.reduced_messages.values.join("\n\n")}= "#{cpd_statement_activity.score} *"
-      - else
-        = cpd_statement_activity.score.to_i
-
-    .col-2.text-center
-      %strong Carry Forward
-      %br
-      = cpd_statement_activity.carry_forward.to_i
+      = cpd_statement_activity.original.cpd_statement.cpd_cycle
 
   .row.mb-3
-    .col
-      - if cpd_activity.amount_label.present?
-        %p
-          %strong= cpd_activity.amount_label.titleize.pluralize
+    .col-sm-8
+      .row
+        - if cpd_activity.amount_label.present?
+          .col
+            %strong #{cpd_activity.amount_label.titleize.pluralize}
+            %br
+            = cpd_statement_activity.amount
+
+        - if cpd_activity.amount2_label.present?
+          .col.text-center
+            %strong #{cpd_activity.amount2_label.to_s.titleize.pluralize} Articles written
+            = cpd_statement_activity.amount2
+
+        - if cpd_activity.amount_static?
+          .col
+            %strong One (1) #{cpd_activity}:
+            %br
+            1
+
+    .col-sm-4
+      .row
+        .col.text-center
+          %strong= cpd_credits_label.titleize
           %br
-          = cpd_statement_activity.amount
+          - if cpd_statement_activity.reduced_messages.present?
+            %span{title: cpd_statement_activity.reduced_messages.values.join("\n\n")}= "#{cpd_statement_activity.score} *"
+          - else
+            = cpd_statement_activity.score.to_i
 
-      - if cpd_activity.amount2_label.present?
-        %p
-          %strong= cpd_activity.amount2_label.titleize.pluralize
+        .col.text-center
+          %strong Carry
           %br
-          = cpd_statement_activity.amount2
+          = cpd_statement_activity.carry_forward.to_i
 
-      - if cpd_activity.amount_static?
-        %p
-          %strong One (1) #{activity}
-          %br
-          1
+  - if cpd_statement_activity.files.present?
+    %p
+      %strong Supporting Documents
 
-      %p
-        %strong Supporting Documents
+    %ul
+      - cpd_statement_activity.files.each do |file|
+        = link_to(file.filename, url_for(file), target: '_blank')
 
-        - if cpd_statement_activity.files.blank?
-          %br
-          None
-        - else
-          %ul
-            - cpd_statement_activity.files.each do |file|
-              = link_to(file.filename, url_for(file), target: '_blank')
-
-    .col
-      %p
-        %strong Description
-        %br
-        = cpd_statement_activity.description
+  %p
+    %strong Description
+    %br
+    = cpd_statement_activity.description

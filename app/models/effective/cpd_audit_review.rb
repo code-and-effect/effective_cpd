@@ -93,13 +93,13 @@ module Effective
     end
 
     def dynamic_wizard_statement_steps
-      cpd_audit.user.cpd_statements.sorted.last(3).each_with_object({}) do |cpd_statement, h|
+      @statement_steps ||= cpd_audit.user.cpd_statements.sorted.last(3).each_with_object({}) do |cpd_statement, h|
         h["statement#{cpd_statement.cpd_cycle_id}".to_sym] = cpd_statement.cpd_cycle.to_s
       end
     end
 
     def dynamic_wizard_questionnaire_steps
-      cpd_audit_level.cpd_audit_level_sections.each_with_object({}) do |section, h|
+      @questionnaire_steps ||= cpd_audit_level.cpd_audit_level_sections.each_with_object({}) do |section, h|
         h["section#{section.position+1}".to_sym] = section.title
       end
     end

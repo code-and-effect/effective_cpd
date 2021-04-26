@@ -11,8 +11,13 @@ module Effective
     # Reuse the same view for all cpd_audit_level_section steps
     # https://github.com/zombocom/wicked/blob/v1.3.4/lib/wicked/controller/concerns/render_redirect.rb#L32
     def render_step(the_step, options = {}, params = {})
-      return super unless resource.dynamic_wizard_steps.keys.include?(the_step)
-      render('cpd_audit_level_section', options)
+      if resource.dynamic_wizard_statement_steps.keys.include?(the_step)
+        render('cpd_statement', options)
+      elsif resource.dynamic_wizard_questionnaire_steps.keys.include?(the_step)
+        render('cpd_audit_level_section', options)
+      else
+        super
+      end
     end
 
     def permitted_params

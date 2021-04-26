@@ -34,7 +34,7 @@
             %tr
               %td
                 .mb-3
-                  = render('/effective/cpd_statement_activities/cpd_statement_activity_condensed', cpd_statement_activity: cpd_statement_activity)
+                  = render('/effective/cpd_statement_activities/cpd_statement_activity', cpd_statement_activity: cpd_statement_activity)
               %td
                 = f.fields_for :cpd_audit_review_items, cpd_audit_review_item do |fi|
                   = render('/effective/cpd_audit_review_items/fields', f: fi, cpd_audit_review: resource)
