@@ -8,7 +8,7 @@
   -#   .mb-2= resource.cpd_audit_level.conflict_content
 
   .mb-3
-    = collapse('Show / hide audit review...', show: true, card_class: '') do
+    = collapse('Show / hide audit review...', card_class: '') do
       = render(resource)
 
   %p Please provide your final recommendation on #{resource.cpd_audit.user}:

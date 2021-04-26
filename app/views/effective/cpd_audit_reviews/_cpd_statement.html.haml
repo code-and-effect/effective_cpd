@@ -1,0 +1,15 @@
+= card(cpd_audit_review.wizard_step_title(step)) do
+  %table.table.table-hover
+    %thead
+      %th #{resource.cpd_audit.user}'s #{cpd_statement}
+      %th Your Review
+    %tbody
+      - cpd_statement.cpd_statement_activities.each do |cpd_statement_activity|
+        - cpd_audit_review_item = resource.cpd_audit_review_item(cpd_statement_activity)
+        - next if cpd_audit_review_item.new_record?
+
+        %tr
+          %td
+            = render('/effective/cpd_statement_activities/cpd_statement_activity', cpd_statement_activity: cpd_statement_activity)
+          %td
+            = render(cpd_audit_review_item)

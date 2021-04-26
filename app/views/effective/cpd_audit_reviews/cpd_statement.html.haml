@@ -7,6 +7,11 @@
   - cpd_statement = resource.cpd_statement(step)
   - raise("no cpd statement for #{step}") if cpd_statement.blank?
 
+  %h3 Review Statement
+  .mb-3
+    = collapse("#{cpd_statement.to_s}...", card_class: 'mb-3') do
+      = render('effective/cpd_statements/cpd_statement', cpd_statement: cpd_statement)
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 

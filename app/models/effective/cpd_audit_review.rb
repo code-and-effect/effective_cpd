@@ -29,7 +29,7 @@ module Effective
       statements: 'Review CPD Statements',
       # ... There will be one step per cpd_statement here. "statement1"
 
-      questionaire: 'Review Questionnaire Responses',
+      questionnaire: 'Review Questionnaire Responses',
       # ... There will be one step per cpd_audit_level_sections here
 
       recommendation: 'Recommendation',
@@ -77,9 +77,11 @@ module Effective
       persisted? ? "#{cpd_audit_level} Audit Review by #{user}" : 'audit review'
     end
 
-    def cpd_audit_level_section(wizard_step)
-      position = (wizard_step.to_s.split('section').last.to_i rescue false)
-      cpd_audit_level.cpd_audit_level_sections.find { |section| (section.position + 1) == position }
+    # Controlls the reviewed cpd_statements
+    def auditee_cpd_statements
+      cpd_audit.user.cpd_statements.select do |cpd_statement|
+        cpd_statement.completed? && (completed_at.blank? || cpd_statement.completed_at < completed_at)
+      end
     end
 
     # Find or build
@@ -94,11 +96,16 @@ module Effective
 
     def cpd_statement(wizard_step)
       cpd_cycle_id = (wizard_step.to_s.split('statement').last.to_i rescue false)
-      cpd_audit.user.cpd_statements.find { |cpd_statement| cpd_statement.cpd_cycle_id == cpd_cycle_id }
+      auditee_cpd_statements.find { |cpd_statement| cpd_statement.cpd_cycle_id == cpd_cycle_id }
+    end
+
+    def cpd_audit_level_section(wizard_step)
+      position = (wizard_step.to_s.split('section').last.to_i rescue false)
+      cpd_audit_level.cpd_audit_level_sections.find { |section| (section.position + 1) == position }
     end
 
     def dynamic_wizard_statement_steps
-      @statement_steps ||= cpd_audit.user.cpd_statements.last(3).each_with_object({}) do |cpd_statement, h|
+      @statement_steps ||= auditee_cpd_statements.each_with_object({}) do |cpd_statement, h|
         h["statement#{cpd_statement.cpd_cycle_id}".to_sym] = "#{cpd_statement.cpd_cycle.to_s} Activities"
       end
     end
@@ -128,7 +135,7 @@ module Effective
       end
 
       steps += [:statements] + dynamic_wizard_statement_steps.keys
-      steps += [:questionaire] + dynamic_wizard_questionnaire_steps.keys
+      steps += [:questionnaire] + dynamic_wizard_questionnaire_steps.keys
       steps += [:recommendation, :submit, :complete]
 
       steps
