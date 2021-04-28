@@ -1,7 +1,7 @@
 = tabs do
   - if cpd_audit.new_record?
     = tab 'New Audit' do
-      = render 'admin/cpd_audits/form_cpd_audit', cpd_audit: cpd_audit
+      = render 'admin/cpd_audits/form_new', cpd_audit: cpd_audit
 
   - if cpd_audit.persisted?
     = tab 'Audit' do

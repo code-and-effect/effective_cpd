@@ -110,6 +110,10 @@ module Effective
       self.notification_date ||= Time.zone.now
     end
 
+    after_commit(on: :create) do
+      send_email(:cpd_audit_opened)
+    end
+
     validates :notification_date, presence: true
     validates :determination, presence: true, if: -> { closed? }
 

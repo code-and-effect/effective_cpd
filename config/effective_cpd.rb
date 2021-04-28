@@ -27,8 +27,18 @@ EffectiveCpd.setup do |config|
     admin: 'admin'
   }
 
+  # Program label settings
   config.cycle_label = 'year'       # 'cycle', 'season'
   config.credit_label = 'credit'    # 'credit', 'PDH', 'PDU', 'CCC'
+
+  # Auditee Scope Collection
+  #
+  # When creating a new audit, these are used to select the auditee
+  # The User model must respond to these
+  config.auditee_user_scope = :all
+
+  # Audit Reviewer Scope Collection
+  config.audit_reviewer_user_scope = :all
 
   # Mailer Configuration
   # Configure the class responsible to send e-mails.

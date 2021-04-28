@@ -16,6 +16,7 @@ module Effective
     has_many :cpd_audit_review_items, -> { CpdAuditReviewItem.sorted }, inverse_of: :cpd_audit_review
     accepts_nested_attributes_for :cpd_audit_review_items, reject_if: :all_blank, allow_destroy: true
 
+    acts_as_email_form
     acts_as_tokened
 
     acts_as_wizard(
@@ -67,6 +68,10 @@ module Effective
 
     before_validation(if: -> { new_record? }) do
       self.cpd_audit_level ||= cpd_audit&.cpd_audit_level
+    end
+
+    after_commit(on: :create) do
+      send_email(:cpd_audit_review_opened)
     end
 
     def to_s
@@ -157,6 +162,17 @@ module Effective
 
     def completed?
       submitted_at.present?
+    end
+
+    def email_form_defaults(action)
+      { from: EffectiveCpd.mailer_sender }
+    end
+
+    private
+
+    def send_email(email)
+      EffectiveCpd.send_email(email, self, email_form_params) if email_form_action && !email_form_skip?
+      true
     end
 
   end

@@ -19,7 +19,7 @@
     %table.table.table-hover
       %thead
         %th Question and #{resource.cpd_audit.user}'s Response
-       %th #{cpd_audit_review.user}'s Review
+        %th #{cpd_audit_review.user}'s Review
       %tbody
         - cpd_audit_level_section.cpd_audit_level_questions.each_with_index do |cpd_audit_level_question, index|
           - cpd_audit_response = resource.cpd_audit.cpd_audit_response(cpd_audit_level_question)
