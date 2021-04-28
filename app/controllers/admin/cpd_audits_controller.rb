@@ -5,6 +5,13 @@ module Admin
 
     include Effective::CrudController
 
+    submit :close, 'Close Audit', success: -> {
+      [
+        "Successfully closed #{resource}",
+        ("and sent #{resource.user.email} a notification" unless resource.email_form_skip?)
+      ].compact.join(' ')
+    }
+
     def permitted_params
       params.require(:effective_cpd_audit).permit!
     end

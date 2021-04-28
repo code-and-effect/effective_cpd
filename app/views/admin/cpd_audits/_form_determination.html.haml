@@ -1,0 +1,10 @@
+= card('Determination') do
+  = effective_form_with(model: [:admin, cpd_audit], engine: true) do |f|
+    %p This action will complete this audit and mark it as closed.
+
+    = f.select :determination, cpd_audit.cpd_audit_level.determinations
+
+    %h2 Email to Send
+    = email_form_fields(f, :cpd_audit_closed)
+
+    = f.submit 'Close Audit', center: true

@@ -1,18 +1,29 @@
 = tabs do
-  = tab 'Audit' do
-    - if cpd_audit.persisted?
-      = render 'effective/cpd_audits/cpd_audit', cpd_audit: cpd_audit
-    - else
+  - if cpd_audit.new_record?
+    = tab 'New Audit' do
       = render 'admin/cpd_audits/form_cpd_audit', cpd_audit: cpd_audit
 
   - if cpd_audit.persisted?
+    = tab 'Audit' do
+      = render 'effective/cpd_audits/cpd_audit', cpd_audit: cpd_audit
+
+    = tab 'Status' do
+      = render 'admin/cpd_audits/status', cpd_audit: cpd_audit
+
     = tab 'Statements' do
       - datatable = Admin::EffectiveCpdStatementsDatatable.new(user_id: cpd_audit.user.id, user_type: cpd_audit.user.class.name)
-      = render_inline_datatable(datatable)
+
+      - if datatable.present?(self)
+        = render_inline_datatable(datatable)
+      - else
+        %p #{cpd_audit.user} has no cpd statements
 
     = tab 'Audit Reviews' do
       - datatable = Admin::EffectiveCpdAuditReviewsDatatable.new(cpd_audit_id: cpd_audit.id)
       = render_inline_datatable(datatable)
+
+    = tab 'Determination' do
+      = render 'admin/cpd_audits/form_determination', cpd_audit: cpd_audit
 
     - if cpd_audit.respond_to?(:log_changes_datatable)
       = tab 'Logs' do

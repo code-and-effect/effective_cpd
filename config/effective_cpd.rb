@@ -21,14 +21,24 @@ EffectiveCpd.setup do |config|
   config.cycle_label = 'year'       # 'cycle', 'season'
   config.credit_label = 'credit'    # 'credit', 'PDH', 'PDU', 'CCC'
 
-  # Notifications Mailer Settings
-  #
-  # Schedule rake effective_cpd:notify to run every 10 minutes
-  # to send out email poll notifications
-  #
-  config.mailer = {
-    layout: 'effective_cpd_mailer_layout',
-    default_from: 'no-reply@example.com'
-  }
+  # Mailer Configuration
+  # Configure the class responsible to send e-mails.
+  # config.mailer = 'Effective::CpdMailer'
 
+  # Configure the parent class responsible to send e-mails.
+  # config.parent_mailer = 'ActionMailer::Base'
+
+  # Default deliver method
+  # config.deliver_method = :deliver_later
+
+  # Default layout
+  config.mailer_layout = 'effective_cpd_mailer_layout'
+
+  # Default From
+  config.mailer_sender = "no-reply@example.com"
+
+  # Will work with effective_email_templates gem:
+  # - The audit and audit review email content will be preopulated based off the template
+  # - Uses an EmailTemplatesMailer mailer instead of ActionMailer::Base for default parent_mailer
+  config.use_effective_email_templates = false
 end

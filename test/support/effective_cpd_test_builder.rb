@@ -1,4 +1,25 @@
 module EffectiveCpdTestBuilder
+  def create_effective_cpd_audit_level!
+    build_effective_cpd_audit_level.tap { |cpd_audit_level| cpd_audit_level.save! }
+  end
+
+  def build_effective_cpd_audit_level
+    cpd_audit_level = Effective::CpdAuditLevel.new(
+      title: 'Audit Level',
+      determinations: ['Approve', 'Decline'],
+      days_to_sumbit: 20,
+      days_to_review: 20,
+
+      conflict_of_interest: true,
+      can_request_exemption: true,
+      can_request_extension: true,
+
+      days_to_declare_conflict: 10,
+      days_to_request_exemption: 10,
+      days_to_request_extension: 10
+    )
+  end
+
   def create_effective_cpd_cycle!
     build_effective_cpd_cycle.tap { |cpd_cycle| cpd_cycle.save! }
   end

@@ -19,13 +19,16 @@ module Effective
       cattr_accessor :test_required_steps
     end
 
+    acts_as_email_form
     acts_as_tokened
 
-    COMPLETED_STATES = [:exemption_granted, :audited]
+    COMPLETED_STATES = [:exemption_granted, :closed]
 
     acts_as_statused(
       :opened,                # Just Opened
       :started,               # First screen clicked
+      :conflicted,            # Auditee has declared a conflict of interest
+      :conflicted_resolved,   # The conflict of interest has been resolved
       :exemption_requested,   # Auditee has requested an exemption
       :exemption_granted,     # Exemption granted -> Audit is cancelled. Exit state.
       :exemption_denied,      # Exemption denied
@@ -34,7 +37,7 @@ module Effective
       :extension_denied,      # Extension denied
       :submitted,             # Audittee has completed questionaire submitted. Audittee is done.
       :reviewed,              # All audit reviews completed. Ready for a determination.
-      :audited                # Determination made by admin and/or audit committee. Exit state. All done.
+      :closed                 # Determination made by admin and/or audit committee. Exit state. All done.
     )
 
     acts_as_wizard(
@@ -83,7 +86,7 @@ module Effective
       started_at              :datetime
       submitted_at            :datetime
       reviewed_at             :datetime
-      audited_at              :datetime
+      audited_at              :datetime       # TODO: CHange to closed_at
 
       # Acts as tokened
       token                   :string
@@ -108,6 +111,7 @@ module Effective
     end
 
     validates :notification_date, presence: true
+    validates :determination, presence: true, if: -> { closed? }
 
     def to_s
       persisted? ? "#{cpd_audit_level} Audit of #{user}" : 'audit'
@@ -229,7 +233,21 @@ module Effective
       submitted!
     end
 
-    # These methods are overrides of automatically created ones by acts_as_statused
+    def close!
+      closed!
+      send_email(:cpd_audit_closed)
+    end
+
+    def email_form_defaults(action)
+      { from: EffectiveCpd.mailer_sender }
+    end
+
+    private
+
+    def send_email(email)
+      EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?
+      true
+    end
 
   end
 end

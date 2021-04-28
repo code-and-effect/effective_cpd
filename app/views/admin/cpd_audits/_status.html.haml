@@ -1,0 +1,334 @@
+%p= cpd_audit_summary_text(cpd_audit)
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Status
+      %th Date Reached
+      %th Details
+      %th
+  %tbody
+    %tr
+      %td Opened
+      %td= cpd_audit.opened_at.strftime('%F')
+      %td #{icon('check', class: 'small-1')} Done
+      %td
+
+    - if cpd_audit.cpd_audit_level.conflict_of_interest?
+      %tr
+        %td Conflict of interest
+        %td= cpd_audit.conflicted_at&.strftime('%F')
+        %td
+          - if cpd_audit.conflicted_at.present?
+            = icon('x', class: 'small-1')
+            Auditee has indicated conflict of interest
+          - else
+            = icon('check', class: 'small-1')
+            None
+
+    -# - if cpd_audit.cpd_audit_level.can_request_exemption?
+    -#   - if cpd_audit.exemption_requested_at.blank?
+    -#     %td Request Exemption
+    -#     %td
+    -#     %td #{icon('check', class: 'small-1')} None requested
+    -#     %td
+
+    -#   - if cpd_audit.exemption_requested_at.present?
+
+    -#   %tr
+    -#     %td Request Exemption
+    -#     %td= cpd_audit.exemption_requested_at&.strftime('%F')
+    -#     %td
+    -#       - if cpd_audit.exemption_requested?
+    -#         = icon('x', class: 'small-1')
+    -#         Auditee has requested an exemption
+    -#         = link_to 'Process Exemption', '#process-exemption-form', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+
+
+      -# steps << :conflict if cpd_audit_level.conflict_of_interest?
+
+      -# if conflict_of_interest?
+      -#   return steps + [:submit, :complete]
+      -# end
+
+      -# steps << :exemption if cpd_audit_level.can_request_exemption?
+
+      -# unless exemption_request?
+      -#   steps << :extension if cpd_audit_level.can_request_extension?
+      -# end
+
+
+
+      -# o
+
+  -# %tbody
+  -#   %tr
+  -#     %td In Progress
+  -#     %td= applicant.created_at.strftime('%F')
+  -#     %td
+  -#       - if applicant.was_submitted?
+  -#         = icon('check', class: 'small-1')
+  -#         Done
+  -#       - else
+  -#         = '-'
+  -#     %td
+  -#   %tr
+  -#     %td Application Submitted
+  -#     %td= applicant.submitted_at&.strftime('%F') || '-'
+  -#     %td
+  -#       - if applicant.submit_order.present?
+  -#         = link_to(applicant.submit_order, effective_orders.admin_order_path(applicant.submit_order))
+  -#       - else
+  -#         = '-'
+  -#     %td
+
+  -#   %tr
+  -#     %td Waiting to Complete
+  -#     %td= applicant.submitted_at&.strftime('%F') || '-'
+  -#     %td
+  -#       .mb-1
+  -#         - if applicant.transcripts_required? == false
+  -#           = icon('check', class: 'small-1')
+  -#           Transcripts Not Required
+  -#         - elsif applicant.transcripts_approved?
+  -#           = icon('check', class: 'small-1')
+  -#           Transcripts Approved
+  -#         - else
+  -#           = icon('x', class: 'small-1')
+  -#           Transcripts Approved
+
+  -#       .mb-1
+  -#         - if applicant.applicant_references_required?
+  -#           = applicant.applicant_references.count(&:completed?)
+  -#           = '/'
+  -#           = applicant.required_applicant_reference_count
+  -#           References Responded
+  -#         - else
+  -#           = icon('check', class: 'small-1')
+  -#           References Not Required
+
+  -#       .mb-1
+  -#         - if applicant.applicant_reports_required?
+  -#           - reports = applicant.applicant_reports.select { |report| report.lead_author_declaration_required? }
+
+  -#           = reports.count(&:completed?)
+  -#           = '/'
+  -#           = reports.length
+  -#           Lead Authors Responded
+  -#         - else
+  -#           = icon('check', class: 'small-1')
+  -#           Reports Not Required
+
+  -#       - if applicant.nwpta?
+  -#         .mb-1
+  -#           - if applicant.nwpta_form_required? == false
+  -#             = icon('check', class: 'small-1')
+  -#             NWPTA Form Not Required
+  -#           - elsif applicant.nwpta_form_received?
+  -#             = icon('check', class: 'small-1')
+  -#             NWPTA Form Received
+  -#           - else
+  -#             = icon('x', class: 'small-1')
+  -#             NWPTA Form Received
+
+  -#       - if applicant.rsb?
+  -#         .mb-1
+  -#           - if applicant.rsb_form_required? == false
+  -#             = icon('check', class: 'small-1')
+  -#             RSB Form Not Required
+  -#           - elsif applicant.rsb_form_received?
+  -#             = icon('check', class: 'small-1')
+  -#             RSB Form Received
+  -#           - else
+  -#             = icon('x', class: 'small-1')
+  -#             RSB Form Received
+
+
+  -#     %td
+  -#       - if !applicant.was_approved? && applicant.transcripts_required? && !applicant.transcripts_approved?
+  -#         = link_to 'Process Transcripts', '#transcripts', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+  -#       - if !applicant.was_approved? && applicant.nwpta_form_required? && !applicant.nwpta_form_received?
+  -#         = link_to 'Receive NWPTA Form', '#nwpta-verification-form', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+  -#   %tr
+  -#     %td Application Complete
+  -#     %td= applicant.completed_at&.strftime('%F') || '-'
+  -#     %td
+  -#     %td
+  -#       - if !applicant.was_approved? && !applicant.was_reviewed?
+  -#         = link_to 'Request Academic Review', '#request-review', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+  -#   %tr
+  -#     - reviews = applicant.applicant_reviews.select(&:academic_review?)
+
+  -#     %td Academic Review
+  -#     %td
+  -#       - if reviews.all?(&:completed?)
+  -#         = reviews.map(&:completed_at).max&.strftime('%F') || '-'
+  -#     %td
+  -#       = reviews.count(&:accepted?)
+  -#       = '/'
+  -#       = applicant.required_applicant_review_count
+  -#       Academics Accepted
+
+  -#       - if reviews.any?(&:rejected?)
+  -#         %br
+  -#         = reviews.count(&:rejected?)
+  -#         = '/'
+  -#         = applicant.required_applicant_review_count
+  -#         Academics Rejected
+
+  -#     %td
+  -#       - if !applicant.was_approved? && !applicant.was_reviewed?
+  -#         = link_to 'Request Work Experience Review', '#request-review', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+  -#   %tr
+  -#     - reviews = applicant.applicant_reviews.select(&:credentials_review?)
+
+  -#     %td Work Experience Review
+  -#     %td
+  -#       - if reviews.all?(&:completed?)
+  -#         = reviews.map(&:completed_at).max&.strftime('%F') || '-'
+  -#     %td
+  -#       = reviews.count(&:accepted?)
+  -#       = '/'
+  -#       = applicant.required_applicant_review_count
+  -#       Work Experience Accepted
+
+  -#       - if reviews.any?(&:rejected?)
+  -#         %br
+  -#         = reviews.count(&:rejected?)
+  -#         = '/'
+  -#         = applicant.required_applicant_review_count
+  -#         Work Experience Rejected
+
+  -#     %td
+  -#       - if applicant.was_submitted? && !applicant.was_approved?
+  -#         = link_to 'Process Applicant', '#process', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+  -#   - if applicant.declined_at.present?
+  -#     %tr
+  -#       %td Processed
+  -#       %td= applicant.declined_at.strftime('%F')
+  -#       %td
+  -#         = icon('x', class: 'small-1')
+  -#         Declined
+  -#       %td
+
+  -#   - if applicant.deferred_at.present?
+  -#     %tr
+  -#       %td Processed
+  -#       %td= applicant.deferred_at.strftime('%F')
+  -#       %td
+  -#         = icon('x', class: 'small-1')
+  -#         Defered
+  -#       %td
+
+  -#   - if applicant.applicant_reassessment.present?
+  -#     %tr
+  -#       %td Reassessment
+  -#       %td= applicant.applicant_reassessment.created_at.strftime('%F')
+  -#       %td= link_to 'Reassessment', '#reassessment', 'data-click-tab': true
+  -#       %td
+  -#         - if applicant.was_submitted? && !applicant.was_approved?
+  -#           = link_to 'Process Applicant', '#process', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+  -#   - if applicant.was_approved? || applicant.applicant_reassessment.present?
+  -#     %tr
+  -#       %td Processed
+  -#       %td= applicant.approved_at&.strftime('%F')
+  -#       %td
+  -#         - if applicant.was_approved?
+  -#           = icon('check', class: 'small-1')
+  -#           Approved
+  -#         - elsif applicant.declined?
+  -#           = icon('x', class: 'small-1')
+  -#           Declined
+  -#         - else
+  -#           = '-'
+  -#       %td
+
+  -#   %tr
+  -#     %td Training
+  -#     %td= applicant.trained_at&.strftime('%F')
+  -#     %td
+  -#       - if applicant.train_order.present?
+  -#         = link_to(applicant.train_order, effective_orders.admin_order_path(applicant.train_order))
+  -#         %br
+
+  -#       - if !applicant.training_required? && !applicant.user.ethics_exam_completed?
+  -#         = icon('check', class: 'small-1')
+  -#         Training Not Required
+  -#         %br
+
+  -#       - if applicant.train_order&.purchased? || applicant.user.ethics_exam_purchased?
+  -#         = icon('check', class: 'small-1')
+  -#         Purchased training fees
+  -#       - else
+  -#         = icon('x', class: 'small-1')
+  -#         Purchased training fees
+  -#       %br
+
+  -#       - if applicant.user.udutu_id.present?
+  -#         = icon('check', class: 'small-1')
+  -#         Assigned udutu course.
+  -#       - else
+  -#         = icon('x', class: 'small-1')
+  -#         Assigned udutu course.
+  -#       %br
+
+  -#       - if applicant.user.ethics_exam_completed?
+  -#         = icon('check', class: 'small-1')
+  -#         Completed udutu training
+  -#       - else
+  -#         = icon('x', class: 'small-1')
+  -#         Completed udutu training
+  -#     %td
+
+  -#   %tr
+  -#     %td Finished
+  -#     %td= applicant.finished_at&.strftime('%F') || '-'
+  -#     %td
+  -#       - if applicant.finish_order.present?
+  -#         = link_to(applicant.finish_order, effective_orders.admin_order_path(applicant.finish_order))
+  -#     %td
+  -#       - if applicant.finish_order.present? && !applicant.finish_order.purchased?
+  -#         = link_to 'Admin Checkout', effective_orders.checkout_admin_order_path(applicant.finish_order), class: 'btn btn-sm btn-primary', 'data-turbolinks' => false
+
+  -#   %tr
+  -#     %td Registered
+  -#     %td= applicant.registered_at&.strftime('%F') || '-'
+  -#     %td
+  -#       - if applicant.was_registered?
+  -#         = applicant.registrant_category
+  -#         %br
+  -#         = applicant.registrant_number
+  -#       %td
+  -#         - if applicant.was_finished? && !applicant.was_registered?
+  -#           = link_to 'Register Applicant', '#register', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
+
+  -#   %tr
+  -#     %td Mailouts
+  -#     %td -
+  -#     %td
+  -#       - if applicant.package_mailed_on.present?
+  -#         = icon('check', class: 'small-1')
+  -#         Package mailed
+  -#       - else
+  -#         = icon('x', class: 'small-1')
+  -#         Package mailed
+
+  -#       %br
+
+  -#       - if applicant.seal_ordered_on.present?
+  -#         = icon('check', class: 'small-1')
+  -#         Seal ordered
+  -#       - else
+  -#         = icon('x', class: 'small-1')
+  -#         Seal ordered
+
+  -#     %td
+  -#       - if applicant.was_finished? && (applicant.package_mailed_on.blank? || applicant.seal_ordered_on.blank?)
+  -#         = link_to 'Mailouts', '#mailouts', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
