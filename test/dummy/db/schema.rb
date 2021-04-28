@@ -62,6 +62,129 @@ ActiveRecord::Schema.define(version: 4) do
     t.index ["cpd_category_id"], name: "index_cpd_activities_on_cpd_category_id"
   end
 
+  create_table "cpd_audit_level_question_options", force: :cascade do |t|
+    t.bigint "cpd_audit_level_question_id"
+    t.text "title"
+    t.integer "position"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+  end
+
+  create_table "cpd_audit_level_questions", force: :cascade do |t|
+    t.bigint "cpd_audit_level_id"
+    t.bigint "cpd_audit_level_section_id"
+    t.text "title"
+    t.string "category"
+    t.boolean "required", default: true
+    t.integer "position"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_audit_level_id"], name: "index_cpd_audit_level_questions_on_cpd_audit_level_id"
+    t.index ["cpd_audit_level_section_id"], name: "index_cpd_audit_level_questions_on_cpd_audit_level_section_id"
+  end
+
+  create_table "cpd_audit_level_response_options", force: :cascade do |t|
+    t.bigint "cpd_audit_response_id"
+    t.bigint "cpd_audit_level_question_option_id"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_audit_response_id"], name: "index_cpd_audit_level_response_options_on_cpd_audit_response_id"
+  end
+
+  create_table "cpd_audit_level_responses", force: :cascade do |t|
+    t.bigint "cpd_audit_id"
+    t.bigint "cpd_audit_level_question_id"
+    t.date "date"
+    t.string "email"
+    t.integer "number"
+    t.text "long_answer"
+    t.text "short_answer"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_audit_id"], name: "index_cpd_audit_level_responses_on_cpd_audit_id"
+    t.index ["cpd_audit_level_question_id"], name: "index_cpd_audit_level_responses_on_cpd_audit_level_question_id"
+  end
+
+  create_table "cpd_audit_level_sections", force: :cascade do |t|
+    t.bigint "cpd_audit_level_id"
+    t.string "title"
+    t.integer "position"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_audit_level_id"], name: "index_cpd_audit_level_sections_on_cpd_audit_level_id"
+  end
+
+  create_table "cpd_audit_levels", force: :cascade do |t|
+    t.string "title"
+    t.text "determinations"
+    t.boolean "conflict_of_interest"
+    t.boolean "can_request_exemption"
+    t.boolean "can_request_extension"
+    t.integer "days_to_submit"
+    t.integer "days_to_review"
+    t.integer "days_to_declare_conflict"
+    t.integer "days_to_request_exemption"
+    t.integer "days_to_request_extension"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+  end
+
+  create_table "cpd_audit_review_items_table_name", force: :cascade do |t|
+    t.bigint "cpd_audit_review_id"
+    t.integer "item_id"
+    t.string "item_type"
+    t.string "recommendation"
+    t.text "comments"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_audit_review_id"], name: "index_cpd_audit_review_items_table_name_on_cpd_audit_review_id"
+  end
+
+  create_table "cpd_audit_reviews_table_name", force: :cascade do |t|
+    t.bigint "cpd_audit_level_id"
+    t.bigint "cpd_audit_id"
+    t.integer "user_id"
+    t.string "user_type"
+    t.text "comments"
+    t.string "recommendation"
+    t.boolean "conflict_of_interest"
+    t.text "conflict_of_interest_reason"
+    t.datetime "submitted_at"
+    t.string "token"
+    t.text "wizard_steps"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_audit_id"], name: "index_cpd_audit_reviews_table_name_on_cpd_audit_id"
+    t.index ["cpd_audit_level_id"], name: "index_cpd_audit_reviews_table_name_on_cpd_audit_level_id"
+  end
+
+  create_table "cpd_audits", force: :cascade do |t|
+    t.bigint "cpd_audit_level_id"
+    t.integer "user_id"
+    t.string "user_type"
+    t.date "notification_date"
+    t.date "extension_date"
+    t.string "determination"
+    t.boolean "conflict_of_interest"
+    t.text "conflict_of_interest_reason"
+    t.boolean "exemption_request"
+    t.text "exemption_request_reason"
+    t.boolean "extension_request"
+    t.text "extension_request_reason"
+    t.date "extension_request_date"
+    t.string "status"
+    t.text "status_steps"
+    t.datetime "started_at"
+    t.datetime "submitted_at"
+    t.datetime "reviewed_at"
+    t.datetime "closed_at"
+    t.string "token"
+    t.text "wizard_steps"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_audit_level_id"], name: "index_cpd_audits_on_cpd_audit_level_id"
+  end
+
   create_table "cpd_categories", force: :cascade do |t|
     t.string "title"
     t.integer "position"
@@ -74,7 +197,6 @@ ActiveRecord::Schema.define(version: 4) do
     t.datetime "start_at"
     t.datetime "end_at"
     t.integer "required_score"
-    t.string "token"
     t.datetime "updated_at"
     t.datetime "created_at"
   end
@@ -95,8 +217,8 @@ ActiveRecord::Schema.define(version: 4) do
 
   create_table "cpd_statement_activities", force: :cascade do |t|
     t.bigint "cpd_statement_id"
-    t.bigint "cpd_category_id"
     t.bigint "cpd_activity_id"
+    t.bigint "cpd_category_id"
     t.bigint "original_id"
     t.integer "amount"
     t.integer "amount2"
@@ -119,7 +241,10 @@ ActiveRecord::Schema.define(version: 4) do
     t.string "user_type"
     t.string "token"
     t.integer "score"
-    t.datetime "completed_at"
+    t.boolean "confirm_read"
+    t.boolean "confirm_factual"
+    t.boolean "confirm_readonly"
+    t.datetime "submitted_at"
     t.text "wizard_steps"
     t.datetime "updated_at"
     t.datetime "created_at"
