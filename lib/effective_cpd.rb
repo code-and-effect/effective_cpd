@@ -7,9 +7,13 @@ module EffectiveCpd
 
   def self.config_keys
     [
-      :cpd_cycles_table_name, :cpd_categories_table_name, :cpd_activities_table_name, :cpd_rules_table_name,
-      :cpd_audit_levels_table_name, :cpd_audit_level_sections_table_name, :cpd_audit_level_questions_table_name, :cpd_audit_level_question_options_table_name,
-      :cpd_statement_activities_table_name, :cpd_statements_table_name,
+      :cpd_categories_table_name, :cpd_activities_table_name,
+      :cpd_cycles_table_name, :cpd_rules_table_name,
+      :cpd_statements_table_name, :cpd_statement_activities_table_name,
+      :cpd_audit_levels_table_name, :cpd_audit_level_sections_table_name,
+      :cpd_audit_level_questions_table_name, :cpd_audit_level_question_options_table_name,
+      :cpd_audits_table_name, :cpd_audit_responses_table_name, :cpd_audit_response_options_table_name,
+      :cpd_audit_reviews_table_name, :cpd_audit_review_items_table_name,
       :cycle_label, :credit_label, :layout,
       :mailer, :parent_mailer, :deliver_method, :mailer_layout, :mailer_sender, :use_effective_email_templates
     ]
