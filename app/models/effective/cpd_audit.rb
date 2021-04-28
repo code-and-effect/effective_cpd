@@ -245,7 +245,7 @@ module Effective
     private
 
     def send_email(email)
-      EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?
+      EffectiveCpd.send_email(email, self, email_form_params) if email_form_action && !email_form_skip?
       true
     end
 

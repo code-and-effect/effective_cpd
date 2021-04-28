@@ -5,7 +5,19 @@ module Effective
 
     def cpd_audit_closed(cpd_audit, opts = {})
       @assigns = effective_email_templates_assigns(cpd_audit)
-      mail(opts.merge(to: cpd_audit.user.email, log: cpd_audit))
+      headers = headers_for(cpd_audit, opts)
+
+      mail(headers)
+    end
+
+    protected
+
+    def headers_for(resource, opts = {})
+      if resource.respond_to?(:log_changes_datatable)
+        opts.merge(to: resource.user.email, log: resource)
+      else
+        opts.merge(to: resource.user.email)
+      end
     end
 
     # Only relevant if the effective_email_templates gem is present
