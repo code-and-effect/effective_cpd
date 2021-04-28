@@ -51,7 +51,7 @@ module Effective
       recommendation            :string
 
       # Status Dates
-      completed_at              :datetime
+      submitted_at              :datetime
 
       # Wizard Progress
       wizard_steps              :text
@@ -62,8 +62,8 @@ module Effective
     scope :deep, -> { includes(:cpd_audit, :cpd_audit_level, :user) }
     scope :sorted, -> { order(:id) }
 
-    scope :available, -> { where(completed_at: nil) }
-    scope :completed, -> { where.not(completed_at: nil) }
+    scope :available, -> { where(submitted_at: nil) }
+    scope :completed, -> { where.not(submitted_at: nil) }
 
     before_validation(if: -> { new_record? }) do
       self.cpd_audit_level ||= cpd_audit&.cpd_audit_level
@@ -148,15 +148,15 @@ module Effective
 
     # Called by wizard submit step
     def submit!
-      update!(completed_at: Time.zone.now)
+      update!(submitted_at: Time.zone.now)
     end
 
     def in_progress?
-      completed_at.blank?
+      submitted_at.blank?
     end
 
     def completed?
-      completed_at.present?
+      submitted_at.present?
     end
 
   end

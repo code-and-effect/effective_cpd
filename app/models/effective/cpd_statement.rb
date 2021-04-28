@@ -29,7 +29,7 @@ module Effective
       confirm_factual         :boolean
       confirm_readonly        :boolean
 
-      completed_at           :datetime, permitted: false
+      submitted_at            :datetime, permitted: false
 
       # Acts as tokened
       token                  :string, permitted: false
@@ -43,8 +43,8 @@ module Effective
     scope :deep, -> { includes(:cpd_cycle, :user, cpd_statement_activities: [:files_attachments, :cpd_category, :original, cpd_activity: [:rich_text_body]]) }
     scope :sorted, -> { order(:cpd_cycle_id) }
 
-    scope :draft, -> { where(completed_at: nil) }
-    scope :completed, -> { where.not(completed_at: nil) }
+    scope :draft, -> { where(submitted_at: nil) }
+    scope :completed, -> { where.not(submitted_at: nil) }
 
     before_validation(if: -> { new_record? }) do
       self.user ||= current_user
@@ -72,13 +72,16 @@ module Effective
     # This is the review step where they click Submit Ballot
     def submit!
       wizard_steps[:complete] ||= Time.zone.now
-      self.completed_at ||= Time.zone.now
 
-      save!
+      update!(submitted_at: Time.zone.now)
+    end
+
+    def in_progress?
+      submitted_at.blank?
     end
 
     def completed?
-      completed_at.present?
+      submitted_at.present?
     end
 
     def carry_forward
