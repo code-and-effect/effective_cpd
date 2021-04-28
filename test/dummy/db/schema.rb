@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 4) do
     t.datetime "created_at"
   end
 
-  create_table "cpd_audit_review_items_table_name", force: :cascade do |t|
+  create_table "cpd_audit_review_items", force: :cascade do |t|
     t.bigint "cpd_audit_review_id"
     t.integer "item_id"
     t.string "item_type"
@@ -137,10 +137,10 @@ ActiveRecord::Schema.define(version: 4) do
     t.text "comments"
     t.datetime "updated_at"
     t.datetime "created_at"
-    t.index ["cpd_audit_review_id"], name: "index_cpd_audit_review_items_table_name_on_cpd_audit_review_id"
+    t.index ["cpd_audit_review_id"], name: "index_cpd_audit_review_items_on_cpd_audit_review_id"
   end
 
-  create_table "cpd_audit_reviews_table_name", force: :cascade do |t|
+  create_table "cpd_audit_reviews", force: :cascade do |t|
     t.bigint "cpd_audit_level_id"
     t.bigint "cpd_audit_id"
     t.integer "user_id"
@@ -154,8 +154,8 @@ ActiveRecord::Schema.define(version: 4) do
     t.text "wizard_steps"
     t.datetime "updated_at"
     t.datetime "created_at"
-    t.index ["cpd_audit_id"], name: "index_cpd_audit_reviews_table_name_on_cpd_audit_id"
-    t.index ["cpd_audit_level_id"], name: "index_cpd_audit_reviews_table_name_on_cpd_audit_level_id"
+    t.index ["cpd_audit_id"], name: "index_cpd_audit_reviews_on_cpd_audit_id"
+    t.index ["cpd_audit_level_id"], name: "index_cpd_audit_reviews_on_cpd_audit_level_id"
   end
 
   create_table "cpd_audits", force: :cascade do |t|

@@ -183,7 +183,7 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
-    create_table :cpd_audit_reviews_table_name do |t|
+    create_table :cpd_audit_reviews do |t|
       t.references :cpd_audit_level
       t.references :cpd_audit
 
@@ -206,7 +206,7 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
-    create_table :cpd_audit_review_items_table_name do |t|
+    create_table :cpd_audit_review_items do |t|
       t.references :cpd_audit_review
 
       t.integer :item_id

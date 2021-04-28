@@ -27,5 +27,4 @@ EffectiveResources.setup do |config|
   #
   # Supported values: 'Save', 'Continue', and 'Add New'
   config.default_submits = ['Save', 'Continue', 'Add New']
-
 end

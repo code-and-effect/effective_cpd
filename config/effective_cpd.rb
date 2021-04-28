@@ -17,8 +17,8 @@ EffectiveCpd.setup do |config|
   config.cpd_audit_responses_table_name = :cpd_audit_level_responses
   config.cpd_audit_response_options_table_name = :cpd_audit_level_response_options
 
-  config.cpd_audit_reviews_table_name = :cpd_audit_reviews_table_name
-  config.cpd_audit_review_items_table_name = :cpd_audit_review_items_table_name
+  config.cpd_audit_reviews_table_name = :cpd_audit_reviews
+  config.cpd_audit_review_items_table_name = :cpd_audit_review_items
 
   # Layout Settings
   # Configure the Layout per controller, or all at once
