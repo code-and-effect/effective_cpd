@@ -9,23 +9,24 @@
 
   - if resource.conflict_of_interest?
     %h3 Conflict of Interest
-
     %p You have indicated there is a conflict of interest with the following match:
 
     %ul
       - resource.cpd_audit_reviews.each do |cpd_audit_review|
         %li #{cpd_audit_review.user} <#{mail_to(cpd_audit_review.user.email)}>
 
-    = render("effective/cpd_audits/conflict", cpd_audit: resource)
+    = render("effective/cpd_audits/conflict", cpd_audit: resource, step: :conflict)
 
-    %p= cpd_audit_summary_text(resource)
+  - if resource.exemption_request?
+    %h3 Exemption Request
+    %p You have requested an exemption from this audit.
+    = render("effective/cpd_audits/exemption", cpd_audit: resource, step: :exemption)
 
-
+  - if resource.extension_request?
+    %h3 Extension Request
+    %p You have requested an extension to the deadline.
+    = render("effective/cpd_audits/extension", cpd_audit: resource, step: :extension)
 
   %h3 Next Step
-  %p You are unable to continue at this time. Please wait for an email with further instructions. Thank you.
-
-  - if resource.has_completed_step?(step)
-    = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
-      = f.hidden_field :current_step
-      = f.submit 'Save and Continue', center: true
+  %p= cpd_audit_summary_text(resource)
+  %p You may not continue at this time. Please wait for an email with further instructions. Thank you.

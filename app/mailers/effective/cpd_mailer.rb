@@ -5,36 +5,57 @@ module Effective
 
     # CPD Audit
     def cpd_audit_opened(cpd_audit, opts = {})
-      @cpd_audit = cpd_audit
       @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
-
       mail(headers_for(cpd_audit, opts))
     end
 
     def cpd_audit_conflicted(cpd_audit, opts = {})
-      @cpd_audit = cpd_audit
       @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
-
       mail(to: 'admin@blah.com')
     end
 
     def cpd_audit_conflict_resolved(cpd_audit, opts = {})
-      @cpd_audit = cpd_audit
       @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+      mail(headers_for(cpd_audit, opts))
+    end
 
+    def cpd_audit_exemption_request(cpd_audit, opts = {})
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+      mail(to: 'admin@blah.com')
+    end
+
+    def cpd_audit_exemption_denied(cpd_audit, opts = {})
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+      mail(headers_for(cpd_audit, opts))
+    end
+
+    def cpd_audit_exemption_granted(cpd_audit, opts = {})
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+      mail(headers_for(cpd_audit, opts))
+    end
+
+    def cpd_audit_extension_request(cpd_audit, opts = {})
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+      mail(to: 'admin@blah.com')
+    end
+
+    def cpd_audit_extension_denied(cpd_audit, opts = {})
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+      mail(headers_for(cpd_audit, opts))
+    end
+
+    def cpd_audit_extension_granted(cpd_audit, opts = {})
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
       mail(headers_for(cpd_audit, opts))
     end
 
     def cpd_audit_closed(cpd_audit, opts = {})
-      @cpd_audit = cpd_audit
       @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
-
       mail(headers_for(cpd_audit, opts))
     end
 
     # CPD Audit Review
     def cpd_audit_review_opened(cpd_audit_review, opts = {})
-      @cpd_audit_review = cpd_audit_review
       @assigns = effective_email_templates_cpd_audit_review_assigns(cpd_audit_review)
 
       mail(headers_for(cpd_audit_review, opts))

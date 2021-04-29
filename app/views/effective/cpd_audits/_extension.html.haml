@@ -4,16 +4,27 @@
       %tr
         %th Extension
         %td
-          - if cpd_audit.extension_request?
+          - if cpd_audit.was_extension_requested?
             Yes, an extension has been requested
           - else
             No extension request
 
-      - if cpd_audit.exemption_request?
+      - if cpd_audit.was_extension_requested?
         %tr
           %th Requested Date
-          %th= cpd_audit.extension_request_date&.strftime('%F')
+          %td= cpd_audit.extension_request_date&.strftime('%F')
 
         %tr
           %th Reason
           %td= cpd_audit.exemption_request_reason
+
+        %tr
+          %th Status
+          %td
+            %span.badge.badge-secondary
+              - if cpd_audit.extension_requested?
+                Requested
+              - elsif cpd_audit.was_extension_granted?
+                Granted
+              - elsif cpd_audit.was_extension_denied?
+                Denied

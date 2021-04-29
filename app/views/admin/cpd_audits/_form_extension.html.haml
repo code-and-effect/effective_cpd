@@ -1,0 +1,24 @@
+- raise('expected an extension requested cpd audit') unless cpd_audit.extension_requested? || cpd_audit.errors.present?
+
+%h2 Extension Request
+%p The auditee has requested an extension:
+= render('effective/cpd_audits/extension', cpd_audit: cpd_audit, step: :extension)
+
+%h2 Resolve Extension Request
+%p Please grant or deny the request. If granted, the auditee's deadline will be updated.
+
+= card('Extension Request') do
+  %p The extension request shall be
+
+  = effective_form_with(model: [:admin, cpd_audit], engine: true) do |f|
+    = f.radios :admin_process_request, Effective::CpdAudit::ADMIN_PROCESS_REQUEST_OPTIONS, label: false, buttons: true, required: true
+
+    = f.show_if :admin_process_request, 'Granted' do
+      %p Send email
+      = email_form_fields(f, :cpd_audit_extension_granted)
+
+    = f.show_if :admin_process_request, 'Denied' do
+      %p Send email
+      = email_form_fields(f, :cpd_audit_extension_denied)
+
+    = f.submit 'Process Extension Request', center: true

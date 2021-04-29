@@ -16,7 +16,7 @@
       - if datatable.present?(self)
         = render_inline_datatable(datatable)
       - else
-        %p #{cpd_audit.user} has no cpd statements
+        %p #{cpd_audit.user} has not submitted any CPD statements.
 
     = tab 'Audit Reviews' do
       - datatable = Admin::EffectiveCpdAuditReviewsDatatable.new(cpd_audit_id: cpd_audit.id)
@@ -28,6 +28,14 @@
     - if cpd_audit.conflicted?
       = tab 'Process Conflict of Interest' do
         = render 'admin/cpd_audits/form_conflict', cpd_audit: cpd_audit
+
+    - if cpd_audit.exemption_requested?
+      = tab 'Process Exemption Request' do
+        = render 'admin/cpd_audits/form_exemption', cpd_audit: cpd_audit
+
+    - if cpd_audit.extension_requested?
+      = tab 'Process Extension Request' do
+        = render 'admin/cpd_audits/form_extension', cpd_audit: cpd_audit
 
     - if cpd_audit.respond_to?(:log_changes_datatable)
       = tab 'Logs' do

@@ -4,12 +4,12 @@
       %tr
         %th Exemption
         %td
-          - if cpd_audit.exemption_request?
+          - if cpd_audit.was_exemption_requested?
             Yes, an exemption has been requested
           - else
             No exemption request
 
-      - if cpd_audit.exemption_request?
+      - if cpd_audit.was_exemption_requested?
         %tr
           %th Reason
           %td= cpd_audit.exemption_request_reason

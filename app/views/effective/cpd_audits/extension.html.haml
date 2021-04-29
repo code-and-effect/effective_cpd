@@ -7,6 +7,9 @@
   - if resource.cpd_audit_level.extension_content.present?
     .mb-2= resource.cpd_audit_level.extension_content
 
+  - if resource.was_extension_requested?
+    = render('effective/cpd_audits/extension', cpd_audit: resource, step: :extension)
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
@@ -14,7 +17,11 @@
       inline: true, required: true
 
     = f.show_if :extension_request, true do
-      = f.date_field :extension_date, required: true
+      = f.date_field :extension_request_date, required: true
       = f.text_area :extension_request_reason, required: true
+
+    = f.show_if :extension_request, false do
+      = f.hidden_field :extension_request_date, value: ''
+      = f.hidden_field :extension_request_reason, value: ''
 
     = f.submit 'Save and Continue', center: true

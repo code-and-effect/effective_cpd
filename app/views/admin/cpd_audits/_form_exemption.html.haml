@@ -1,0 +1,24 @@
+- raise('expected an exemption requested cpd audit') unless cpd_audit.exemption_requested? || cpd_audit.errors.present?
+
+%h2 Exemption Request
+%p The auditee has requested an exemption:
+= render('effective/cpd_audits/exemption', cpd_audit: cpd_audit, step: :exemption)
+
+%h2 Resolve Exemption Request
+%p Please grant or deny the request. If granted, this audit will be closed.
+
+= card('Exemption Request') do
+  %p The exemption request shall be
+
+  = effective_form_with(model: [:admin, cpd_audit], engine: true) do |f|
+    = f.radios :admin_process_request, Effective::CpdAudit::ADMIN_PROCESS_REQUEST_OPTIONS, label: false, buttons: true, required: true
+
+    = f.show_if :admin_process_request, 'Granted' do
+      %p Send email
+      = email_form_fields(f, :cpd_audit_exemption_granted)
+
+    = f.show_if :admin_process_request, 'Denied' do
+      %p Send email
+      = email_form_fields(f, :cpd_audit_exemption_denied)
+
+    = f.submit 'Process Exemption Request', center: true

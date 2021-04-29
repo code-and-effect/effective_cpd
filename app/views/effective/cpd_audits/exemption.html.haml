@@ -7,6 +7,9 @@
   - if resource.cpd_audit_level.exemption_content.present?
     .mb-2= resource.cpd_audit_level.exemption_content
 
+  - if resource.was_exemption_requested?
+    = render('effective/cpd_audits/exemption', cpd_audit: resource, step: :exemption)
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
@@ -15,5 +18,8 @@
 
     = f.show_if :exemption_request, true do
       = f.text_area :exemption_request_reason, required: true
+
+    = f.show_if :exemption_request, false do
+      = f.hidden_field :exemption_request_reason, value: ''
 
     = f.submit 'Save and Continue', center: true

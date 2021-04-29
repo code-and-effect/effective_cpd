@@ -22,4 +22,7 @@
     = f.show_if :conflict_of_interest, true do
       = f.text_area :conflict_of_interest_reason, required: true
 
+    = f.show_if :conflict_of_interest, false do
+      = f.hidden_field :conflict_of_interest_reason, value: ''
+
     = f.submit 'Save and Continue', center: true
