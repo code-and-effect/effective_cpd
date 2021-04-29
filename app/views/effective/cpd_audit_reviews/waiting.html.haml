@@ -1,0 +1,17 @@
+= render('layout') do
+  %h1= @page_title
+
+  - if resource.cpd_audit_level.all_steps_content.present?
+    .mb-2= resource.cpd_audit_level.all_steps_content
+
+  -# - if resource.cpd_audit_level.conflict_content.present?
+  -#   .mb-2= resource.cpd_audit_level.conflict_content
+
+  %h3 Next Step
+  %p= cpd_audit_summary_text(resource.cpd_audit)
+
+  %p
+    You may not continue at this time.
+    Please wait for an email when this audit becomes available for review.
+
+  %p Thank you and have a great day!

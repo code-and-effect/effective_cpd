@@ -56,6 +56,9 @@ EffectiveCpd.setup do |config|
   # Default From
   config.mailer_sender = "no-reply@example.com"
 
+  # Send Admin correspondence To
+  config.mailer_admin = "admin@example.com"
+
   # Will work with effective_email_templates gem:
   # - The audit and audit review email content will be preopulated based off the template
   # - Uses an EmailTemplatesMailer mailer instead of ActionMailer::Base for default parent_mailer

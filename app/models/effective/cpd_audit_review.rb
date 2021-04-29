@@ -27,6 +27,8 @@ module Effective
       # Optional based on cpd_audit_level options
       conflict: 'Conflict of Interest',
 
+      waiting: 'Waiting on Auditee Submission',
+
       statements: 'Review CPD Statements',
       # ... There will be one step per cpd_statement here. "statement1"
 
@@ -140,6 +142,8 @@ module Effective
         return steps + [:submit, :complete]
       end
 
+      steps += [:waiting] unless cpd_audit.was_submitted?
+
       steps += [:statements] + dynamic_wizard_statement_steps.keys
       steps += [:questionnaire] + dynamic_wizard_questionnaire_steps.keys
       steps += [:recommendation, :submit, :complete]
@@ -154,6 +158,10 @@ module Effective
     # Called by wizard submit step
     def submit!
       update!(submitted_at: Time.zone.now)
+      cpd_audit.save!  # This triggers cpd_audit.review! to maybe go from submitted->removed
+
+      send_email(:cpd_audit_review_submitted) # Always
+      true
     end
 
     def in_progress?

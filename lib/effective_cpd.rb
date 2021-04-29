@@ -15,7 +15,7 @@ module EffectiveCpd
       :cpd_audits_table_name, :cpd_audit_responses_table_name, :cpd_audit_response_options_table_name,
       :cpd_audit_reviews_table_name, :cpd_audit_review_items_table_name,
       :cycle_label, :credit_label, :layout, :auditee_user_scope, :audit_reviewer_user_scope,
-      :mailer, :parent_mailer, :deliver_method, :mailer_layout, :mailer_sender, :use_effective_email_templates
+      :mailer, :parent_mailer, :deliver_method, :mailer_layout, :mailer_sender, :mailer_admin, :use_effective_email_templates
     ]
   end
 

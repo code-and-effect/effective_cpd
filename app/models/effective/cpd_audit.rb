@@ -38,7 +38,7 @@ module Effective
       :extension_requested,   # Audittee has requested an extension
       :extension_granted,     # Extension granted
       :extension_denied,      # Extension denied
-      :submitted,             # Audittee has completed questionaire submitted. Audittee is done.
+      :submitted,             # Audittee has completed questionnaire submitted. Audittee is done.
       :reviewed,              # All audit reviews completed. Ready for a determination.
       :closed                 # Determination made by admin and/or audit committee. Exit state. All done.
     )
@@ -111,6 +111,9 @@ module Effective
     before_validation(if: -> { new_record? }) do
       self.notification_date ||= Time.zone.now
     end
+
+    # If we're submitted. Check if we can go into reviewed?
+    before_save(if: -> { submitted? }) { review! }
 
     after_commit(on: :create) do
       send_email(:cpd_audit_opened) if email_form_action
@@ -185,6 +188,14 @@ module Effective
       (extension_date || notification_date)
     end
 
+    def completed?
+      COMPLETED_STATES.include?(status.to_sym)
+    end
+
+    def in_progress?
+      COMPLETED_STATES.include?(status.to_sym) == false
+    end
+
     def cpd_audit_level_section(wizard_step)
       position = (wizard_step.to_s.split('section').last.to_i rescue false)
       cpd_audit_level.cpd_audit_level_sections.find { |section| (section.position + 1) == position }
@@ -206,7 +217,7 @@ module Effective
       return save! unless conflict_of_interest?
 
       update!(status: :conflicted)
-      send_email(:cpd_audit_conflicted)
+      send_email(:cpd_audit_conflicted) # Always
     end
 
     # Admin action
@@ -254,7 +265,7 @@ module Effective
       return save! unless extension_request?
 
       update!(status: :extension_requested)
-      send_email(:cpd_audit_extension_request)
+      send_email(:cpd_audit_extension_request) # Always
     end
 
     # Admin action
@@ -281,19 +292,35 @@ module Effective
     # Auditee wizard action
     def submit!
       submitted!
+
+      send_email(:cpd_audit_submitted) # Always
+
+      cpd_audit_reviews.each do |cpd_audit_review|
+        cpd_audit_review.send_email(:cpd_audit_review_ready)
+      end
+
+      true
+    end
+
+    # Called in a before_save. Intended for applicant_review to call in its submit! method
+    def review!
+      return false unless submitted?
+      return false unless cpd_audit_reviews.present? && cpd_audit_reviews.all?(&:completed?)
+
+      reviewed!
+      send_email(:cpd_audit_reviewed) # Always
     end
 
     # Admin action
     def close!
       closed!
       send_email(:cpd_audit_closed) if email_form_action
+      true
     end
 
     def email_form_defaults(action)
       { from: EffectiveCpd.mailer_sender }
     end
-
-    private
 
     def send_email(email)
       EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?

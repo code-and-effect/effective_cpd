@@ -2,7 +2,7 @@
   = render('effective/cpd_audit_reviews/summary', cpd_audit_review: cpd_audit_review)
 
   - steps = cpd_audit_review.required_steps.select { |step| cpd_audit_review.has_completed_step?(step) }
-  - blacklist = [:start, :information, :instructions, :statements, :questionnaire, :submit, :complete]
+  - blacklist = [:start, :information, :instructions, :waiting, :statements, :questionnaire, :submit, :complete]
 
   - (steps - blacklist).each do |step|
     - if cpd_audit_review.dynamic_wizard_questionnaire_steps.keys.include?(step)
