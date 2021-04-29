@@ -1,12 +1,14 @@
 ---
-subject: 'You have been selected to perform a CPD audit review'
+subject: 'You have been selected to CPD Audit Review {{ auditee.name }}'
 from: 'admin@example.com'
 ---
 Hello {{ reviewer.name }},
 
-You have been selected to to perform a CPD audit review.
+You have been selected to to perform a CPD Audit review of {{ auditee.name }}.
 
-Please begin here
+The auditee needs time to complete their audit questionnaire, so there is nothing to review just yet.
+
+You will receive another email after the auditee has submitted their audit questionnaire.
 
 {{ url }}
 

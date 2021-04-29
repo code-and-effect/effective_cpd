@@ -1,12 +1,12 @@
 ---
-subject: 'Your audit has been closed with determination {{ determination }}'
+subject: 'Your CPD Audit has been closed with a determination'
 from: 'admin@example.com'
 ---
 Hello {{ auditee.name }},
 
-Your {{ cpd_audit }} has been closed.
+Your {{ audit.title }} has been closed.
 
-It was determined: {{ determination }}.
+The following determination was made: {{ audit.determination }}
 
 Please check below for any additional details
 
