@@ -116,7 +116,7 @@ module Effective
     before_save(if: -> { submitted? }) { review! }
 
     after_commit(on: :create) do
-      send_email(:cpd_audit_opened) if email_form_action
+      send_email(:cpd_audit_opened)
     end
 
     validates :notification_date, presence: true
@@ -217,7 +217,7 @@ module Effective
       return save! unless conflict_of_interest?
 
       update!(status: :conflicted)
-      send_email(:cpd_audit_conflicted) # Always
+      send_email(:cpd_audit_conflicted)
     end
 
     # Admin action
@@ -227,7 +227,7 @@ module Effective
       assign_attributes(conflict_of_interest: false, conflict_of_interest_reason: nil)
       conflicted_resolved!
 
-      send_email(:cpd_audit_conflict_resolved) if email_form_action
+      send_email(:cpd_audit_conflict_resolved)
       true
     end
 
@@ -248,13 +248,13 @@ module Effective
       if admin_process_request == 'Denied'
         assign_attributes(exemption_request: false)
         exemption_denied!
-        send_email(:cpd_audit_exemption_denied) if email_form_action
+        send_email(:cpd_audit_exemption_denied)
       end
 
       if admin_process_request == 'Granted'
         wizard_steps[:submit] ||= Time.zone.now
         submitted! && exemption_granted!
-        send_email(:cpd_audit_exemption_granted) if email_form_action
+        send_email(:cpd_audit_exemption_granted)
       end
 
       true
@@ -265,7 +265,7 @@ module Effective
       return save! unless extension_request?
 
       update!(status: :extension_requested)
-      send_email(:cpd_audit_extension_request) # Always
+      send_email(:cpd_audit_extension_request)
     end
 
     # Admin action
@@ -277,13 +277,13 @@ module Effective
       if admin_process_request == 'Denied'
         assign_attributes(extension_request: false)
         extension_denied!
-        send_email(:cpd_audit_extension_denied) if email_form_action
+        send_email(:cpd_audit_extension_denied)
       end
 
       if admin_process_request == 'Granted'
         assign_attributes(extension_date: extension_request_date)
         extension_granted!
-        send_email(:cpd_audit_extension_granted) if email_form_action
+        send_email(:cpd_audit_extension_granted)
       end
 
       true
@@ -292,14 +292,9 @@ module Effective
     # Auditee wizard action
     def submit!
       submitted!
+      cpd_audit_reviews.each { |cpd_audit_review| cpd_audit_review.ready! }
 
-      send_email(:cpd_audit_submitted) # Always
-
-      cpd_audit_reviews.each do |cpd_audit_review|
-        cpd_audit_review.send_email(:cpd_audit_review_ready)
-      end
-
-      true
+      send_email(:cpd_audit_submitted)
     end
 
     # Called in a before_save. Intended for applicant_review to call in its submit! method
@@ -308,14 +303,13 @@ module Effective
       return false unless cpd_audit_reviews.present? && cpd_audit_reviews.all?(&:completed?)
 
       reviewed!
-      send_email(:cpd_audit_reviewed) # Always
+      send_email(:cpd_audit_reviewed)
     end
 
     # Admin action
     def close!
       closed!
-      send_email(:cpd_audit_closed) if email_form_action
-      true
+      send_email(:cpd_audit_closed)
     end
 
     def email_form_defaults(action)

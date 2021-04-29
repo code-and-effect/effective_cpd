@@ -73,7 +73,7 @@ module Effective
     end
 
     after_commit(on: :create) do
-      send_email(:cpd_audit_review_opened) if email_form_action
+      send_email(:cpd_audit_review_opened)
     end
 
     def to_s
@@ -142,7 +142,7 @@ module Effective
         return steps + [:submit, :complete]
       end
 
-      steps += [:waiting] unless cpd_audit.was_submitted?
+      steps += [:waiting] unless ready?
 
       steps += [:statements] + dynamic_wizard_statement_steps.keys
       steps += [:questionnaire] + dynamic_wizard_questionnaire_steps.keys
@@ -155,13 +155,21 @@ module Effective
       WIZARD_STEPS[step] || dynamic_wizard_steps.fetch(step)
     end
 
-    # Called by wizard submit step
+    # Called by CpdAudit.submit!
+    def ready!
+      send_email(:cpd_audit_review_ready)
+    end
+
+    # Called by review wizard submit step
     def submit!
       update!(submitted_at: Time.zone.now)
-      cpd_audit.save!  # This triggers cpd_audit.review! to maybe go from submitted->removed
+      cpd_audit.review! # maybe go from submitted->removed
 
-      send_email(:cpd_audit_review_submitted) # Always
-      true
+      send_email(:cpd_audit_review_submitted)
+    end
+
+    def ready?
+      cpd_audit&.was_submitted?
     end
 
     def in_progress?
@@ -175,8 +183,6 @@ module Effective
     def email_form_defaults(action)
       { from: EffectiveCpd.mailer_sender }
     end
-
-    private
 
     def send_email(email)
       EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?
