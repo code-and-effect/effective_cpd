@@ -1,13 +1,11 @@
 = render('layout') do
-  %h1= @page_title
+  %p
+    Please review your audit before submitting.
 
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
-  - if resource.cpd_audit_level.submit_content.present?
-    .mb-2= resource.cpd_audit_level.submit_content
-
-  %p Please review your audit before submitting.
+  %p
+    Once submitted you
+    %strong will not
+    be able to change your submission
 
   .mb-4= render(resource)
 

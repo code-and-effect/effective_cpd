@@ -6,13 +6,16 @@
 
 %h2 Resolve Conflict of Interest
 %p
-  Please use the table below to remove any conflicting audit reviews, and add another reviewer.
+  Please use the table below to delete any conflicting audit reviews, and create another reviewer.
 
-= card('Audit Reviewers') do
+= card('Update Audit Reviewers') do
   %p There should be at least one audit reviewer.
 
   - datatable = Admin::EffectiveCpdAuditReviewsDatatable.new(cpd_audit_id: cpd_audit.id)
   = render_datatable(datatable, inline: true, simple: true)
+
+= card('Mark Resolved') do
+  %p Once resolved, the auditee will be ready to continue their audit questionnaire.
 
   = effective_form_with(model: [:admin, cpd_audit], engine: true) do |f|
     %p Send email

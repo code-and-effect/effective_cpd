@@ -1,9 +1,4 @@
 = render('layout') do
-  %h1= @page_title
-
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
   - cpd_audit_level_section = resource.cpd_audit_level_section(step)
   - raise("no cpd audit section for #{step}") if cpd_audit_level_section.blank?
 

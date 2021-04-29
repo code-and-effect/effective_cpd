@@ -1,0 +1,15 @@
+%p Each of the following content areas will be displayed on the auditee wizard.
+
+= effective_form_with(model: [:admin, cpd_audit_level], engine: true) do |f|
+  = card("All Steps Content") do
+    = f.rich_text_area "rich_text_all_steps_audit_content", label: false,
+      hint: "displayed on all steps"
+
+  %hr
+
+  - Effective::CpdAudit::WIZARD_STEPS.each do |step, title|
+    = card("#{title} Content") do
+      = f.rich_text_area "rich_text_#{step}_audit_content", label: false,
+        hint: "displayed on the auditee wizard #{step} wizard step only"
+
+  = f.submit

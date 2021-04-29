@@ -26,7 +26,7 @@ module Admin
       ].compact.join(' ')
     }
 
-    submit :process_exemption, 'Process Extension Request', success: -> {
+    submit :process_extension, 'Process Extension Request', success: -> {
       [
         "Successfully #{resource.status.gsub('_', ' ')} #{resource}",
         ("and sent #{resource.user.email} a notification" unless resource.email_form_skip?)

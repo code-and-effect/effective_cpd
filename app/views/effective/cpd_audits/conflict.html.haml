@@ -1,12 +1,4 @@
 = render('layout') do
-  %h1= @page_title
-
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
-  - if resource.cpd_audit_level.conflict_content.present?
-    .mb-2= resource.cpd_audit_level.conflict_content
-
   %p You have been selected for #{resource.cpd_audit_level} audit and matched with:
 
   %ul

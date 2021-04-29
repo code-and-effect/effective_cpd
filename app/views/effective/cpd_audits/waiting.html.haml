@@ -1,12 +1,4 @@
 = render('layout') do
-  %h1= @page_title
-
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
-  - if resource.cpd_audit_level.waiting_content.present?
-    .mb-2= resource.cpd_audit_level.waiting_content
-
   - if resource.conflict_of_interest?
     %h3 Conflict of Interest
     %p You have indicated there is a conflict of interest with the following match:

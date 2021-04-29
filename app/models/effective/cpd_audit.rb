@@ -269,7 +269,7 @@ module Effective
     end
 
     # Admin action
-    def process_exemption!
+    def process_extension!
       if admin_process_request.blank?
         self.errors.add(:admin_process_request, "can't be blank"); save!
       end

@@ -13,8 +13,11 @@
           = tab(cpd_audit_level_section.to_s) do
             = render 'admin/cpd_audit_levels/form_cpd_audit_level_section', cpd_audit_level: cpd_audit_level, cpd_audit_level_section: cpd_audit_level_section
 
-    = tab 'Content' do
-      = render 'admin/cpd_audit_levels/form_content', cpd_audit_level: cpd_audit_level
+    = tab 'Auditee Wizard' do
+      = render 'admin/cpd_audit_levels/form_content_audit', cpd_audit_level: cpd_audit_level
+
+    = tab 'Audit Reviewer Wizard' do
+      = render 'admin/cpd_audit_levels/form_content_audit_review', cpd_audit_level: cpd_audit_level
 
     - if cpd_audit_level.respond_to?(:log_changes_datatable)
       = tab 'Logs' do

@@ -1,17 +1,13 @@
 module Effective
   class CpdAuditLevel < ActiveRecord::Base
-    has_rich_text :all_steps_content
-    has_rich_text :start_content
-    has_rich_text :information_content
-    has_rich_text :instructions_content
-    has_rich_text :conflict_content
-    has_rich_text :exemption_content
-    has_rich_text :extension_content
-    has_rich_text :waiting_content
-    has_rich_text :questionnaire_content
-    has_rich_text :files_content
-    has_rich_text :submit_content
-    has_rich_text :complete_content
+    has_many_rich_texts
+
+    # For each cpd audit and cpd audit review wizard step
+    # rich_text_all_steps_audit_content
+    # rich_text_step_audit_content
+
+    # rich_text_all_steps_audit_review_content
+    # rich_text_step_audit_review_content
 
     log_changes if respond_to?(:log_changes)
 

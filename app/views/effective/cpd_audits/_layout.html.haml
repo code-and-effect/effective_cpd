@@ -14,4 +14,12 @@
           %td #{cpd_credits_label} in last 3 #{cpd_cycles_label} (including this #{cpd_cycle_label})
 
   .col-9
+    %h1= @page_title
+
+    - if resource.cpd_audit_level.rich_text_all_steps_audit_content.present?
+      .mb-2= resource.cpd_audit_level.rich_text_all_steps_audit_content
+
+    - if resource.cpd_audit_level.send("rich_text_#{step}_audit_content").present?
+      .mb-2= resource.cpd_audit_level.send("rich_text_#{step}_audit_content")
+
     = yield
