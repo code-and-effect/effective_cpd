@@ -19,6 +19,7 @@
 
   = f.has_many :cpd_audit_reviews, class: 'tight' do |fr|
     = card('Audit Reviewer') do
+      %p.text-muted The audit reviewer is the person reviewing an audit
       = render('admin/cpd_audits/audit_reviewer_fields', form: fr, f: fr)
 
       %p Send email

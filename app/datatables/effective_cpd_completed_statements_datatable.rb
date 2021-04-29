@@ -8,7 +8,7 @@ class EffectiveCpdCompletedStatementsDatatable < Effective::Datatable
       statement.cpd_cycle.to_s
     end
 
-    col :completed_at, label: 'Completed'
+    col :submitted_at, label: 'Submitted'
     col :score
     col :carry_forward
 

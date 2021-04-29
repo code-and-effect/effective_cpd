@@ -10,8 +10,14 @@
   %tbody
     %tr
       %td Opened
-      %td= cpd_audit.opened_at.strftime('%F')
+      %td= cpd_audit.opened_at.strftime('%F') || '-'
       %td #{icon('check', class: 'small-1')} Done
+      %td
+
+    %tr
+      %td Started
+      %td= cpd_audit.started_at&.strftime('%F') || '-'
+      %td
       %td
 
     - if cpd_audit.cpd_audit_level.conflict_of_interest?

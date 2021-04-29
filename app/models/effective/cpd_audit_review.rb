@@ -71,7 +71,7 @@ module Effective
     end
 
     after_commit(on: :create) do
-      send_email(:cpd_audit_review_opened)
+      send_email(:cpd_audit_review_opened) if email_form_action
     end
 
     def to_s
@@ -95,7 +95,7 @@ module Effective
     # The dynamic CPD Statement review steps
     def auditee_cpd_statements
       cpd_audit.user.cpd_statements.select do |cpd_statement|
-        cpd_statement.completed? && (completed_at.blank? || cpd_statement.completed_at < completed_at)
+        cpd_statement.completed? && (submitted_at.blank? || cpd_statement.submitted_at < submitted_at)
       end
     end
 
@@ -171,7 +171,7 @@ module Effective
     private
 
     def send_email(email)
-      EffectiveCpd.send_email(email, self, email_form_params) if email_form_action && !email_form_skip?
+      EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?
       true
     end
 

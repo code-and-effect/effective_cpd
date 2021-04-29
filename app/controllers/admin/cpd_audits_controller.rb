@@ -5,6 +5,13 @@ module Admin
 
     include Effective::CrudController
 
+    submit :resolve_conflict, 'Resolve Conflict of Interest', success: -> {
+      [
+        "Successfully resolved #{resource}",
+        ("and sent #{resource.user.email} a notification" unless resource.email_form_skip?)
+      ].compact.join(' ')
+    }
+
     submit :close, 'Close Audit', success: -> {
       [
         "Successfully closed #{resource}",

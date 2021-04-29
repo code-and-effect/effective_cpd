@@ -7,7 +7,7 @@ module Effective
     belongs_to :user, polymorphic: true  # The user being audited
 
     has_many :cpd_audit_reviews, -> { order(:id) }, inverse_of: :cpd_audit, dependent: :destroy
-    accepts_nested_attributes_for :cpd_audit_reviews
+    accepts_nested_attributes_for :cpd_audit_reviews, allow_destroy: true
 
     has_many :cpd_audit_responses, -> { order(:id) }, inverse_of: :cpd_audit, dependent: :destroy
     accepts_nested_attributes_for :cpd_audit_responses
@@ -49,7 +49,7 @@ module Effective
       conflict: 'Conflict of Interest',
       exemption: 'Request Exemption',
       extension: 'Request Extension',
-      waiting: 'Waiting on Request',
+      waiting: 'Waiting',
 
       questionnaire: 'Questionnaire',
       # ... There will be one step per cpd_audit_level_sections here
@@ -101,8 +101,7 @@ module Effective
 
     scope :sorted, -> { order(:id) }
 
-    scope :draft, -> { where(completed_at: nil) }
-
+    scope :draft, -> { where(submitted_at: nil) }
     scope :available, -> { where.not(status: COMPLETED_STATES) }
     scope :completed, -> { where(status: COMPLETED_STATES) }
 
@@ -111,7 +110,7 @@ module Effective
     end
 
     after_commit(on: :create) do
-      send_email(:cpd_audit_opened)
+      send_email(:cpd_audit_opened) if email_form_action
     end
 
     validates :notification_date, presence: true
@@ -157,7 +156,7 @@ module Effective
       steps << :conflict if cpd_audit_level.conflict_of_interest?
 
       if conflict_of_interest?
-        return steps + [:submit, :complete]
+        return steps + [:waiting, :submit, :complete]
       end
 
       steps << :exemption if cpd_audit_level.can_request_exemption?
@@ -194,52 +193,78 @@ module Effective
       cpd_audit_response ||= cpd_audit_responses.build(cpd_audit: self, cpd_audit_level_question: cpd_audit_level_question)
     end
 
-    # These methods are automatically called by acts_as_wizard wizard controller
+    # Auditee wizard action
     def start!
       started!
     end
 
+    # Auditee wizard action
+    def conflict!
+      return save! unless conflict_of_interest?
+
+      update!(status: :conflicted)
+      send_email(:cpd_audit_conflicted)
+    end
+
+    # Admin action
+    def resolve_conflict!
+      wizard_steps[:waiting] = nil
+      wizard_steps[:conflict] = nil
+
+      assign_attributes(conflict_of_interest: false, conflict_of_interest_reason: nil)
+      conflicted_resolved!
+
+      send_email(:cpd_audit_conflict_resolved) if email_form_action
+      true
+    end
+
     def exemption!
-      exemption_request? ? exemption_requested! : save!
+      return save! unless exemption_request?
+
+      update!(status: :exemption_requested)
+      send_email(:cpd_audit_exemption_requested)
     end
 
     def extension!
-      extension_request? ? extension_requested! : save!
-    end
+      return save! unless extension_request?
 
-    def exemption_requested!
-      update!(status: :exemption_requested)
-
-      #Effective::CpdMailer.audit_exemption_requested(self).deliver_later
-      true
-    end
-
-    # By admin
-    def exemption_granted!
-      wizard_steps[:waiting] ||= Time.zone.now
-      wizard_steps[:submit] ||= Time.zone.now
-
-      submitted! && update!(status: :exemption_granted)
-
-      #Effective::CpdMailer.audit_exemption_granted(self).deliver_later if email.present?
-      true
-    end
-
-    def exemption_denied!
-      wizard_steps[:waiting] ||= Time.zone.now
-      update!(status: :exemption_denied)
-
-      #Effective::CpdMailer.audit_exemption_denied(self).deliver_later if email.present?
-      true
+      update!(status: :extension_requested)
+      send_email(:cpd_audit_extension_requested)
     end
 
     def submit!
       submitted!
     end
 
+
+    # def exemption_requested!
+
+    #   #Effective::CpdMailer.audit_exemption_requested(self).deliver_later
+    #   true
+    # end
+
+    # # By admin
+    # def exemption_granted!
+    #   wizard_steps[:waiting] ||= Time.zone.now
+    #   wizard_steps[:submit] ||= Time.zone.now
+
+    #   submitted! && update!(status: :exemption_granted) if email_form_action
+
+    #   #Effective::CpdMailer.audit_exemption_granted(self).deliver_later if email.present?
+    #   true
+    # end
+
+    # def exemption_denied!
+    #   wizard_steps[:waiting] ||= Time.zone.now
+    #   update!(status: :exemption_denied) if email_form_action
+
+    #   #Effective::CpdMailer.audit_exemption_denied(self).deliver_later if email.present?
+    #   true
+    # end
+
     def close!
       closed!
-      send_email(:cpd_audit_closed)
+      send_email(:cpd_audit_closed) if email_form_action
     end
 
     def email_form_defaults(action)
@@ -249,7 +274,7 @@ module Effective
     private
 
     def send_email(email)
-      EffectiveCpd.send_email(email, self, email_form_params) if email_form_action && !email_form_skip?
+      EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?
       true
     end
 

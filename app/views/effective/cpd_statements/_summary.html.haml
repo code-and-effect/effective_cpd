@@ -16,7 +16,7 @@
       - if cpd_statement.completed?
         %tr
           %th Completed
-          %td= cpd_statement.completed_at.strftime('%F %H:%M')
+          %td= cpd_statement.submitted_at.strftime('%F %H:%M')
 
       %tr
         %th= cpd_cycle_label.titleize

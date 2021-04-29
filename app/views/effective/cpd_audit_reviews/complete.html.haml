@@ -19,7 +19,7 @@
   %p
     The following audit review was successfully submitted at
     = succeed('.') do
-      = resource.completed_at&.strftime('%F')
+      = resource.submitted_at&.strftime('%F')
 
   %p Thank you for your review.
 

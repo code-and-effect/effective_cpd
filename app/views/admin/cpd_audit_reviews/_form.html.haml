@@ -1,0 +1,13 @@
+= effective_form_with(model: [:admin, cpd_audit_review], engine: true) do |f|
+  - if inline_datatable?
+    = f.hidden_field :cpd_audit_id
+    = f.static_field :cpd_audit, label: 'CPD Audit'
+  - else
+    = f.select :cpd_audit_id, Effective::CpdAudit.available.sorted.all
+
+  = render('admin/cpd_audits/audit_reviewer_fields', f: f)
+
+  %p Send email
+  = email_form_fields(f, :cpd_audit_review_opened)
+
+  = effective_submit(f)

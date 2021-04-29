@@ -9,9 +9,9 @@ module Admin
       col :user, label: 'Audit Reviewer'
       col :recommendation
       col :comments
-      col :completed_at
+      col :submitted_at, label: 'Submitted'
 
-      actions_col
+      actions_col(edit: false)
     end
 
     collection do

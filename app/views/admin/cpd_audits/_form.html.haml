@@ -25,6 +25,10 @@
     = tab 'Determination' do
       = render 'admin/cpd_audits/form_determination', cpd_audit: cpd_audit
 
+    - if cpd_audit.conflicted?
+      = tab 'Process Conflict of Interest' do
+        = render 'admin/cpd_audits/form_conflict', cpd_audit: cpd_audit
+
     - if cpd_audit.respond_to?(:log_changes_datatable)
       = tab 'Logs' do
         = render_inline_datatable(cpd_audit.log_changes_datatable)

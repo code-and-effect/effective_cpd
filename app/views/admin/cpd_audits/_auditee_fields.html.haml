@@ -1,2 +1,2 @@
 - collection = current_user.class.send(EffectiveCpd.auditee_user_scope)
-= f.select :user, { 'Auditees' => collection }, label: false, polymorphic: true
+= f.select :user, { 'Auditees' => collection }, label: 'Auditee', polymorphic: true

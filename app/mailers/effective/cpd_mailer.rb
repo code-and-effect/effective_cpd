@@ -11,6 +11,20 @@ module Effective
       mail(headers_for(cpd_audit, opts))
     end
 
+    def cpd_audit_conflicted(cpd_audit, opts = {})
+      @cpd_audit = cpd_audit
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+
+      mail(to: 'admin@blah.com')
+    end
+
+    def cpd_audit_conflict_resolved(cpd_audit, opts = {})
+      @cpd_audit = cpd_audit
+      @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)
+
+      mail(headers_for(cpd_audit, opts))
+    end
+
     def cpd_audit_closed(cpd_audit, opts = {})
       @cpd_audit = cpd_audit
       @assigns = effective_email_templates_cpd_audit_assigns(cpd_audit)

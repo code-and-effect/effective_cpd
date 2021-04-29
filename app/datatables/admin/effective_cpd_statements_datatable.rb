@@ -16,7 +16,7 @@ module Admin
 
       col :cpd_cycle, label: cpd_cycle_label.titleize
       col :user
-      col :completed_at
+      col :submitted_at
       col :score
       col :carry_forward
 
