@@ -5,7 +5,9 @@ PATH
       effective_bootstrap
       effective_datatables (>= 4.0.0)
       effective_resources
+      holidays
       rails (>= 6.0.0)
+      wicked
 
 GEM
   remote: https://rubygems.org/
@@ -114,7 +116,7 @@ GEM
       effective_resources
       liquid
       rails (>= 3.2.0)
-    effective_resources (1.8.18)
+    effective_resources (1.8.19)
       rails (>= 4.0.0)
     erubi (1.10.0)
     erubis (2.7.0)
@@ -131,6 +133,7 @@ GEM
       haml (>= 4.0.6, < 6.0)
       html2haml (>= 1.0.1)
       railties (>= 5.1)
+    holidays (8.4.1)
     html2haml (2.2.0)
       erubis (~> 2.7.0)
       haml (>= 4.0, < 6)
@@ -253,7 +256,6 @@ DEPENDENCIES
   haml-rails
   pry-byebug
   sqlite3
-  wicked
 
 BUNDLED WITH
    2.1.4
