@@ -41,7 +41,7 @@ module Effective
     ]
 
     effective_resource do
-      title     :text
+      title         :text
       category      :string
       required      :boolean
 

@@ -40,6 +40,16 @@ module EffectiveCpdTestBuilder
       days_to_request_exemption: 10,
       days_to_request_extension: 10
     )
+
+    section = cpd_audit_level.cpd_audit_level_sections.build(title: 'Section A')
+    section.cpd_audit_level_questions.build(title: 'Question One', category: 'Short Answer')
+    section.cpd_audit_level_questions.build(title: 'Question Two', category: 'Long Answer')
+
+    section = cpd_audit_level.cpd_audit_level_sections.build(title: 'Section B')
+    section.cpd_audit_level_questions.build(title: 'Question Three', category: 'Short Answer')
+    section.cpd_audit_level_questions.build(title: 'Question Four', category: 'Long Answer')
+
+    cpd_audit_level
   end
 
   def create_effective_cpd_cycle!
