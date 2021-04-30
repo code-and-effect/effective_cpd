@@ -83,6 +83,12 @@ if user.persisted?
   can [:index, :show, :update], Effective::CpdStatement, user_id: user.id
   can [:index, :show], Effective::CpdCycle
   can([:create, :update, :destroy], Effective::CpdStatementActivity) { |sa| sa.cpd_statement.user_id == user.id }
+  can [:index, :show, :update], Effective::CpdAudit, user_id: user.id
+end
+
+if user.reviewer?
+  can [:index], Effective::CpdAudit
+  can [:index, :show, :update], Effective::CpdAuditReview, user_id: user.id
 end
 
 if user.admin?
@@ -91,7 +97,14 @@ if user.admin?
   can :manage, Effective::CpdCategory
   can :manage, Effective::CpdCycle
   can :manage, Effective::CpdRule
+
+  can :manage, Effective::CpdAuditLevel
+  can :manage, Effective::CpdAuditLevelSection
+  can :manage, Effective::CpdAuditLevelQuestion
+
   can :manage, Effective::CpdStatement
+  can :manage, Effective::CpdAudit
+  can :manage, Effective::CpdAuditReview
 end
 ```
 
