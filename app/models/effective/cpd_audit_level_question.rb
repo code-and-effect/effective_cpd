@@ -6,8 +6,13 @@ module Effective
     has_many :cpd_audit_level_question_options, -> { CpdAuditLevelQuestionOption.sorted }, inverse_of: :cpd_audit_level_question, dependent: :delete_all
     accepts_nested_attributes_for :cpd_audit_level_question_options, reject_if: :all_blank, allow_destroy: true
 
+    has_many :cpd_audit_responses
+
     has_rich_text :body
-    log_changes(to: :cpd_audit_level) if respond_to?(:log_changes)
+
+    if respond_to?(:log_changes)
+      log_changes(to: :cpd_audit_level, except: [:cpd_audit_responses])
+    end
 
     CATEGORIES = [
       'Choose one',   # Radios
@@ -57,6 +62,12 @@ module Effective
     validates :category, presence: true, inclusion: { in: CATEGORIES }
     validates :position, presence: true
     validates :cpd_audit_level_question_options, presence: true, if: -> { question_option? }
+
+    before_destroy do
+      if (count = cpd_audit_responses.length) > 0
+        raise("#{count} audit responses belong to this question")
+      end
+    end
 
     # Create choose_one? and select_all_that_apply? methods for each category
     CATEGORIES.each do |category|

@@ -1,0 +1,7 @@
+= tabs do
+  = tab 'Statement' do
+    = render('effective/cpd_statements/cpd_statement', cpd_statement: cpd_statement)
+
+  - if cpd_statement.persisted? && cpd_statement.respond_to?(:log_changes_datatable)
+    = tab 'Logs' do
+      = render_inline_datatable(cpd_statement.log_changes_datatable)

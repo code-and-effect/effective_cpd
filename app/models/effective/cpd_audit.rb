@@ -16,10 +16,9 @@ module Effective
     accepts_nested_attributes_for :cpd_audit_responses
 
     has_many_attached :files
-    log_changes(except: :wizard_steps) if respond_to?(:log_changes)
 
-    if Rails.env.test? # So our tests can override the required_steps method
-      cattr_accessor :test_required_steps
+    if respond_to?(:log_changes)
+      log_changes(except: [:wizard_steps, :cpd_audit_reviews])
     end
 
     acts_as_email_form
@@ -63,8 +62,10 @@ module Effective
     )
 
     effective_resource do
+      due_date                 :date     # Computed due date based on notification and extension date
+
       # Important dates
-      notification_date        :date     # created_at, but editable
+      notification_date        :date     # Can be set on CpdAudits#new, but basically created_at
       extension_date           :date     # set by admin if extension if granted
 
       # Final determination

@@ -10,7 +10,10 @@ module Effective
     accepts_nested_attributes_for :cpd_statement_activities
 
     has_many_attached :files
-    log_changes if respond_to?(:log_changes)
+
+    if respond_to?(:log_changes)
+      log_changes(except: [:wizard_steps])
+    end
 
     acts_as_tokened
 

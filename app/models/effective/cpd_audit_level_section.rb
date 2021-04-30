@@ -5,10 +5,14 @@ module Effective
     has_rich_text :top_content
     has_rich_text :bottom_content
 
-    log_changes(to: :cpd_audit_level) if respond_to?(:log_changes)
-
     has_many :cpd_audit_level_questions, -> { CpdAuditLevelQuestion.sorted }, inverse_of: :cpd_audit_level_section, dependent: :destroy
     accepts_nested_attributes_for :cpd_audit_level_questions, allow_destroy: true
+
+    has_many :cpd_audit_responses
+
+    if respond_to?(:log_changes)
+      log_changes(to: :cpd_audit_level, except: [:cpd_audit_responses])
+    end
 
     effective_resource do
       title     :string
@@ -31,6 +35,12 @@ module Effective
 
     validates :title, presence: true
     validates :position, presence: true
+
+    before_destroy do
+      if (count = cpd_audit_responses.length) > 0
+        raise("#{count} audit responses belong to this section")
+      end
+    end
 
     def to_s
       title.presence || 'audit section'

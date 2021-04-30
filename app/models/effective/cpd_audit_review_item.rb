@@ -3,7 +3,9 @@ module Effective
     belongs_to :cpd_audit_review
     belongs_to :item, polymorphic: true # CpdAuditResponse or CpdStatementActivity
 
-    log_changes(to: :cpd_audit_review) if respond_to?(:log_changes)
+    if respond_to?(:log_changes)
+      log_changes(to: :cpd_audit_review)
+    end
 
     effective_resource do
       recommendation            :string

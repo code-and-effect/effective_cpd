@@ -3,18 +3,20 @@ module Effective
     attr_accessor :current_user
     attr_accessor :current_step
 
-    belongs_to :cpd_audit
-    belongs_to :cpd_audit_level
-    belongs_to :user, polymorphic: true    # Auditor
-
-    log_changes(to: :cpd_audit, except: :wizard_steps) if respond_to?(:log_changes)
-
     if Rails.env.test? # So our tests can override the required_steps method
       cattr_accessor :test_required_steps
     end
 
+    belongs_to :cpd_audit
+    belongs_to :cpd_audit_level
+    belongs_to :user, polymorphic: true    # Auditor
+
     has_many :cpd_audit_review_items, -> { CpdAuditReviewItem.sorted }, inverse_of: :cpd_audit_review
     accepts_nested_attributes_for :cpd_audit_review_items, reject_if: :all_blank, allow_destroy: true
+
+    if respond_to?(:log_changes)
+      log_changes(to: :cpd_audit, except: :wizard_steps)
+    end
 
     acts_as_email_form
     acts_as_tokened
@@ -42,6 +44,7 @@ module Effective
 
     effective_resource do
       token                     :string
+      due_date                  :date
 
       # Auditor response
       conflict_of_interest          :boolean
@@ -55,6 +58,11 @@ module Effective
 
       # Status Dates
       submitted_at              :datetime
+
+      # acts_as_statused
+      # I'm not using acts_as_statused yet, but I probably will later
+      status                  :string
+      status_steps            :text
 
       # Wizard Progress
       wizard_steps              :text

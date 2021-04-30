@@ -2,11 +2,16 @@ module Effective
   class CpdAuditResponse < ActiveRecord::Base
     belongs_to :cpd_audit
     belongs_to :cpd_audit_level_question
+    belongs_to :cpd_audit_level_section
 
     has_many :cpd_audit_response_options, dependent: :delete_all
     has_many :cpd_audit_level_question_options, through: :cpd_audit_response_options
 
     has_one_attached :upload_file
+
+    if respond_to?(:log_changes)
+      log_changes(to: :cpd_audit)
+    end
 
     effective_resource do
       # The response
@@ -21,6 +26,10 @@ module Effective
 
     scope :submitted, -> { where(cpd_audit: Effective::CpdAudit.where.not(submitted_at: nil)) }
     scope :deep, -> { includes(:cpd_audit, :cpd_audit_level_question) }
+
+    before_validation(if: -> { cpd_audit_level_question.present? }) do
+      self.cpd_audit_level_section = cpd_audit_level_question.cpd_audit_level_section
+    end
 
     validates :date, presence: true, if: -> { cpd_audit_level_question&.required? && cpd_audit_level_question.date? }
     validates :email, presence: true, email: true, if: -> { cpd_audit_level_question&.required? && cpd_audit_level_question.email? }

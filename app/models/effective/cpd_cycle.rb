@@ -55,6 +55,12 @@ module Effective
       self.errors.add(:end_at, 'must be after the start date') unless end_at > start_at
     end
 
+    before_destroy do
+      if (count = cpd_statements.length) > 0
+        raise("#{count} statement belong to this cycle")
+      end
+    end
+
     def self.latest_cycle
       order(id: :desc).first
     end

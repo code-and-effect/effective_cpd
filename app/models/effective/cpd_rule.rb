@@ -3,7 +3,9 @@ module Effective
     belongs_to :cpd_cycle
     belongs_to :ruleable, polymorphic: true # Activity or Category
 
-    log_changes(to: :cpd_cycle) if respond_to?(:log_changes)
+    if respond_to?(:log_changes)
+      log_changes(to: :cpd_cycle)
+    end
 
     # Only permit the words amount, amount2 and any charater 0-9 + - / * ( )
     INVALID_FORMULA_CHARS = /[^0-9\+\-\/\*\(\)]/

@@ -3,10 +3,13 @@ module Effective
     belongs_to :cpd_category
 
     has_rich_text :body
-    log_changes(to: :cpd_category) if respond_to?(:log_changes)
 
-    # has_many :rules, -> { order(cycle_id: :desc) }, as: :ruleable, dependent: :delete_all
-    # accepts_nested_attributes_for :rules, allow_destroy: true
+    if respond_to?(:log_changes)
+      log_changes(to: :cpd_category, except: [:cpd_statement_activities])
+    end
+
+    #has_many :rules, class_name: 'Effective::CpdRule', as: :ruleable
+    has_many :cpd_statement_activities
 
     effective_resource do
       title     :string
@@ -32,6 +35,12 @@ module Effective
 
     validates :title, presence: true
     validates :position, presence: true
+
+    before_destroy do
+      if (count = cpd_statement_activities.length) > 0
+        raise("#{count} statement activities belong to this activity")
+      end
+    end
 
     def to_s
       title.presence || 'activity'

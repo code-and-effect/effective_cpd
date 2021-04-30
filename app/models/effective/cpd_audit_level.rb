@@ -9,8 +9,6 @@ module Effective
     # rich_text_all_steps_audit_review_content
     # rich_text_step_audit_review_content
 
-    log_changes if respond_to?(:log_changes)
-
     has_many :cpd_audit_level_sections, -> { CpdAuditLevelSection.sorted }, inverse_of: :cpd_audit_level, dependent: :destroy
     accepts_nested_attributes_for :cpd_audit_level_sections, allow_destroy: true
 
@@ -18,6 +16,12 @@ module Effective
 
     has_many :cpd_audit_reviews, -> { CpdAuditReview.sorted }, inverse_of: :cpd_audit_level, dependent: :destroy
     accepts_nested_attributes_for :cpd_audit_reviews, allow_destroy: true
+
+    has_many :cpd_audits
+
+    if respond_to?(:log_changes)
+      log_changes(except: [:cpd_audits, :cpd_audit_reviews, :cpd_audit_level_sections, :cpd_audit_level_questions])
+    end
 
     effective_resource do
       title                         :string
@@ -57,6 +61,12 @@ module Effective
 
     validates :days_to_request_extension, presence: true, if: -> { can_request_extension? }
     validates :days_to_request_extension, numericality: { greater_than: 0, allow_nil: true }
+
+    before_destroy do
+      if (count = cpd_audits.length) > 0
+        raise("#{count} audits belong to this audit level")
+      end
+    end
 
     def to_s
       title.presence || 'audit level'
