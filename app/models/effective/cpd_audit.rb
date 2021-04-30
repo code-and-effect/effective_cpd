@@ -342,7 +342,7 @@ module Effective
       return nil unless cpd_audit_level.days_to_declare_conflict.present?
 
       date = (notification_date || created_at || Time.zone.now)
-      date.advance(days: cpd_audit_level.days_to_declare_conflict)
+      EffectiveResources.advance_date(date, business_days: cpd_audit_level.days_to_declare_conflict)
     end
 
     def deadline_to_exemption
@@ -350,7 +350,7 @@ module Effective
       return nil unless cpd_audit_level.days_to_request_exemption.present?
 
       date = (notification_date || created_at || Time.zone.now)
-      date.advance(days: cpd_audit_level.days_to_request_exemption)
+      EffectiveResources.advance_date(date, business_days: cpd_audit_level.days_to_request_exemption)
     end
 
     def deadline_to_extension
@@ -358,14 +358,14 @@ module Effective
       return nil unless cpd_audit_level.days_to_request_extension.present?
 
       date = (notification_date || created_at || Time.zone.now)
-      date.advance(days: cpd_audit_level.days_to_request_extension)
+      EffectiveResources.advance_date(date, business_days: cpd_audit_level.days_to_request_extension)
     end
 
     def deadline_to_submit
       return nil unless cpd_audit_level&.days_to_submit.present?
 
       date = (extension_date || notification_date || created_at || Time.zone.now)
-      date.advance(days: cpd_audit_level.days_to_submit)
+      EffectiveResources.advance_date(date, business_days: cpd_audit_level.days_to_submit)
     end
 
   end

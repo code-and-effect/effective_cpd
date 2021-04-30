@@ -4,9 +4,9 @@ class CpdAuditDeadlinesTest < ActiveSupport::TestCase
 
   test 'due date is present on new cpd audit' do
     now = Time.zone.now.to_date
-    days_10 = (now + 10.days)
-    days_20 = (now + 20.days)
-    days_40 = (now + 40.days)
+    days_10 = EffectiveResources.advance_date(now, business_days: 10)
+    days_20 = EffectiveResources.advance_date(now, business_days: 20)
+    days_40 = EffectiveResources.advance_date(now, business_days: 40)
 
     cpd_audit_level = build_effective_cpd_audit_level()
     assert_equal 20, cpd_audit_level.days_to_submit
@@ -41,11 +41,12 @@ class CpdAuditDeadlinesTest < ActiveSupport::TestCase
   test 'granting an extension updates the due date' do
     now = Time.zone.now.to_date
 
-    days_10 = (now + 10.days)
-    days_20 = (now + 20.days)
-    days_40 = (now + 40.days)
-    days_50 = (now + 50.days)
-    days_70 = (now + 70.days)
+    days_10 = EffectiveResources.advance_date(now, business_days: 10)
+    days_20 = EffectiveResources.advance_date(now, business_days: 20)
+    days_30 = EffectiveResources.advance_date(now, business_days: 30)
+    days_40 = EffectiveResources.advance_date(now, business_days: 40)
+    days_50 = EffectiveResources.advance_date(now, business_days: 50)
+    days_70 = EffectiveResources.advance_date(now, business_days: 70)
 
     cpd_audit_level = build_effective_cpd_audit_level()
     assert_equal 20, cpd_audit_level.days_to_submit
@@ -54,7 +55,7 @@ class CpdAuditDeadlinesTest < ActiveSupport::TestCase
     cpd_audit.save!
 
     # Make the request
-    cpd_audit.assign_attributes(extension_request: true, extension_request_date: now + 30.days, extension_request_reason: 'Test')
+    cpd_audit.assign_attributes(extension_request: true, extension_request_date: days_30, extension_request_reason: 'Test')
     cpd_audit.extension!
 
     assert_equal days_20, cpd_audit.due_date

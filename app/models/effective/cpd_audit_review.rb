@@ -212,10 +212,10 @@ module Effective
     def deadline_to_review
       return nil unless cpd_audit_level&.days_to_review.present?
 
-      date = cpd_audit.deadline_to_submit()
+      date = cpd_audit.deadline_to_submit
       return nil unless date.present?
 
-      date.advance(days: cpd_audit_level.days_to_review)
+      EffectiveResources.advance_date(date, business_days: cpd_audit_level.days_to_review)
     end
 
   end
