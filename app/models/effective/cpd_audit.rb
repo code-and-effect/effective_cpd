@@ -116,6 +116,11 @@ module Effective
     validates :notification_date, presence: true
     validates :determination, presence: true, if: -> { closed? }
 
+    validates :conflict_of_interest_reason, presence: true, if: -> { conflict_of_interest? }
+    validates :exemption_request_reason, presence: true, if: -> { exemption_request? }
+    validates :extension_request_date, presence: true, if: -> { extension_request? }
+    validates :extension_request_reason, presence: true, if: -> { extension_request? }
+
     validate(if: -> { determination.present? }) do
       unless cpd_audit_level.determinations.include?(determination)
         self.errors.add(:determination, 'must exist in this audit level')
@@ -248,23 +253,24 @@ module Effective
 
     # Admin action
     def process_exemption!
-      if admin_process_request.blank?
+      case admin_process_request
+      when 'Granted' then grant_exemption!
+      when 'Denied' then deny_exemption!
+      else
         self.errors.add(:admin_process_request, "can't be blank"); save!
       end
+    end
 
-      if admin_process_request == 'Denied'
-        assign_attributes(exemption_request: false)
-        exemption_denied!
-        send_email(:cpd_audit_exemption_denied)
-      end
+    def grant_exemption!
+      wizard_steps[:submit] ||= Time.zone.now
+      submitted! && exemption_granted!
+      send_email(:cpd_audit_exemption_granted)
+    end
 
-      if admin_process_request == 'Granted'
-        wizard_steps[:submit] ||= Time.zone.now
-        submitted! && exemption_granted!
-        send_email(:cpd_audit_exemption_granted)
-      end
-
-      true
+    def deny_exemption!
+      assign_attributes(exemption_request: false)
+      exemption_denied!
+      send_email(:cpd_audit_exemption_denied)
     end
 
     # Auditee wizard action
@@ -277,27 +283,28 @@ module Effective
 
     # Admin action
     def process_extension!
-      if admin_process_request.blank?
+      case admin_process_request
+      when 'Granted' then grant_extension!
+      when 'Denied' then deny_extension!
+      else
         self.errors.add(:admin_process_request, "can't be blank"); save!
       end
+    end
 
-      if admin_process_request == 'Denied'
-        assign_attributes(extension_request: false)
-        extension_denied!
-        send_email(:cpd_audit_extension_denied)
-      end
+    def grant_extension!
+      self.extension_date = extension_request_date
+      self.due_date = deadline_to_submit()
 
-      if admin_process_request == 'Granted'
-        self.extension_date = extension_request_date
-        self.due_date = deadline_to_submit()
+      cpd_audit_reviews.each { |cpd_audit_review| cpd_audit_review.extension_granted! }
+      extension_granted!
 
-        cpd_audit_reviews.each { |cpd_audit_review| cpd_audit_review.extension_granted! }
-        extension_granted!
+      send_email(:cpd_audit_extension_granted)
+    end
 
-        send_email(:cpd_audit_extension_granted)
-      end
-
-      true
+    def deny_extension!
+      assign_attributes(extension_request: false)
+      extension_denied!
+      send_email(:cpd_audit_extension_denied)
     end
 
     # Auditee wizard action
