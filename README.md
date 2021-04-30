@@ -43,19 +43,67 @@ Then migrate the database:
 rake db:migrate
 ```
 
-Render the "available statements for current_user" datatable on your user dashboard:
+Please add the following to your User model:
+
+```
+has_many :cpd_statements, -> { Effective::CpdStatement.sorted }, class_name: 'Effective::CpdStatement'
+```
+
+Use the following datatables to display to your user their statements and audits and audit reviews:
 
 ```haml
 %h2 Continuing Professional Development
 
-%p Please submit a CPD statement for the following available #{cpd_cycles_label}:
-= render_datatable(EffectiveCpdDatatable.new, simple: true)
-
-- datatable = EffectiveCpdStatementsDatatable.new(self)
-- if datatable.present?
+- # Auditee datatables (4)
+- auditing = EffectiveCpdAvailableAuditsDatatable.new(self)
+- if auditing.present?
   .mt-4
-    %p You completed these statements:
-    = render_datatable(datatable, simple: true)
+    %p You have been selected for audit:
+    = render_datatable(auditing, simple: true)
+
+- audited = EffectiveCpdCompletedAuditsDatatable.new(self)
+- if audited.present?
+  .mt-4
+    %p You have completed these past audits:
+    = render_datatable(audited, simple: true)
+
+- available = EffectiveCpdAvailableCyclesDatatable.new(self)
+- if available.present?
+  .mt-4
+    %p Please submit a CPD statement for the following available #{cpd_cycles_label}:
+    = render_datatable(available, simple: true)
+
+- completed = EffectiveCpdCompletedStatementsDatatable.new(self)
+- if completed.present?
+  .mt-4
+    %p You have completed these past statements:
+    = render_datatable(completed, simple: true)
+
+- # Auditor / Audit reviewer datatables (2)
+- reviewing = EffectiveCpdAvailableAuditReviewsDatatable.new(self)
+- if reviewing.present?
+  .mt-4
+    %p You have been selected to review the following audits:
+    = render_datatable(reviewing, simple: true)
+
+- reviewed = EffectiveCpdCompletedAuditReviewsDatatable.new(self)
+- if reviewed.present?
+  .mt-4
+    %p You have completed these past audit reviews:
+    = render_datatable(reviewed, simple: true)
+```
+
+On the Admin::Users#edit, you can use the following datatables as well:
+
+```haml
+%h2 CPD Statements
+- datatable = Admin::EffectiveCpdStatementsDatatable.new(user_id: user.id, user_type: user.class.name)
+= render_datatable(datatable, inline: true)
+
+%h2 CPD Audits
+- datatable = Admin::EffectiveCpdAuditsDatatable.new(user_id: user.id, user_type: user.class.name)
+= render_datatable(datatable)
+
 ```
 
 Add a link to the admin menu:
