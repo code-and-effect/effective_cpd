@@ -8,12 +8,12 @@
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
-    - determinations = resource.cpd_audit_level.determinations
+    - recommendations = resource.cpd_audit_level.recommendations
 
-    - if determinations.length > 3
-      = f.select :recommendation, determinations
+    - if recommendations.length > 3
+      = f.select :recommendation, recommendations
     - else
-      = f.radios :recommendation, determinations, inline: true
+      = f.radios :recommendation, recommendations, inline: true
 
     %hr
     = f.text_area :comments, label: 'Reviewer comments'

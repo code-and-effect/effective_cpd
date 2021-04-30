@@ -20,8 +20,8 @@ module Effective
     validates :recommendation, presence: true
     validates :item_id, presence: true, uniqueness: { scope: [:cpd_audit_review_id, :item_type] }
 
-    validate(if: -> { cpd_audit_review.present? && recommendation.present? }) do
-      unless cpd_audit_review.cpd_audit_level.determinations.include?(recommendation)
+    validate(if: -> { recommendation.present? && cpd_audit_review.present? }) do
+      unless cpd_audit_review.cpd_audit_level.recommendations.include?(recommendation)
         self.errors.add(:recommendation, 'must exist in this audit level')
       end
     end

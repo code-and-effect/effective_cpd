@@ -112,15 +112,21 @@ module Effective
       self.notification_date ||= Time.zone.now
     end
 
+    validates :notification_date, presence: true
+    validates :determination, presence: true, if: -> { closed? }
+
+    validate(if: -> { determination.present? }) do
+      unless cpd_audit_level.determinations.include?(determination)
+        self.errors.add(:determination, 'must exist in this audit level')
+      end
+    end
+
     # If we're submitted. Check if we can go into reviewed?
     before_save(if: -> { submitted? }) { review! }
 
     after_commit(on: :create) do
       send_email(:cpd_audit_opened)
     end
-
-    validates :notification_date, presence: true
-    validates :determination, presence: true, if: -> { closed? }
 
     def to_s
       persisted? ? "#{cpd_audit_level} Audit of #{user}" : 'audit'

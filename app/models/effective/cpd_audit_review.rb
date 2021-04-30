@@ -3,10 +3,6 @@ module Effective
     attr_accessor :current_user
     attr_accessor :current_step
 
-    if Rails.env.test? # So our tests can override the required_steps method
-      cattr_accessor :test_required_steps
-    end
-
     belongs_to :cpd_audit
     belongs_to :cpd_audit_level
     belongs_to :user, polymorphic: true    # Auditor
@@ -78,6 +74,12 @@ module Effective
 
     before_validation(if: -> { new_record? }) do
       self.cpd_audit_level ||= cpd_audit&.cpd_audit_level
+    end
+
+    validate(if: -> { recommendation.present? }) do
+      unless cpd_audit_level.recommendations.include?(recommendation)
+        self.errors.add(:recommendation, 'must exist in this audit level')
+      end
     end
 
     after_commit(on: :create) { send_email(:cpd_audit_review_opened) }

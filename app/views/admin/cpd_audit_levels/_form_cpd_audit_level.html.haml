@@ -1,9 +1,14 @@
 = effective_form_with(model: [:admin, cpd_audit_level], engine: true) do |f|
   = f.text_field :title, hint: 'A title for this kind of audit'
 
+  = f.select :recommendations, f.object.recommendations,
+    label: 'Audit Review recommendation choices', tags: true, placeholder: 'Type to add item...',
+    hint: 'The recommendation made by an audit reviewer when reviewing an audit. Begin typing and then press enter to add a choice'
+
+
   = f.select :determinations, f.object.determinations,
-    label: 'Determination choices', tags: true, placeholder: 'Type to add item...',
-    hint: 'The final determination choices made by the auditor on each audit. Begin typing and then press enter to add a choice'
+    label: 'Audit determination choices', tags: true, placeholder: 'Type to add item...',
+    hint: 'The final determination made by the auditor when closing an audit. Begin typing and then press enter to add a choice.'
 
   %h2 Sections
   %p

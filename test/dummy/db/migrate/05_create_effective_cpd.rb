@@ -97,6 +97,7 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
     create_table :cpd_audit_levels do |t|
       t.string :title
       t.text   :determinations
+      t.text   :recommendations
 
       t.boolean :conflict_of_interest
       t.boolean :can_request_exemption

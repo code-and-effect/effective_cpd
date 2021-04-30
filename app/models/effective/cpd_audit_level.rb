@@ -26,7 +26,8 @@ module Effective
     effective_resource do
       title                         :string
 
-      determinations                :text
+      determinations                :text     # Final determination by auditor
+      recommendations               :text     # Recommendations by audit reviewers
 
       days_to_submit                :integer  # For auditee to submit statement
       days_to_review                :integer  # For auditor/audit_review to be completed
@@ -43,12 +44,14 @@ module Effective
     end
 
     serialize :determinations, Array
+    serialize :recommendations, Array
 
     scope :deep, -> { all }
     scope :sorted, -> { order(:title) }
 
     validates :title, presence: true
     validates :determinations, presence: true
+    validates :recommendations, presence: true
 
     validates :days_to_submit, numericality: { greater_than: 0, allow_nil: true }
     validates :days_to_review, numericality: { greater_than: 0, allow_nil: true }
@@ -74,6 +77,10 @@ module Effective
 
     def determinations
       Array(self[:determinations]) - [nil, '']
+    end
+
+    def recommendations
+      Array(self[:recommendations]) - [nil, '']
     end
 
   end

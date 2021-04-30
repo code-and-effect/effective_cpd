@@ -27,7 +27,8 @@ module EffectiveCpdTestBuilder
   def build_effective_cpd_audit_level
     cpd_audit_level = Effective::CpdAuditLevel.new(
       title: 'Audit Level',
-      determinations: ['Approve', 'Decline'],
+      determinations: ['Compliant', 'Conditional', 'Refer to Investigations Committee'],
+      recommendations: ['Accepted', 'Rejected'],
       days_to_submit: 20,
       days_to_review: 20,
 

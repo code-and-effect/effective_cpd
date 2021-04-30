@@ -1,8 +1,8 @@
 module Effective
   class CpdAuditResponse < ActiveRecord::Base
     belongs_to :cpd_audit
-    belongs_to :cpd_audit_level_question
     belongs_to :cpd_audit_level_section
+    belongs_to :cpd_audit_level_question
 
     has_many :cpd_audit_response_options, dependent: :delete_all
     has_many :cpd_audit_level_question_options, through: :cpd_audit_response_options

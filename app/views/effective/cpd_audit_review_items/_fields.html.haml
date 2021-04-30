@@ -1,11 +1,11 @@
 = f.hidden_field :item_id
 = f.hidden_field :item_type
 
-- determinations = cpd_audit_review.cpd_audit_level.determinations
+- recommendations = cpd_audit_review.cpd_audit_level.recommendations
 
-- if determinations.length > 3
-  = f.select :recommendation, determinations
+- if recommendations.length > 3
+  = f.select :recommendation, recommendations
 - else
-  = f.radios :recommendation, determinations, inline: true
+  = f.radios :recommendation, recommendations, inline: true
 
 = f.text_area :comments
