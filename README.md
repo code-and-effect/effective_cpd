@@ -128,6 +128,12 @@ Add a link to the admin menu:
     = nav_link_to 'CPD Audits', effective_cpd.admin_cpd_audits_path
 ```
 
+## Configuration
+
+As an admin, visit the CPD Categories, then CPD Cycles, and CPD Audit levels.
+
+Once all these 3 areas have been configured, users can submit statements and audits can be performed.
+
 ## Authorization
 
 All authorization checks are handled via the effective_resources gem found in the `config/initializers/effective_resources.rb` file.
