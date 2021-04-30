@@ -1,14 +1,5 @@
 = render('layout') do
-  %h1= @page_title
-
-  /- raise('expected a submitted cpd_audit_review') unless resource.was_submitted? || resource.was_conflicted?
-  /- raise('expected a completed cpd_audit_review') unless resource.completed?
-
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
-  - if resource.cpd_audit_level.complete_content.present?
-    .mb-2= resource.cpd_audit_level.complete_content
+  - raise('expected a completed cpd_audit_review') unless resource.completed?
 
   .text-center
     .row
@@ -19,7 +10,7 @@
   %p
     The following audit review was successfully submitted at
     = succeed('.') do
-      = resource.submitted_at&.strftime('%F')
+      = resource.submitted_at.strftime('%F')
 
   %p Thank you for your review.
 

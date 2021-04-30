@@ -2,4 +2,12 @@
   .col-3
     = render_wizard_sidebar(resource)
   .col-9
+    %h1= @page_title
+
+    - if resource.cpd_audit_level.rich_text_all_steps_audit_review_content.present?
+      .mb-2= resource.cpd_audit_level.rich_text_all_steps_audit_review_content
+
+    - if resource.cpd_audit_level.send("rich_text_#{step}_audit_review_content").present?
+      .mb-2= resource.cpd_audit_level.send("rich_text_#{step}_audit_review_content")
+
     = yield

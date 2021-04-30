@@ -1,13 +1,8 @@
 = render('layout') do
-  %h1= @page_title
-
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
   - cpd_statement = resource.cpd_statement(step)
   - raise("no cpd statement for #{step}") if cpd_statement.blank?
 
-  %h3 Review Statement
+  %h2 Review Statement
   .mb-3
     = collapse("#{cpd_statement.to_s}...", card_class: 'mb-3') do
       = render('effective/cpd_statements/cpd_statement', cpd_statement: cpd_statement)
@@ -15,13 +10,13 @@
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
-    %h3 Review Activities
+    %h2 Review Activities
     %p Please review the following activities:
 
     %table.table.table-hover
       %thead
         %th #{resource.cpd_audit.user}'s #{cpd_statement}
-         %th #{cpd_audit_review.user}'s Review
+        %th #{resource.user}'s Review
       %tbody
         - cpd_statement.cpd_statement_activities.each do |cpd_statement_activity|
           - cpd_audit_review_item = resource.cpd_audit_review_item(cpd_statement_activity)

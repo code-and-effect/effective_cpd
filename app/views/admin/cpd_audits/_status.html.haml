@@ -105,24 +105,17 @@
 
         Reviews Completed
 
-        - if cpd_audit.was_reviewed?
-          = icon('check', class: 'small-1')
-          Done
       %td
-        - if cpd_audit.was_submitted? && !cpd_audit.completed?
+        - if cpd_audit.was_submitted? && !cpd_audit.was_reviewed?
           = link_to 'Audit Reviews', '#audit-reviews', 'data-click-tab': true, class: 'btn btn-sm btn-primary'
 
     %tr
       %td Closed
       %td= cpd_audit.closed_at&.strftime('%F') || '-'
       %td
-        - if cpd_audit.was_closed?
-          = icon('check', class: 'small-1')
-          Done
-
-        - if cpd_audit.determination.present?
-          %p= cpd_audit.determination
+        - if cpd_audit.completed?
+          = cpd_audit.determination
 
       %td
-        - if cpd_audit.reviewed? && !cpd_audit.complete?
+        - if cpd_audit.reviewed? && !cpd_audit.completed?
           = link_to 'Determination', '#determination', 'data-click-tab': true, class: 'btn btn-sm btn-primary'

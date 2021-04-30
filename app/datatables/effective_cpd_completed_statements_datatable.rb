@@ -4,11 +4,11 @@ class EffectiveCpdCompletedStatementsDatatable < Effective::Datatable
   datatable do
     order :cpd_cycle_id
 
-    col(:cpd_cycle_id, label: cpd_cycle_label.titleize) do |statement|
+    col(:cpd_cycle_id, label: 'Statement') do |statement|
       statement.cpd_cycle.to_s
     end
 
-    col :submitted_at, label: 'Submitted'
+    col :submitted_at, as: :date, label: 'Submitted'
     col :score
     col :carry_forward
 

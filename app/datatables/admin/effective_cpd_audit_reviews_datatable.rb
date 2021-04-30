@@ -7,10 +7,11 @@ module Admin
 
       col :cpd_audit
       col :user, label: 'Audit Reviewer'
-      col :submitted_at, label: 'Submitted'
+      col :submitted_at, as: :date, label: 'Submitted'
       col :conflict_of_interest
       col :recommendation
       col :comments
+
       actions_col(edit: false)
     end
 

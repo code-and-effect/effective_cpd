@@ -9,7 +9,10 @@ class EffectiveCpdCompletedAuditReviewsDatatable < Effective::Datatable
     col :cpd_audit_level, label: 'Audit'
     col :notification_date, label: 'Date of Notification'
     col :user, label: 'Auditee'
-    col :determination
+
+    col :recommendation do |cpd_audit|
+      cpd_audit.cpd_audit_reviews.find { |r| r.user_id == current_user.id }.recommendation
+    end
 
     actions_col(actions: []) do |cpd_audit|
       cpd_audit_review = cpd_audit.cpd_audit_reviews.find { |r| r.user_id == current_user.id }
@@ -22,7 +25,7 @@ class EffectiveCpdCompletedAuditReviewsDatatable < Effective::Datatable
 
     reviews = Effective::CpdAuditReview.completed.where(user: current_user)
 
-    Effective::CpdAudit.completed.includes(:cpd_audit_reviews)
+    Effective::CpdAudit.includes(:cpd_audit_reviews)
       .where(id: reviews.select('cpd_audit_id as id'))
   end
 

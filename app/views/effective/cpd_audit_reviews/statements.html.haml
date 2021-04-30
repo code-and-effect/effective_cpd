@@ -1,16 +1,9 @@
 = render('layout') do
-  %h1= @page_title
-
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
-  -# - if resource.cpd_audit_level.start_content.present?
-  -#   .mb-2= resource.cpd_audit_level.start_content
-
-  %h3 Review Activities
-  %p Please review auditee cpd statements:
-
   - auditee = resource.cpd_audit.user
+
+  %h2 Review Statements
+  %p #{auditee} has submitted the following statements:
+
   - datatable = EffectiveCpdCompletedStatementsDatatable.new(user_id: auditee.id, actions: false)
 
   - if datatable.blank?(self)
@@ -18,6 +11,9 @@
       %strong There are no completed CPD statements from #{auditee}.
   - else
     = render_datatable(datatable, simple: true)
+
+  %h2 All Statements
+  %p Click to expand any statements
 
   - datatable.collection.sorted.each do |cpd_statement|
     .mb-3
@@ -28,7 +24,6 @@
     = f.hidden_field :current_step
 
     %hr
-    %p The following comments will be displayed to you on each step.
     = f.text_area :comments, label: 'Reviewer comments'
 
     = f.submit 'Save and Continue', center: true

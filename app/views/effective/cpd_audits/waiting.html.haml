@@ -1,6 +1,6 @@
 = render('layout') do
   - if resource.conflict_of_interest?
-    %h3 Conflict of Interest
+    %h2 Conflict of Interest
     %p You have indicated there is a conflict of interest with the following match:
 
     %ul
@@ -10,15 +10,15 @@
     = render("effective/cpd_audits/conflict", cpd_audit: resource, step: :conflict)
 
   - if resource.exemption_request?
-    %h3 Exemption Request
+    %h2 Exemption Request
     %p You have requested an exemption from this audit.
     = render("effective/cpd_audits/exemption", cpd_audit: resource, step: :exemption)
 
   - if resource.extension_request?
-    %h3 Extension Request
+    %h2 Extension Request
     %p You have requested an extension to the deadline.
     = render("effective/cpd_audits/extension", cpd_audit: resource, step: :extension)
 
-  %h3 Next Step
+  %h2 Next Step
   %p= cpd_audit_summary_text(resource)
   %p You may not continue at this time. Please wait for an email with further instructions. Thank you.

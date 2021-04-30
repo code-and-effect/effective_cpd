@@ -38,7 +38,7 @@ EffectiveCpd::Engine.routes.draw do
     resources :cpd_audit_levels, except: [:show]
     resources :cpd_audit_level_questions, except: [:show]
 
-    resources :cpd_audits, except: [:show]
+    resources :cpd_audits, except: [:show, :destroy]
     resources :cpd_audit_reviews
   end
 

@@ -8,6 +8,7 @@ module Admin
       col :token, visible: false
 
       col :cpd_audit_level, label: 'Audit Level'
+
       col :user, search: :string, label: 'Auditee'
 
       col(:cpd_audit_reviews, label: 'Auditor Reviewers', search: :string) do |cpd_audit|

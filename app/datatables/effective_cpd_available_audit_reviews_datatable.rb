@@ -10,6 +10,10 @@ class EffectiveCpdAvailableAuditReviewsDatatable < Effective::Datatable
     col :notification_date, label: 'Date of Notification'
     col :user, label: 'Auditee'
 
+    col :ready_to_review do |cpd_audit|
+      cpd_audit.was_submitted? ? 'Yes' : 'No'
+    end
+
     actions_col(actions: []) do |cpd_audit|
       cpd_audit_review = cpd_audit.cpd_audit_reviews.find { |r| r.user_id == current_user.id }
 

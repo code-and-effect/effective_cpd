@@ -39,7 +39,7 @@ module EffectiveCpdAuditsHelper
     when 'reviewed'
       "The audit has been reviewed and is ready for the final determination to be made."
     when 'closed'
-      "This audit has been closed. A final determination was made. All parties have been notified. The audit is all done."
+      "This audit has been closed with a final determination. All done."
     else
       raise("unexpected cpd audit status: #{cpd_audit.status}")
     end

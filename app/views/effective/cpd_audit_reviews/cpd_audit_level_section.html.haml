@@ -1,13 +1,8 @@
 = render('layout') do
-  %h1= @page_title
-
-  - if resource.cpd_audit_level.all_steps_content.present?
-    .mb-2= resource.cpd_audit_level.all_steps_content
-
   - cpd_audit_level_section = resource.cpd_audit.cpd_audit_level_section(step)
   - raise("no cpd audit section for #{step}") if cpd_audit_level_section.blank?
 
-  %h3 Review Section
+  %h2 Review Section
   %p Please review auditee responses to the #{cpd_audit_level_section} section:
 
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
@@ -19,7 +14,7 @@
     %table.table.table-hover
       %thead
         %th Question and #{resource.cpd_audit.user}'s Response
-        %th #{cpd_audit_review.user}'s Review
+        %th #{resource.user}'s Review
       %tbody
         - cpd_audit_level_section.cpd_audit_level_questions.each_with_index do |cpd_audit_level_question, index|
           - cpd_audit_response = resource.cpd_audit.cpd_audit_response(cpd_audit_level_question)
@@ -42,6 +37,7 @@
     - if cpd_audit_level_section.bottom_content.present?
       .mb-2= cpd_audit_level_section.bottom_content
 
+    %hr
     = f.text_area :comments, label: 'Reviewer comments'
 
     = f.submit 'Save and Continue', center: true

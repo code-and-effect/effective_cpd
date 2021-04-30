@@ -16,7 +16,7 @@ module Admin
 
       col :cpd_cycle, label: cpd_cycle_label.titleize
       col :user
-      col :submitted_at
+      col :submitted_at, as: :date, label: 'Submitted'
       col :score
       col :carry_forward
 

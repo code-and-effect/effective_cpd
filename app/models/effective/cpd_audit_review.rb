@@ -72,9 +72,8 @@ module Effective
       self.cpd_audit_level ||= cpd_audit&.cpd_audit_level
     end
 
-    after_commit(on: :create) do
-      send_email(:cpd_audit_review_opened)
-    end
+    after_commit(on: :create) { send_email(:cpd_audit_review_opened) }
+    after_commit(on: :destroy) { cpd_audit.review! }
 
     def to_s
       'audit review'
@@ -168,6 +167,7 @@ module Effective
       send_email(:cpd_audit_review_submitted)
     end
 
+    # When ready, the applicant review wizard hides the waiting step
     def ready?
       cpd_audit&.was_submitted?
     end

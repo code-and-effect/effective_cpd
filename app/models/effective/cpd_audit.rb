@@ -16,7 +16,7 @@ module Effective
     accepts_nested_attributes_for :cpd_audit_responses
 
     has_many_attached :files
-    log_changes(except: :step_progress) if respond_to?(:log_changes)
+    log_changes(except: :wizard_steps) if respond_to?(:log_changes)
 
     if Rails.env.test? # So our tests can override the required_steps method
       cattr_accessor :test_required_steps
@@ -100,8 +100,7 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { includes(:cpd_audit_level, :user, cpd_audit_reviews: [:cpd_audit_review_items]) }
-
+    scope :deep, -> { includes(:cpd_audit_level, user: [:cpd_statements], cpd_audit_reviews: [:cpd_audit_level, :user, :cpd_audit_review_items]) }
     scope :sorted, -> { order(:id) }
 
     scope :draft, -> { where(submitted_at: nil) }

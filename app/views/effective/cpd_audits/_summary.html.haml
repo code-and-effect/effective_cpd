@@ -23,10 +23,6 @@
               %small= mail_to cpd_audit_review.user.email
 
       %tr
-        %th Determination
-        %td= cpd_audit.determination.presence || '-'
-
-      %tr
         %th Date of notification
         %td= cpd_audit.notification_date.strftime('%F')
 
@@ -39,6 +35,10 @@
         %th Status
         %td
           %span.badge.badge-secondary= cpd_audit.status
+
+      %tr
+        %th Determination
+        %td= cpd_audit.determination.presence || '-'
 
       %tr
         %th Summary
