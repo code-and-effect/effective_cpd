@@ -1,5 +1,14 @@
 module Admin
   class EffectiveCpdAuditsDatatable < Effective::Datatable
+    filters do
+      scope :all
+      scope :available, label: 'In Progress'
+      scope :completed
+      scope :waiting_on_admin
+      scope :waiting_on_auditee
+      scope :waiting_on_reviewers
+    end
+
     datatable do
       col :id, visible: false
       col :created_at, visible: false

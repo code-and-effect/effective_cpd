@@ -26,6 +26,10 @@ module Effective
 
     COMPLETED_STATES = [:exemption_granted, :closed]
 
+    WAITING_ON_ADMIN_STATES = [:conflicted, :exemption_requested, :extension_requested, :reviewed]
+    WAITING_ON_REVIEWERS_STATES = [:submitted]
+    WAITING_ON_AUDITEE_STATES = [:opened, :started, :conflicted_resolved, :exemption_denied, :extension_granted, :extension_denied]
+
     acts_as_statused(
       :opened,                # Just Opened
       :started,               # First screen clicked
@@ -107,6 +111,10 @@ module Effective
     scope :draft, -> { where(submitted_at: nil) }
     scope :available, -> { where.not(status: COMPLETED_STATES) }
     scope :completed, -> { where(status: COMPLETED_STATES) }
+
+    scope :waiting_on_admin, -> { where(status: WAITING_ON_ADMIN_STATES) }
+    scope :waiting_on_auditee, -> { where(status: WAITING_ON_AUDITEE_STATES) }
+    scope :waiting_on_reviewers, -> { where(status: WAITING_ON_REVIEWERS_STATES) }
 
     before_validation(if: -> { new_record? }) do
       self.notification_date ||= Time.zone.now

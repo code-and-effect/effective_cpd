@@ -1,9 +1,9 @@
 module Admin
   class EffectiveCpdStatementsDatatable < Effective::Datatable
     filters do
-      scope :completed
-      scope :draft
       scope :all
+      scope :draft, label: 'In Progress'
+      scope :completed
     end
 
     datatable do
