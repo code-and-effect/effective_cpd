@@ -56,16 +56,28 @@ Render the "available statements for current_user" datatable on your user dashbo
   .mt-4
     %p You completed these statements:
     = render_datatable(datatable, simple: true)
-
 ```
 
 Add a link to the admin menu:
 
 ```haml
 - if can? :admin, :effective_cpd
-  = link_to 'CPD Categories', effective_cpd.admin_cpd_categories_path
-  = link_to 'CPD Cycles', effective_cpd.admin_cpd_cycles_path
-  = link_to 'CPD Statements', effective_cpd.admin_cpd_statements_path
+  - if can? :index, Effective::CpdCategory
+    = nav_link_to 'CPD Categories', effective_cpd.admin_cpd_categories_path
+
+  - if can? :index, Effective::CpdCycle
+    = nav_link_to 'CPD Cycles', effective_cpd.admin_cpd_cycles_path
+
+  - if can? :index, Effective::CpdAuditLevel
+    = nav_link_to 'CPD Audit Levels', effective_cpd.admin_cpd_audit_levels_path
+
+  = nav_divider
+
+  - if can? :index, Effective::CpdStatement
+    = nav_link_to 'CPD Statements', effective_cpd.admin_cpd_statements_path
+
+  - if can? :index, Effective::CpdAudit
+    = nav_link_to 'CPD Audits', effective_cpd.admin_cpd_audits_path
 ```
 
 ## Authorization
