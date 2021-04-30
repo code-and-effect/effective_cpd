@@ -110,6 +110,7 @@ module Effective
 
     before_validation(if: -> { new_record? }) do
       self.notification_date ||= Time.zone.now
+      self.due_date ||= deadline_to_submit()
     end
 
     validates :notification_date, presence: true
@@ -287,8 +288,12 @@ module Effective
       end
 
       if admin_process_request == 'Granted'
-        assign_attributes(extension_date: extension_request_date)
+        self.extension_date = extension_request_date
+        self.due_date = deadline_to_submit()
+
+        cpd_audit_reviews.each { |cpd_audit_review| cpd_audit_review.extension_granted! }
         extension_granted!
+
         send_email(:cpd_audit_extension_granted)
       end
 
@@ -325,6 +330,37 @@ module Effective
     def send_email(email)
       EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?
       true
+    end
+
+    def deadline_to_conflict_of_interest
+      return nil unless cpd_audit_level&.conflict_of_interest?
+      return nil unless cpd_audit_level.days_to_declare_conflict.present?
+
+      date = (notification_date || created_at || Time.zone.now)
+      date.advance(days: cpd_audit_level.days_to_declare_conflict)
+    end
+
+    def deadline_to_exemption
+      return nil unless cpd_audit_level&.can_request_exemption?
+      return nil unless cpd_audit_level.days_to_request_exemption.present?
+
+      date = (notification_date || created_at || Time.zone.now)
+      date.advance(days: cpd_audit_level.days_to_request_exemption)
+    end
+
+    def deadline_to_extension
+      return nil unless cpd_audit_level&.can_request_extension?
+      return nil unless cpd_audit_level.days_to_request_extension.present?
+
+      date = (notification_date || created_at || Time.zone.now)
+      date.advance(days: cpd_audit_level.days_to_request_extension)
+    end
+
+    def deadline_to_submit
+      return nil unless cpd_audit_level&.days_to_submit.present?
+
+      date = (extension_date || notification_date || created_at || Time.zone.now)
+      date.advance(days: cpd_audit_level.days_to_submit)
     end
 
   end

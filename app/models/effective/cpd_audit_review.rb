@@ -74,6 +74,7 @@ module Effective
 
     before_validation(if: -> { new_record? }) do
       self.cpd_audit_level ||= cpd_audit&.cpd_audit_level
+      self.due_date ||= deadline_to_review()
     end
 
     validate(if: -> { recommendation.present? }) do
@@ -164,6 +165,11 @@ module Effective
       WIZARD_STEPS[step] || dynamic_wizard_steps.fetch(step)
     end
 
+    # Called by CpdAudit.extension_granted
+    def extension_granted!
+      self.due_date = deadline_to_review()
+    end
+
     # Called by CpdAudit.submit!
     def ready!
       send_email(:cpd_audit_review_ready)
@@ -197,6 +203,17 @@ module Effective
     def send_email(email)
       EffectiveCpd.send_email(email, self, email_form_params) unless email_form_skip?
       true
+    end
+
+    def deadline_to_conflict_of_interest
+      cpd_audit.deadline_to_conflict_of_interest
+    end
+
+    def deadline_to_review
+      return nil unless cpd_audit_level&.days_to_review.present?
+
+      date = cpd_audit.deadline_to_submit()
+      date.advance(days: cpd_audit_level.days_to_review)
     end
 
   end
