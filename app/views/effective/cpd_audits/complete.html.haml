@@ -1,5 +1,5 @@
 = render('layout') do
-  - raise('expected a completed cpd_audit') unless resource.completed?
+  - raise('expected a submitted cpd_audit') unless resource.was_submitted?
 
   .text-center
     .row

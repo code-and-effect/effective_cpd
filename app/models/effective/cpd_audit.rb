@@ -226,7 +226,7 @@ module Effective
 
     # Auditee wizard action
     def conflict!
-      return save! unless conflict_of_interest?
+      return started! unless conflict_of_interest?
 
       update!(status: :conflicted)
       send_email(:cpd_audit_conflicted)
@@ -245,7 +245,7 @@ module Effective
 
     # Auditee wizard action
     def exemption!
-      return save! unless exemption_request?
+      return started! unless exemption_request?
 
       update!(status: :exemption_requested)
       send_email(:cpd_audit_exemption_request)
@@ -275,7 +275,7 @@ module Effective
 
     # Auditee wizard action
     def extension!
-      return save! unless extension_request?
+      return started! unless extension_request?
 
       update!(status: :extension_requested)
       send_email(:cpd_audit_extension_request)
@@ -297,7 +297,6 @@ module Effective
 
       cpd_audit_reviews.each { |cpd_audit_review| cpd_audit_review.extension_granted! }
       extension_granted!
-
       send_email(:cpd_audit_extension_granted)
     end
 
@@ -311,7 +310,6 @@ module Effective
     def submit!
       submitted!
       cpd_audit_reviews.each { |cpd_audit_review| cpd_audit_review.ready! }
-
       send_email(:cpd_audit_submitted)
     end
 

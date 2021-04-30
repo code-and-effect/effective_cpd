@@ -9,4 +9,4 @@
           - else
             %ul
               - cpd_audit.files.each do |file|
-                = link_to(file.filename, url_for(file), target: '_blank')
+                %li= link_to(file.filename, url_for(file), target: '_blank')

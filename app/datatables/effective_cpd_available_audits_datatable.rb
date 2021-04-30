@@ -2,12 +2,12 @@
 
 class EffectiveCpdAvailableAuditsDatatable < Effective::Datatable
   datatable do
-    order :notification_date
+    order :due_date
 
     col :token, visible: false
 
     col :cpd_audit_level, label: 'Audit'
-    col :notification_date, label: 'Date of Notification'
+    col :due_date
     col :status
     col :determination
 

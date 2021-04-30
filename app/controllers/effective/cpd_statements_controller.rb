@@ -57,9 +57,7 @@ module Effective
           :current_step, :confirm_read, :confirm_factual, files: []
         )
       when :submit
-        params.require(:effective_cpd_statement).permit(
-          :current_step, :confirm_readonly
-        )
+        params.require(:effective_cpd_statement).permit(:current_step, :confirm_readonly)
       when :complete
         raise('unexpected post to complete')
       else

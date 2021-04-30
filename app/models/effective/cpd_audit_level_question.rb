@@ -8,6 +8,7 @@ module Effective
 
     has_many :cpd_audit_responses
 
+    has_one_attached :upload_file
     has_rich_text :body
 
     if respond_to?(:log_changes)

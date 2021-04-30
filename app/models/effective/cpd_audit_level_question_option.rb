@@ -2,7 +2,7 @@ module Effective
   class CpdAuditLevelQuestionOption < ActiveRecord::Base
     belongs_to :cpd_audit_level_question
 
-    has_many :cpd_audit_level_response_options
+    has_many :cpd_audit_response_options
 
     effective_resource do
       title         :text
@@ -21,7 +21,7 @@ module Effective
     validates :position, presence: true
 
     before_destroy do
-      if (count = cpd_audit_level_response_options.length) > 0
+      if (count = cpd_audit_response_options.length) > 0
         raise("#{count} audit response options belong to this question option")
       end
     end

@@ -28,6 +28,10 @@
         %th Date of notification
         %td= cpd_audit_review.cpd_audit.notification_date.strftime('%F')
 
+      %tr
+        %th Due date (deadline to review)
+        %td= cpd_audit_review.due_date.strftime('%F')
+
       - if cpd_audit_review.completed?
         %tr
           %th Submitted on

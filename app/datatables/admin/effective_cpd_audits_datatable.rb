@@ -24,7 +24,8 @@ module Admin
       end
 
       col :notification_date, label: 'Date of Notification'
-      col :extension_date, label: 'Approved Extension Date'
+      col :extension_date, label: 'Approved Extension Date', visible: false
+      col :due_date
 
       col :status
       col :determination

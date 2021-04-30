@@ -32,6 +32,15 @@
           %td= cpd_audit.extension_date.strftime('%F')
 
       %tr
+        %th Due date (deadline to submit)
+        %td= cpd_audit.due_date.strftime('%F')
+
+      - if cpd_audit.completed?
+        %tr
+          %th Submitted on
+          %td= cpd_audit.submitted_at.strftime('%F')
+
+      %tr
         %th Status
         %td
           %span.badge.badge-secondary= cpd_audit.status

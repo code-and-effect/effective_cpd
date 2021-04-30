@@ -21,17 +21,38 @@ module Effective
     end
 
     def permitted_params
-      return params.require(:effective_cpd_audit_review).permit!
-
       case step
       when :start
-        params.require(:effective_cpd_audit).permit(:current_step)
+        params.require(:effective_cpd_audit_review).permit(:current_step, :comments)
+      when :information
+        params.require(:effective_cpd_audit_review).permit(:current_step, :comments)
+      when :instructions
+        params.require(:effective_cpd_audit_review).permit(:current_step, :comments)
+      when :conflict
+        params.require(:effective_cpd_audit_review)
+          .permit(:current_step, :comments, :conflict_of_interest, :conflict_of_interest_reason)
+      when :statements
+        params.require(:effective_cpd_audit_review).permit(:current_step, :comments)
+      when :questionnaire
+        params.require(:effective_cpd_audit_review).permit(:current_step, :comments)
+      when :recommendation
+        params.require(:effective_cpd_audit_review).permit(:current_step, :comments, :recommendation)
       when :submit
-        params.require(:effective_cpd_audit).permit(:current_step)
+        params.require(:effective_cpd_audit_review).permit(:current_step)
       when :complete
         raise('unexpected post to complete')
       else
-        raise('unexpected step')
+        if step.to_s.start_with?('statement')
+          params.require(:effective_cpd_audit_review).permit(:current_step, :comments,
+            cpd_audit_review_items_attributes: [:id, :item_id, :item_type, :recommendation, :comments]
+          )
+        elsif step.to_s.start_with?('section')
+          params.require(:effective_cpd_audit_review).permit(:current_step, :comments,
+            cpd_audit_review_items_attributes: [:id, :item_id, :item_type, :recommendation, :comments]
+          )
+        else
+          raise('unexpected step')
+        end
       end
     end
 
