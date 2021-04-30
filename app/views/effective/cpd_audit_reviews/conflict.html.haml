@@ -4,6 +4,8 @@
   %ul
     %li #{resource.cpd_audit.user} <#{mail_to(resource.cpd_audit.user.email)}>
 
+  %p The deadline to declare a conflict of interest is: #{resource.deadline_to_conflict_of_interest.strftime('%F')}.
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 

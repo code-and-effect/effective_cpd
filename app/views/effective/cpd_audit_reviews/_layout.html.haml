@@ -1,6 +1,17 @@
 .row
   .col-3
     = render_wizard_sidebar(resource)
+
+    %table.table.mt-4
+      %tbody
+        - if resource.due_date.present? && !resource.completed?
+          %tr{title: "#{resource} is due on #{resource.due_date.strftime('%F')}"}
+            %td
+              %h4= (resource.due_date - Time.zone.now.to_date).to_i.abs
+
+            %td
+              = (Time.zone.now > resource.due_date) ? 'days overdue' : 'days left to review'
+
   .col-9
     %h1= @page_title
 

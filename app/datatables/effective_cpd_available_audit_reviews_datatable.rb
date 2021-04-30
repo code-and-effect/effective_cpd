@@ -8,7 +8,7 @@ class EffectiveCpdAvailableAuditReviewsDatatable < Effective::Datatable
 
     col :cpd_audit_level, label: 'Audit'
     col :due_date
-    col :user, label: 'Auditee'
+    col :user, label: 'Auditee', action: false
 
     col :ready_to_review do |cpd_audit|
       cpd_audit.was_submitted? ? 'Yes' : 'No'

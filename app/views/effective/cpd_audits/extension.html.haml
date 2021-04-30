@@ -2,6 +2,8 @@
   - if resource.was_extension_requested?
     = render('effective/cpd_audits/extension', cpd_audit: resource, step: :extension)
 
+  %p The deadline to request an extension is: #{resource.deadline_to_extension.strftime('%F')}.
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 

@@ -7,6 +7,14 @@
 
     %table.table.mt-4
       %tbody
+        - if resource.due_date.present? && !resource.was_submitted?
+          %tr{title: "#{resource} is due on #{resource.due_date.strftime('%F')}"}
+            %td
+              %h4= (resource.due_date - Time.zone.now.to_date).to_i.abs
+
+            %td
+              = (Time.zone.now > resource.due_date) ? 'days overdue' : 'days left to submit'
+
         %tr
           %td
             %h4= last_3_scores.to_i

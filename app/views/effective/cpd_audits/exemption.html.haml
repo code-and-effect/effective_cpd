@@ -2,6 +2,8 @@
   - if resource.was_exemption_requested?
     = render('effective/cpd_audits/exemption', cpd_audit: resource, step: :exemption)
 
+  %p The deadline to request an exemption is: #{resource.deadline_to_exemption.strftime('%F')}.
+
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 

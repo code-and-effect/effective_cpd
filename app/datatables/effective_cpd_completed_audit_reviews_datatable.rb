@@ -8,7 +8,7 @@ class EffectiveCpdCompletedAuditReviewsDatatable < Effective::Datatable
 
     col :cpd_audit_level, label: 'Audit'
     col :notification_date, label: 'Date of Notification'
-    col :user, label: 'Auditee'
+    col :user, label: 'Auditee', action: false
 
     col :recommendation do |cpd_audit|
       cpd_audit.cpd_audit_reviews.find { |r| r.user_id == current_user.id }.recommendation
