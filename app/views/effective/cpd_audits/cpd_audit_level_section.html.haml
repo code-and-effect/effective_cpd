@@ -12,7 +12,7 @@
       - cpd_audit_response = resource.cpd_audit_response(cpd_audit_level_question)
 
       = f.fields_for :cpd_audit_responses, cpd_audit_response do |fcar|
-        = render('/effective/cpd_audit_responses/fields', f: fcar, cpd_audit_level_question: cpd_audit_level_question)
+        .mt-2= render('/effective/cpd_audit_responses/fields', f: fcar, cpd_audit_level_question: cpd_audit_level_question)
 
     - if cpd_audit_level_section.bottom_content.present?
       .mb-2= cpd_audit_level_section.bottom_content
