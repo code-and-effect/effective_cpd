@@ -22,10 +22,7 @@
             %h4= resource.score.to_i
 
           %td
-            - if cpd_cycle.required_score.to_i > 0
-              #{cpd_credits_label} out of #{cpd_cycle.required_score} required
-            - else
-              #{cpd_credits_label} in current #{cpd_cycle_label}
+            #{cpd_credits_label} out of #{resource.required_score} required
 
         %tr
           %td

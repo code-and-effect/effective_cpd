@@ -54,9 +54,9 @@ module Effective
       self.score ||= 0
     end
 
-    validate(if: -> { completed? && cpd_cycle.required_score.present? }) do
-      min = cpd_cycle.required_score
-      self.errors.add(:score, "must be #{min} or greater to submit statement") if score < min
+    validate(if: -> { completed? }) do
+      min = required_score()
+      self.errors.add(:score, "must be #{min} or greater to submit a statement") if score < min
     end
 
     with_options(if: -> { current_step == :agreements }) do
@@ -85,6 +85,13 @@ module Effective
 
     def completed?
       submitted_at.present?
+    end
+
+    def required_score
+      required_by_cycle = cpd_cycle&.required_score
+      required_by_user = user.cpd_statement_required_score(self) if user.respond_to?(:cpd_statement_required_score)
+
+      [required_by_cycle.to_i, required_by_user.to_i].max
     end
 
     def carry_forward

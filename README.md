@@ -134,6 +134,31 @@ As an admin, visit the CPD Categories, then CPD Cycles, and CPD Audit levels.
 
 Once all these 3 areas have been configured, users can submit statements and audits can be performed.
 
+## Required Score
+
+You can specify the required score in the CPD Cycle.
+
+You can also programatically do it. Add the following to your user class.
+
+```
+# This is an ActiveRecord concern to add the has_many :cpd_statements
+effective_cpd_user
+
+# Just this one magic method. Chcked when submitting the passed cpd_Statement
+# Must be 100 points in the last 3 years. Can submit 0 0 100 or 33 33 34
+def cpd_statement_required_score(cpd_statement)
+  # All completed cpd statements before this cpd_statement
+  existing = cpd_statements.select { |s| s.completed? && s.cpd_cycle_id < cpd_statement.cpd_cycle_id }
+  return 0 if existing.length < 2
+
+  existing_score = others.last(2).map { |statement| statement.score }.sum
+  raise('expected existing to be >= 0') if existing < 0
+  return 0 if existing >= 100
+
+  (100 - existing)
+end
+```
+
 ## Authorization
 
 All authorization checks are handled via the effective_resources gem found in the `config/initializers/effective_resources.rb` file.
