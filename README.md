@@ -144,18 +144,26 @@ You can also programatically do it. Add the following to your user class.
 # This is an ActiveRecord concern to add the has_many :cpd_statements
 effective_cpd_user
 
-# Just this one magic method. Chcked when submitting the passed cpd_Statement
-# Must be 100 points in the last 3 years. Can submit 0 0 100 or 33 33 34
+# We require 100 points in the last 3 years.
 def cpd_statement_required_score(cpd_statement)
-  # All completed cpd statements before this cpd_statement
-  existing = cpd_statements.select { |s| s.completed? && s.cpd_cycle_id < cpd_statement.cpd_cycle_id }
-  return 0 if existing.length < 2
+  # We always consider the 3 year window, of the passed cpd_statement and the last two statements
+  last_two_statements = cpd_statements.select do |statement|
+    statement.completed? && statement.cpd_cycle_id < cpd_statement.cpd_cycle_id
+  end.last(2)
 
-  existing_score = others.last(2).map { |statement| statement.score }.sum
-  raise('expected existing to be >= 0') if existing < 0
-  return 0 if existing >= 100
+  # They can submit 0 0 100
+  return 0 if last_two_statements.length < 2
 
-  (100 - existing)
+  # 100 points in the last 3 years.
+  required_score = 100
+
+  # Score so far
+  existing_score = last_two_statements.sum { |statement| statement.score }
+  raise('expected existing_score to be >= 0') if existing_score < 0
+
+  # Required score minus previous
+  return 0 if existing_score >= required_score
+  (required_score - existing_score)
 end
 ```
 
