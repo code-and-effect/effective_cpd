@@ -69,6 +69,24 @@ class CpdScorerTest < ActiveSupport::TestCase
     assert_equal 0, fourth.cpd_statement_activities.length
   end
 
+  test 'roll forward zero cycles' do
+    user = create_user!
+
+    # First Statement
+    Effective::CpdRule.update_all(max_cycles_can_carry_forward: 0)
+    first = create_scoreable_cpd_statement!(user: user, amount: 1, amount2: 1)
+    assert_equal 67, first.score
+
+    assert_equal 25, first.cpd_statement_activities.length
+    assert first.cpd_statement_activities.all? { |a| a.carry_over.nil? }
+    assert first.cpd_statement_activities.all? { |a| a.original.nil? }
+
+    assert_equal 0, first.cpd_statement_activities.sum(&:carry_forward)
+    assert_equal 67, first.cpd_statement_activities.sum(&:score)
+    assert_equal [2, 4, 2, 5, 3, 30, 21], first.score_per_category.values
+    assert_equal 0, first.carry_forward
+  end
+
   test 'roll forward amount 1' do
     user = create_user!
 
