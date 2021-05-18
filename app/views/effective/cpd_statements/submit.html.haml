@@ -14,7 +14,6 @@
   = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
     = f.hidden_field :current_step
 
-    = f.check_box :confirm_readonly,
-      label: 'Yes, I understand that I will not be able to modify this statement after submission'
+    = f.check_box :confirm_readonly, label: cpd_statement_submit_label(f.object)
 
     = f.submit 'Submit Statement', center: true

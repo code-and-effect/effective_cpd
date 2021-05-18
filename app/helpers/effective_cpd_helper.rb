@@ -30,6 +30,16 @@ module EffectiveCpdHelper
     end
   end
 
+  def cpd_statement_submit_label(cpd_statement)
+    label = "Yes, I understand I will not be able to submit more #{cpd_credits_label} or modify any of my activities for this #{cpd_cycle_label}, once I submit."
+
+    if (end_at = cpd_statement.cpd_cycle.end_at).present?
+      label += " The last date to submit this form is #{end_at.strftime("%B %d, %Y")}."
+    end
+
+    label
+  end
+
   def effective_cpd_categories
     @effective_cpd_categories ||= Effective::CpdCategory.deep.sorted
   end
