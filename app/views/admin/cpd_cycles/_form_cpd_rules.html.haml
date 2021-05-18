@@ -10,8 +10,8 @@
       label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
       hint: "The maximum number of #{cpd_credits_label} that may be earned in this category for this #{cpd_cycle_label}. Leave blank for no limit."
 
-    = fc.text_field :credit_description,
-      hint: "A simple description of the maximum #{cpd_credits_label} and carry forward policy of activities for this category"
+    = fc.rich_text_area :category_credit_description,
+      hint: "A description of the maximum #{cpd_credits_label} and carry forward policy of activities for this category"
 
     = fc.check_box :unavailable, label: "Unavailable in this #{cpd_cycle_label}"
 
@@ -49,7 +49,7 @@
 
           = fa.number_field :max_cycles_can_carry_forward,
             label: "Max #{cpd_cycles_label} can carry forward",
-            hint: "leave blank for no limit"
+            hint: "leave blank for no limit. enter zero for no carry forward."
 
           = fa.check_box :unavailable, label: "Unavailable in this #{cpd_cycle_label}"
 

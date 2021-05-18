@@ -1,9 +1,17 @@
 = effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
+  %h2 All Steps Content
+
   .card.mb-4
     .card-body
       %h5.card-title All Steps Content
       = f.rich_text_area :all_steps_content, label: false, hint: 'displayed on all statement steps'
 
+  .card.mb-4
+    .card-body
+      %h5.card-title Sidebar Content
+      = f.rich_text_area :sidebar_content, label: false, hint: 'displayed on the sidebar on all statement steps'
+
+  %h2 Individual Steps Content
   .card.mb-4
     .card-body
       %h5.card-title Start Step

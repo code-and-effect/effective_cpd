@@ -9,7 +9,6 @@ if Rails.env.test?
   Effective::CpdRule.delete_all
 
   ActionText::RichText.where(record_type: ['Effective::CpdCycle', 'Effective::CpdCycle', 'Effective::CpdActivity', 'Effective::CpdAudit', 'Effective::CpdAuditLevelSection', 'Effective::CpdAuditLevelQuestion']).delete_all
-
 end
 
 # Build the first CpdCycle
@@ -18,11 +17,12 @@ cycle = Effective::CpdCycle.create!(
   start_at: now.beginning_of_year,
   end_at: now.end_of_year,
   required_score: 100,
-  all_steps_content: "<div>All Steps Content</div>",
-  start_content: "<div>Start Content</div>",
-  activities_content: "<div>Activities Content</div>",
-  submit_content: "<div>Submit Content</div>",
-  complete_content: "<div>Complete Content</div>"
+  all_steps_content: "All Steps Content",
+  start_content: "Start Content",
+  activities_content: "Activities Content",
+  submit_content: "Submit Content",
+  complete_content: "Complete Content",
+  sidebar_content: "Sidebar Content"
 )
 
 # Professional Practice
@@ -33,7 +33,7 @@ category = Effective::CpdCategory.create!(
 Effective::CpdRule.create!(
   cpd_cycle: cycle,
   ruleable: category,
-  credit_description: 'Upto a maximum of 20 claimable points per CPD year. Points cannot be carried forward to future years.',
+  category_credit_description: 'Upto a maximum of 20 claimable points per CPD year. Points cannot be carried forward to future years.',
   max_credits_per_cycle: 20
 )
 
@@ -74,7 +74,7 @@ category = Effective::CpdCategory.create!(
 Effective::CpdRule.create!(
   cpd_cycle: cycle,
   ruleable: category,
-  credit_description: 'Upto a maximum of 20 claimable points per CPD year. Points cannot be carried forward to future years.',
+  category_credit_description: 'Upto a maximum of 20 claimable points per CPD year. Points cannot be carried forward to future years.',
   max_credits_per_cycle: 20
 )
 
@@ -144,7 +144,7 @@ category = Effective::CpdCategory.create!(
 Effective::CpdRule.create!(
   cpd_cycle: cycle,
   ruleable: category,
-  credit_description: 'Upto a maximum of 35 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
+  category_credit_description: 'Upto a maximum of 35 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
   max_credits_per_cycle: 35
 )
 
@@ -183,7 +183,7 @@ category = Effective::CpdCategory.create!(
 Effective::CpdRule.create!(
   cpd_cycle: cycle,
   ruleable: category,
-  credit_description: 'Upto a maximum of 15 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
+  category_credit_description: 'Upto a maximum of 15 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
   max_credits_per_cycle: 15
 )
 
@@ -265,7 +265,7 @@ category = Effective::CpdCategory.create!(
 Effective::CpdRule.create!(
   cpd_cycle: cycle,
   ruleable: category,
-  credit_description: 'Upto a maximum of 15 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
+  category_credit_description: 'Upto a maximum of 15 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
   max_credits_per_cycle: 15
 )
 
@@ -319,7 +319,7 @@ category = Effective::CpdCategory.create!(
 Effective::CpdRule.create!(
   cpd_cycle: cycle,
   ruleable: category,
-  credit_description: 'Upto a maximum of 30 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
+  category_credit_description: 'Upto a maximum of 30 claimable points per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
   max_credits_per_cycle: 30
 )
 
@@ -421,7 +421,7 @@ category = Effective::CpdCategory.create!(
 Effective::CpdRule.create!(
   cpd_cycle: cycle,
   ruleable: category,
-  credit_description: 'Upto a maximum of 10 points per mentee or position per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
+  category_credit_description: 'Upto a maximum of 10 points per mentee or position per CPD year. Points may be carried over upto a maximum of 2 years after the year in which they were earned.',
   max_credits_per_cycle: nil
 )
 

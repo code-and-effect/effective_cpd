@@ -3,6 +3,9 @@ module Effective
     belongs_to :cpd_cycle
     belongs_to :ruleable, polymorphic: true # Activity or Category
 
+    # For a Category: A maximum of 35 PDHs/year may be claimed in the Contributions to Knowledge category
+    has_rich_text :category_credit_description
+
     if respond_to?(:log_changes)
       log_changes(to: :cpd_cycle)
     end
@@ -12,7 +15,6 @@ module Effective
 
     effective_resource do
       # A plaintext description of the formula
-      # For a Category: A maximum of 35 PDHs/year may be claimed in the Contributions to Knowledge category
       # For a Activity: 15 hours of work equals 1 credit
       credit_description :text
 
@@ -23,6 +25,7 @@ module Effective
       formula   :string
 
       # Maximum number of cycles can carry forward
+      # Only considered for activities
       max_cycles_can_carry_forward  :integer
 
       # Cannot be entered in this cycle
@@ -31,18 +34,20 @@ module Effective
       timestamps
     end
 
-    scope :deep, -> { includes(:cpd_cycle, :ruleable) }
+    scope :deep, -> { with_rich_text_category_credit_description.includes(:cpd_cycle, :ruleable) }
     scope :categories, -> { where(ruleable_type: 'Effective::CpdCategory') }
     scope :activities, -> { where(ruleable_type: 'Effective::CpdActivity') }
     scope :unavailable, -> { where(unavailable: true) }
 
     #validates :cpd_cycle_id, uniqueness: { scope: [:ruleable_id, :ruleable_type] }
-    validates :credit_description, presence: true
     validates :max_credits_per_cycle, numericality: { greater_than: 0, allow_nil: true }
-    validates :max_cycles_can_carry_forward, numericality: { greater_than: 0, allow_nil: true }
+    validates :max_cycles_can_carry_forward, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
     validates :formula, presence: true, if: -> { activity? }
     validates :formula, absence: true, if: -> { category? }
+
+    validates :credit_description, presence: true, if: -> { activity? }
+    validates :category_credit_description, presence: true, if: -> { category? }
 
     validate(if: -> { formula.present? }) do
       if formula.gsub('amount2', '').gsub('amount', '').gsub(' ', '').match(INVALID_FORMULA_CHARS).present?

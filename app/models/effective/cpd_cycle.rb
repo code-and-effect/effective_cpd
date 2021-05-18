@@ -1,6 +1,7 @@
 module Effective
   class CpdCycle < ActiveRecord::Base
     has_rich_text :all_steps_content    # Update build_from_cycle() below if these change
+    has_rich_text :sidebar_content
     has_rich_text :start_content
     has_rich_text :activities_content
     has_rich_text :agreements_content
@@ -29,6 +30,7 @@ module Effective
 
     scope :deep, -> {
       with_rich_text_all_steps_content
+      .with_rich_text_sidebar_content
       .with_rich_text_start_content
       .with_rich_text_activities_content
       .with_rich_text_submit_content
@@ -76,13 +78,17 @@ module Effective
       attributes = cycle.dup.attributes.except('title', 'token', 'start_at', 'end_at')
       assign_attributes(attributes)
 
-      [:all_steps_content, :start_content, :activities_content, :submit_content, :complete_content].each do |rich_text|
+      [:all_steps_content, :sidebar_content, :start_content, :activities_content, :submit_content, :complete_content].each do |rich_text|
         self.send("#{rich_text}=", cycle.send(rich_text))
       end
 
       cycle.cpd_rules.each do |rule|
         attributes = rule.dup.attributes.except('cpd_cycle_id')
-        self.cpd_rules.build(attributes)
+        cpd_rule = self.cpd_rules.build(attributes)
+
+        if rule.category?
+          cpd_rule.category_credit_description = rule.category_credit_description
+        end
       end
 
       self
