@@ -12,7 +12,7 @@
           label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
           hint: "The maximum number of #{cpd_credits_label} that may be earned in this category for this #{cpd_cycle_label}. Leave blank for no limit."
       .col
-        = fc.select :cpd_special_rules, cpd_cycle.cpd_special_rules, multiple: true,
+        = fc.select :cpd_special_rule_ids, cpd_cycle.cpd_special_rules, multiple: true,
           label: 'Special Rules', hint: "Special rules operate on more than one category at a time"
 
     = fc.rich_text_area :category_credit_description,
