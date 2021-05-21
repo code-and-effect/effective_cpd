@@ -7,6 +7,8 @@ if Rails.env.test?
   Effective::CpdCategory.delete_all
   Effective::CpdActivity.delete_all
   Effective::CpdRule.delete_all
+  Effective::CpdSpecialRule.delete_all
+  Effective::CpdSpecialRuleMate.delete_all
 
   ActionText::RichText.where(record_type: ['Effective::CpdCycle', 'Effective::CpdCycle', 'Effective::CpdActivity', 'Effective::CpdAudit', 'Effective::CpdAuditLevelSection', 'Effective::CpdAuditLevelQuestion']).delete_all
 end

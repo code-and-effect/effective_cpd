@@ -45,5 +45,10 @@ module Effective
       category == 'cumulative max credits'
     end
 
+    # Right now this is going to be just Effective::CpdCategory objects
+    def ruleables
+      cpd_rules.map(&:ruleable)
+    end
+
   end
 end

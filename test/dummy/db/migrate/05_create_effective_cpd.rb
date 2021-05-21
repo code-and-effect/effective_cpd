@@ -51,6 +51,24 @@ class CreateEffectiveCpd < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
+    create_table :cpd_special_rules do |t|
+      t.references :cpd_cycle
+
+      t.integer :max_credits_per_cycle
+      t.string :category
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
+    create_table :cpd_special_rule_mates do |t|
+      t.references :cpd_rule
+      t.references :cpd_special_rule
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
     create_table :cpd_statement_activities do |t|
       t.references :cpd_statement
       t.references :cpd_activity

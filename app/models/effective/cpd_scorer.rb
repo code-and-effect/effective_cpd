@@ -78,7 +78,7 @@ module Effective
         end
       end
 
-      # This enforced CycleCategory.max_credits_per_cycle
+      # This enforces CycleCategory.max_credits_per_cycle
       statement.cpd_statement_activities.group_by(&:cpd_category).each do |cpd_category, activities|
         rule = cycle.rule_for(cpd_category)
         max_credits_per_cycle = rule.max_credits_per_cycle
@@ -94,6 +94,28 @@ module Effective
             activity.score = [activity.score + max_credits_per_cycle, 0].max
             activity.carry_forward = activity.max_score - activity.score
             activity.reduced_messages["category_#{cpd_category.id}"] = "You have reached the maximum of #{rule.max_credits_per_cycle}/#{cpd_cycle_label} for activities in the #{cpd_category} category"
+          end
+        end
+      end
+
+      # This enforces cumulative max credits CpdSpecialRule.max_credits_per_cycle special rules
+      cycle.cpd_special_rules.select(&:cumulative_max_credits?).each do |special_rule|
+        cpd_categories = special_rule.ruleables.select { |obj| obj.kind_of?(Effective::CpdCategory) }
+
+        max_credits_per_cycle = special_rule.max_credits_per_cycle
+        raise('expected max credits per cycle to be present') unless max_credits_per_cycle.to_i > 0
+
+        activities = statement.cpd_statement_activities.select { |sa| cpd_categories.include?(sa.cpd_category) }
+
+        activities.each do |activity|
+          next if activity.marked_for_destruction?
+
+          max_credits_per_cycle -= activity.score   # We're already scored. Counting down...
+
+          if max_credits_per_cycle < 0
+            activity.score = [activity.score + max_credits_per_cycle, 0].max
+            activity.carry_forward = activity.max_score - activity.score
+            activity.reduced_messages["category_#{activity.cpd_category_id}"] = "You have reached the cumulative maximum of #{special_rule.max_credits_per_cycle}/#{cpd_cycle_label} for activities in the #{cpd_categories.map(&:to_s).to_sentence} categories"
           end
         end
       end

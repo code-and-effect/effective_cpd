@@ -222,6 +222,24 @@ ActiveRecord::Schema.define(version: 5) do
     t.index ["cpd_cycle_id"], name: "index_cpd_rules_on_cpd_cycle_id"
   end
 
+  create_table "cpd_special_rule_mates", force: :cascade do |t|
+    t.bigint "cpd_rule_id"
+    t.bigint "cpd_special_rule_id"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_rule_id"], name: "index_cpd_special_rule_mates_on_cpd_rule_id"
+    t.index ["cpd_special_rule_id"], name: "index_cpd_special_rule_mates_on_cpd_special_rule_id"
+  end
+
+  create_table "cpd_special_rules", force: :cascade do |t|
+    t.bigint "cpd_cycle_id"
+    t.integer "max_credits_per_cycle"
+    t.string "category"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["cpd_cycle_id"], name: "index_cpd_special_rules_on_cpd_cycle_id"
+  end
+
   create_table "cpd_statement_activities", force: :cascade do |t|
     t.bigint "cpd_statement_id"
     t.bigint "cpd_activity_id"

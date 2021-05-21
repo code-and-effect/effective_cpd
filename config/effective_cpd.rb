@@ -4,6 +4,8 @@ EffectiveCpd.setup do |config|
 
   config.cpd_cycles_table_name = :cpd_cycles
   config.cpd_rules_table_name = :cpd_rules
+  config.cpd_special_rules_table_name = :cpd_special_rules
+  config.cpd_special_rule_mates_table_name = :cpd_special_rule_mates
 
   config.cpd_statements_table_name = :cpd_statements
   config.cpd_statement_activities_table_name = :cpd_statement_activities

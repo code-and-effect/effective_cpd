@@ -25,6 +25,8 @@ module EffectiveCpd
 
         @cpd_cycles_table_name = ':' + EffectiveCpd.cpd_cycles_table_name.to_s
         @cpd_rules_table_name = ':' + EffectiveCpd.cpd_rules_table_name.to_s
+        @cpd_special_rules_table_name = ':' + EffectiveCpd.cpd_special_rules_table_name.to_s
+        @cpd_special_rule_mates_table_name = ':' + EffectiveCpd.cpd_special_rule_mates_table_name.to_s
 
         @cpd_statements_table_name = ':' + EffectiveCpd.cpd_statements_table_name.to_s
         @cpd_statement_activities_table_name = ':' + EffectiveCpd.cpd_statement_activities_table_name.to_s
