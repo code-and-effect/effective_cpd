@@ -3,6 +3,9 @@
     = render 'admin/cpd_cycles/form_cpd_cycle', cpd_cycle: cpd_cycle
 
   - if cpd_cycle.persisted?
+    = tab 'Special Rules' do
+      = render 'admin/cpd_cycles/form_cpd_special_rules', cpd_cycle: cpd_cycle
+
     = tab 'Category and Activity Rules' do
       = tabs do
         - Effective::CpdCategory.deep.sorted.each do |cpd_category|

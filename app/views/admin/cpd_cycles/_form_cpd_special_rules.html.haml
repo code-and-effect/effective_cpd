@@ -1,0 +1,4 @@
+%p Special rules operate on more than one category at a time.
+
+- datatable = Admin::EffectiveCpdSpecialRulesDatatable.new(cpd_cycle_id: cpd_cycle.id)
+= render_datatable(datatable, inline: true)

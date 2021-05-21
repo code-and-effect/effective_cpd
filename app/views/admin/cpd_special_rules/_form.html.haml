@@ -1,0 +1,18 @@
+= effective_form_with(model: [:admin, cpd_special_rule], engine: true) do |f|
+  - if inline_datatable?
+    = f.hidden_field :cpd_cycle_id
+  - else
+    = f.select :cpd_cycle_id, Effective::CpdCycle.sorted.all, label: cpd_cycle_label.titleize
+
+  = f.select :category, Effective::CpdSpecialRule::CATEGORIES
+
+  = f.show_if :category, 'cumulative max credits' do
+    = f.number_field :max_credits_per_cycle, label: "Cumulative max credits per #{cpd_cycle_label}",
+      hint: "The cumulative max #{cpd_credits_label} per #{cpd_cycle_label} that can be earned between the following categories."
+
+    - cpd_category_rules = cpd_special_rule.cpd_cycle.cpd_rules.select(&:category?)
+
+    = f.select :cpd_rule_ids, cpd_category_rules, label: 'Cumulative max included categories',
+      hint: "These categories will shared a maximum cumulative #{cpd_credits_label} per #{cpd_cycle_label}."
+
+  = effective_submit(f)

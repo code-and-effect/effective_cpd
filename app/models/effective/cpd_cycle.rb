@@ -11,6 +11,9 @@ module Effective
     has_many :cpd_rules, dependent: :delete_all
     accepts_nested_attributes_for :cpd_rules, allow_destroy: true
 
+    has_many :cpd_special_rules, dependent: :delete_all
+    accepts_nested_attributes_for :cpd_special_rules, allow_destroy: true
+
     has_many :cpd_statements
 
     if respond_to?(:log_changes)

@@ -6,6 +6,9 @@ module Effective
     # For a Category: A maximum of 35 PDHs/year may be claimed in the Contributions to Knowledge category
     has_rich_text :category_credit_description
 
+    has_many :cpd_special_rule_mates, dependent: :destroy, inverse_of: :cpd_rule
+    has_many :cpd_special_rules, -> { CpdSpecialRule.sorted }, through: :cpd_special_rule_mates
+
     if respond_to?(:log_changes)
       log_changes(to: :cpd_cycle)
     end
@@ -34,6 +37,7 @@ module Effective
       timestamps
     end
 
+    scope :sorted, -> { order(:id) }
     scope :deep, -> { with_rich_text_category_credit_description.includes(:cpd_cycle, :ruleable) }
     scope :categories, -> { where(ruleable_type: 'Effective::CpdCategory') }
     scope :activities, -> { where(ruleable_type: 'Effective::CpdActivity') }
@@ -84,7 +88,13 @@ module Effective
     end
 
     def to_s
-      formula.presence || 'category'
+      if activity?
+        formula.presence || ruleable.to_s.presence || 'activity rule'
+      elsif category?
+        ruleable.to_s.presence || 'category rule'
+      else
+        'new rule'
+      end
     end
 
     def activity?

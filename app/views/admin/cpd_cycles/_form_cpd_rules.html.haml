@@ -6,9 +6,14 @@
   %p= link_to 'Edit Category', edit_path, target: '_blank'
 
   = f.fields_for :cpd_rules, cpd_cycle.rule_for(cpd_category) do |fc|
-    = fc.number_field :max_credits_per_cycle,
-      label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
-      hint: "The maximum number of #{cpd_credits_label} that may be earned in this category for this #{cpd_cycle_label}. Leave blank for no limit."
+    .row
+      .col
+        = fc.number_field :max_credits_per_cycle,
+          label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
+          hint: "The maximum number of #{cpd_credits_label} that may be earned in this category for this #{cpd_cycle_label}. Leave blank for no limit."
+      .col
+        = f.select :cpd_special_rule_ids, cpd_cycle.cpd_special_rules,
+          label: 'Special Rules', hint: "Special rules operate on more than one category at a time"
 
     = fc.rich_text_area :category_credit_description,
       hint: "A description of the maximum #{cpd_credits_label} and carry forward policy of activities for this category"
