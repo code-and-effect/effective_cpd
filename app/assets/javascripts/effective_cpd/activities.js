@@ -44,6 +44,12 @@ $(document).on('click', '[data-cpd-edit-activity]', function(event) {
   $activity.children('.statement-activity-form').show()
 });
 
+// When we click any x button
+$(document).on('click', '[data-cpd-collapse]', function(event) {
+  event.preventDefault()
+  collapse_effective_cpd_activities()
+});
+
 // Initializers
 $(document).ready(function() { initialize_effective_cpd_activities() });
 $(document).on('turbolinks:load', function() { initialize_effective_cpd_activities() });

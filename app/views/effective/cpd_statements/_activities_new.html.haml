@@ -7,6 +7,8 @@
     - next if rule.unavailable?
 
     = tab(category) do
+      .float-right= link_to icon('x', class: 'small-1'), '#', 'data-cpd-collapse': true
+
       %h3
         #{category}
         %small
