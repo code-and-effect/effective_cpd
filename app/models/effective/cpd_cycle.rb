@@ -94,6 +94,15 @@ module Effective
         end
       end
 
+      cycle.cpd_special_rules.each do |special_rule|
+        attributes = special_rule.dup.attributes.except('cpd_cycle_id')
+        cpd_special_rule = self.cpd_special_rules.build(attributes)
+
+        special_rule.ruleables.each do |ruleable|
+          cpd_special_rule.cpd_special_rule_mates.build(cpd_rule: self.rule_for(ruleable))
+        end
+      end
+
       self
     end
 
