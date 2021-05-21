@@ -7,7 +7,7 @@
   - rule = statement.cpd_cycle.rule_for(activity)
 
   .float-right= link_to icon('x', class: 'small-1'), '#', 'data-cpd-collapse': true
-  %h3.mt-0= activity
+  %h3= activity
 
   - if activity.body.present?
     = activity.body
