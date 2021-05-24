@@ -81,7 +81,7 @@ module Effective
       attributes = cycle.dup.attributes.except('title', 'token', 'start_at', 'end_at')
       assign_attributes(attributes)
 
-      [:all_steps_content, :sidebar_content, :start_content, :activities_content, :submit_content, :complete_content].each do |rich_text|
+      [:all_steps_content, :sidebar_content, :start_content, :activities_content, :agreements_content, :submit_content, :complete_content].each do |rich_text|
         self.send("#{rich_text}=", cycle.send(rich_text))
       end
 
