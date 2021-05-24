@@ -1,4 +1,5 @@
 - edit_path = effective_cpd.edit_admin_cpd_category_path(cpd_category)
+- cpd_rule = cpd_cycle.rule_for(cpd_category)
 
 = effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
   %h2= cpd_category
@@ -22,40 +23,42 @@
 
   = f.submit
 
-= effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
-  %h2 Activities
-  - rules = cpd_category.cpd_activities.map { |activity| cpd_cycle.rule_for(activity) }
+- unless cpd_rule.unavailable?
 
-  = f.fields_for :cpd_rules, rules do |fa|
-    - activity = fa.object.ruleable
+  = effective_form_with(model: [:admin, cpd_cycle], engine: true) do |f|
+    %h2 Activities
+    - rules = cpd_category.cpd_activities.map { |activity| cpd_cycle.rule_for(activity) }
 
-    = card do
-      .row
-        .col
-          %h5.card-title= activity
-          - if activity.body.present?
-            %p= activity.body
+    = f.fields_for :cpd_rules, rules do |fa|
+      - activity = fa.object.ruleable
 
-          %p= link_to 'Edit Activity', edit_path, target: '_blank'
+      = card do
+        .row
+          .col
+            %h5.card-title= activity
+            - if activity.body.present?
+              %p= activity.body
 
-          = f.static_field :amount_label, value: activity.amount_label.presence || '-'
-          = f.static_field :amount2_label, value: activity.amount2_label.presence || '-'
-          = f.static_field :requires_upload_file, value: (activity.requires_upload_file ? 'Yes' : '-')
+            %p= link_to 'Edit Activity', edit_path, target: '_blank'
 
-        .col
-          = fa.text_field :formula, hint: cpd_rule_formula_hint(activity)
+            = f.static_field :amount_label, value: activity.amount_label.presence || '-'
+            = f.static_field :amount2_label, value: activity.amount2_label.presence || '-'
+            = f.static_field :requires_upload_file, value: (activity.requires_upload_file ? 'Yes' : '-')
 
-          = fa.text_field :credit_description, label: "#{cpd_credits_label.titleize} description",
-            hint: "A simple description of the formula and its #{cpd_credits_label} calculation"
+          .col
+            = fa.text_field :formula, hint: cpd_rule_formula_hint(activity)
 
-          = fa.number_field :max_credits_per_cycle,
-            label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
-            hint: 'leave blank for no limit'
+            = fa.text_field :credit_description, label: "#{cpd_credits_label.titleize} description",
+              hint: "A simple description of the formula and its #{cpd_credits_label} calculation"
 
-          = fa.number_field :max_cycles_can_carry_forward,
-            label: "Max #{cpd_cycles_label} can carry forward",
-            hint: "leave blank for no limit. enter zero for no carry forward."
+            = fa.number_field :max_credits_per_cycle,
+              label: "Max #{cpd_credits_label} per #{cpd_cycle_label}",
+              hint: 'leave blank for no limit'
 
-          = fa.check_box :unavailable, label: "Unavailable in this #{cpd_cycle_label}"
+            = fa.number_field :max_cycles_can_carry_forward,
+              label: "Max #{cpd_cycles_label} can carry forward",
+              hint: "leave blank for no limit. enter zero for no carry forward."
 
-  = f.submit
+            = fa.check_box :unavailable, label: "Unavailable in this #{cpd_cycle_label}"
+
+    = f.submit
