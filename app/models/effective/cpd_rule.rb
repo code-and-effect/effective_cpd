@@ -13,8 +13,8 @@ module Effective
       log_changes(to: :cpd_cycle)
     end
 
-    # Only permit the words amount, amount2 and any charater 0-9 + - / * ( )
-    INVALID_FORMULA_CHARS = /[^0-9\+\-\/\*\(\)]/
+    # Only permit the words amount, amount2 and any charater 0-9 + - / * . ( )
+    INVALID_FORMULA_CHARS = /[^0-9\+\-\.\/\*\(\)]/
 
     effective_resource do
       # A plaintext description of the formula
@@ -55,7 +55,7 @@ module Effective
 
     validate(if: -> { formula.present? }) do
       if formula.gsub('amount2', '').gsub('amount', '').gsub(' ', '').match(INVALID_FORMULA_CHARS).present?
-        self.errors.add(:formula, "may only contain amount, amount2 and 0-9 + - / * ( ) characters")
+        self.errors.add(:formula, "may only contain amount, amount2 and 0-9 + - / * . ( ) characters")
       else
         begin
           eval_equation(amount: 0, amount2: 0)
@@ -118,7 +118,7 @@ module Effective
 
     def eval_equation(amount: nil, amount2: nil)
       equation = formula.gsub('amount2', amount2.to_s).gsub('amount', amount.to_s)
-      eval(equation).to_i
+      eval(equation).round.to_i
     end
 
   end
