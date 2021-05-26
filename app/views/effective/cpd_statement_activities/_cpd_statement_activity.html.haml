@@ -21,13 +21,13 @@
       .row
         - if cpd_activity.amount_label.present?
           .col
-            %strong #{cpd_activity.amount_label.titleize.pluralize}
+            %strong= cpd_activity.amount_label
             %br
             = cpd_statement_activity.amount
 
         - if cpd_activity.amount2_label.present?
           .col.text-center
-            %strong #{cpd_activity.amount2_label.to_s.titleize.pluralize} Articles written
+            %strong= cpd_activity.amount2_label
             = cpd_statement_activity.amount2
 
         - if cpd_activity.amount_static?

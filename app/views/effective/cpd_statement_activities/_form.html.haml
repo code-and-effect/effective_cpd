@@ -41,10 +41,10 @@
   .row
     .col
       - if activity.amount_label.present?
-        = f.number_field :amount, label: activity.amount_label.titleize.pluralize, required: true
+        = f.number_field :amount, label: activity.amount_label, required: true
 
       - if activity.amount2_label.present?
-        = f.number_field :amount2, label: activity.amount2_label.titleize.pluralize, required: true
+        = f.number_field :amount2, label: activity.amount2_label, required: true
 
       - if activity.amount_static?
         = f.hidden_field :amount, value: 1
