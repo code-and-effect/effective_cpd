@@ -22,7 +22,7 @@ module Effective
         flash[:danger] = "You have already completed a statement for this #{cpd_cycle_label}."
         redirect_to(root_path)
       elsif existing.present?
-        flash[:success] = "You have been redirected to the #{resource_wizard_step_title(existing.next_step)} step."
+        flash[:success] = "You have been redirected to the #{resource_wizard_step_title(existing, existing.next_step)} step."
         redirect_to effective_cpd.cpd_cycle_cpd_statement_build_path(existing.cpd_cycle, existing, existing.next_step)
       end
     end
