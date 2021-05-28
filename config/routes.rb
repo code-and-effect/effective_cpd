@@ -34,7 +34,9 @@ EffectiveCpd::Engine.routes.draw do
     resources :cpd_rules, only: [:index]
     resources :cpd_special_rules, except: [:show]
 
-    resources :cpd_statements, only: [:index, :show]
+    resources :cpd_statements, only: [:index, :show] do
+      post :unsubmit, on: :member
+    end
 
     resources :cpd_audit_levels, except: [:show]
     resources :cpd_audit_level_questions, except: [:show]

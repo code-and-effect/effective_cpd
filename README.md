@@ -197,11 +197,13 @@ if user.admin?
   can :manage, Effective::CpdCycle
   can :manage, Effective::CpdRule
 
+  can([:index, :show], Effective::CpdStatement)
+  can(:unsubmit, Effective::CpdStatement) { |statement| statement.completed? }
+
   can :manage, Effective::CpdAuditLevel
   can :manage, Effective::CpdAuditLevelSection
   can :manage, Effective::CpdAuditLevelQuestion
 
-  can :manage, Effective::CpdStatement
   can :manage, Effective::CpdAudit
   can :manage, Effective::CpdAuditReview
 end

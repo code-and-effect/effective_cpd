@@ -79,6 +79,11 @@ module Effective
       update!(submitted_at: Time.zone.now)
     end
 
+    # Called by admin only. This is an exceptional action
+    def unsubmit!
+      update!(wizard_steps: {}, submitted_at: nil, confirm_readonly: nil)
+    end
+
     def in_progress?
       submitted_at.blank?
     end
@@ -86,6 +91,7 @@ module Effective
     def completed?
       submitted_at.present?
     end
+    alias_method :submitted?, :completed?
 
     def required_score
       required_by_cycle = cpd_cycle&.required_score
