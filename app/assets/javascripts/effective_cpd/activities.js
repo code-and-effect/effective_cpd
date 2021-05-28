@@ -1,14 +1,8 @@
 const initialize_effective_cpd_activities = function() {
-  const $obj = $('.cpd-statement-activities:not(.initialized)')
+  const $obj = $('#cpd-statement-activities,.cpd-statement-activities')
 
   if($obj.length > 0) {
-    $(document).on('mousedown touchstart', function(event) { collapse_effective_cpd_activities() })
-
-    // When we click outside the New Activity or Edit Activity
-    $(document).on('mousedown touchstart', '.activities-new', function(event) { event.stopPropagation() });
-    $(document).on('mousedown touchstart', '.statement-activity', function(event) { event.stopPropagation() });
-
-    $obj.addClass('initialized')
+    $('body').addClass('effective-cpd-statement-activities')
   }
 };
 
@@ -50,6 +44,15 @@ $(document).on('click', '[data-cpd-collapse]', function(event) {
   collapse_effective_cpd_activities()
 });
 
+// Click outside the activities anywehre on body
+$(document).on('mousedown touchstart', 'body.effective-cpd-statement-activities', function(event) {
+  collapse_effective_cpd_activities()
+});
+
+// When we click outside the New Activity or Edit Activity
+$(document).on('mousedown touchstart', 'body.effective-cpd-statement-activities .activities-new', function(event) { event.stopPropagation() });
+$(document).on('mousedown touchstart', 'body.effective-cpd-statement-activities .statement-activity', function(event) { event.stopPropagation() });
+
 // Initializers
-$(document).ready(function() { initialize_effective_cpd_activities() });
-$(document).on('turbolinks:load', function() { initialize_effective_cpd_activities() });
+$(document).ready(initialize_effective_cpd_activities);
+$(document).on('turbolinks:load', initialize_effective_cpd_activities);
