@@ -10,7 +10,7 @@
   %tbody
     %tr
       %td Opened
-      %td= cpd_audit.opened_at.strftime('%F') || '-'
+      %td= cpd_audit.opened_at&.strftime('%F') || '-'
       %td #{icon('check', class: 'small-1')} Done
       %td
 

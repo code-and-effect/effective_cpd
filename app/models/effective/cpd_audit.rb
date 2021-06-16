@@ -94,7 +94,7 @@ module Effective
       started_at              :datetime
       submitted_at            :datetime
       reviewed_at             :datetime
-      audited_at              :datetime       # TODO: CHange to closed_at
+      closed_at               :datetime
 
       # Acts as tokened
       token                   :string

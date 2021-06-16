@@ -38,7 +38,7 @@
       - if cpd_audit.completed?
         %tr
           %th Submitted on
-          %td= cpd_audit.submitted_at.strftime('%F')
+          %td= cpd_audit.submitted_at&.strftime('%F') || '-'
 
       %tr
         %th Status
