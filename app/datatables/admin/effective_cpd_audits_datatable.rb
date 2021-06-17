@@ -39,7 +39,7 @@ module Admin
       col :status
       col :determination
 
-      col(:auditee_cpd_statements, label: 'Auditee Statements') do |cpd_audit|
+      col(:auditee_cpd_statements, label: 'Auditee Statements', visible: false) do |cpd_audit|
         cpd_audit.user.cpd_statements.map do |cpd_statement|
           content_tag(:div, class: 'col-resource_item') do
             link_to(cpd_statement.to_s, effective_cpd.admin_cpd_statement_path(cpd_statement))
